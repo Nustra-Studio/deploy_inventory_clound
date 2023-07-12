@@ -22,3 +22,12 @@ Route::group(['middleware' => 'ApiCabang'], function () {
     Route::get('/barang', 'Api\ApiCabang@barang')->name('api.barang');
     
 });
+Route::prefix('member')->group(function () {
+    Route::post('/login', 'Api\ApiMember@login')->name('api.member.login');
+    Route::post('/register', 'Api\ApiMember@register')->name('api.member.register');
+    Route::group(['middleware' => 'Apimember'], function () {
+        // get route barang
+        Route::get('/home', 'Api\ApiMember@home')->name('api.member.home');
+        
+    });
+});
