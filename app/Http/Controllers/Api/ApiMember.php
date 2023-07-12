@@ -54,6 +54,7 @@ class ApiMember extends Controller
                         'phone' => $member->phone,
                     ];
                     return response()->json([
+                        'access_token' => $member->kode_akses,
                         'success' => true,
                         'expaid_token' => $member->expait_kode,
                         'message' => 'Login Berhasil',
