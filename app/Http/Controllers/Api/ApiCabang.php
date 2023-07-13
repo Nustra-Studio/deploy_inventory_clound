@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\user_cabang;
+use App\Models\suplier;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -29,6 +30,11 @@ class ApiCabang extends Controller
     {
         //
     }
+    public function supplier(){
+        $supplier = suplier::all();
+        return response()->json($supplier);
+    }
+
     public function login(Request $request)
     {
         $username = $request->input('username');
