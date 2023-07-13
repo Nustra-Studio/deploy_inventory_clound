@@ -139,9 +139,30 @@ class ApiMember extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function editdata(Request $request)
     {
-        //
+        $uuid = $request->uuid;
+        $member = member::where('uuid', $uuid)->first();
+        if(!$member){
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Tidak Ditemukan',
+                'data' => ''
+            ], 401);
+        }
+        else{
+            $member = [
+                $member->name,
+                $member->email,
+            ];
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Data Ditemukan',
+                    'data' => $member
+                ], 200);
+
+        }
     }
 
     /**
@@ -151,9 +172,22 @@ class ApiMember extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updatemember (Request $request)
     {
-        //
+        $data = $request->data;
+        $password = Hash::make($data['password']);
+        $email = $data['email'];
+        $username = $data['username'];
+        $member = member::where('uuid', $request->uuid)->update([
+            'name' => $username,
+            'email' => $email,
+            'password' => $password,
+        ]);
+        return response ()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Diubah',
+            'data' => $member
+        ], 200);
     }
 
     /**

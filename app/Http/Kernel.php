@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'ApiCabang'=> \App\Http\Middleware\ApiCabang::class,
+        'ApiMember'=> \App\Http\Middleware\ApiMember::class,
     ];
 
     /**
