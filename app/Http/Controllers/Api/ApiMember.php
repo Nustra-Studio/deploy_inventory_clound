@@ -82,7 +82,7 @@ class ApiMember extends Controller
             'kode_akses' => Str::random(60),
             'expait_kode' => time() + 600,
             'status' => 'member',
-            'alamat' => $input[alamat],
+            'alamat' => $input['alamat'],
         ];
         $member = member::create($data);
         $member_data = [
