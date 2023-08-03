@@ -72,7 +72,9 @@ class ApiMember extends Controller
     
     }
     public function register(Request $request){
-        $data_hp = member::where('phone', $request->data->phone)->first();
+        $datas = $request->data;
+        $phone= $datas['phone'];
+        $data_hp = member::where('phone', $phone)->first();
         if($request->data->phone == $data_hp->phone){
             return response()->json([
                 'success' => false,
