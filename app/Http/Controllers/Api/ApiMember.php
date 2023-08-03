@@ -72,37 +72,47 @@ class ApiMember extends Controller
     
     }
     public function register(Request $request){
-        $input = $request->data;
-        $data = [
-            'uuid' => Str::random(60),
-            'name' => $input['nama'],
-            'phone' => $input['phone'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-            'kode_akses' => Str::random(60),
-            'expait_kode' => time() + 600,
-            'status' => 'member',
-            'alamat' => $input['alamat'],
-        ];
-        $member = member::create($data);
-        $member_data = [
-            'nama' => $member->name,
-            'uuid' => $member->uuid,
-            'phone' => $member->phone,
-            'kode_akses' => $member->kode_akses
-        ];
-        if ($member) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Register Berhasil',
-                'data' => $member_data
-            ], 200);
-        } else {
+        $data_hp = member::where('phone', $request->data->phone)->first();
+        if($request->data->phone == $data_hp->phone){
             return response()->json([
                 'success' => false,
-                'message' => 'Register Gagal',
+                'message' => 'Register Gagal Data Sudah Ada',
                 'data' => ''
-            ], 401);
+            ], 400);
+        }
+        else{
+            $input = $request->data;
+            $data = [
+                'uuid' => Str::random(60),
+                'name' => $input['nama'],
+                'phone' => $input['phone'],
+                'email' => $input['email'],
+                'password' => Hash::make($input['password']),
+                'kode_akses' => Str::random(60),
+                'expait_kode' => time() + 600,
+                'status' => 'member',
+                'alamat' => $input['alamat'],
+            ];
+            $member = member::create($data);
+            $member_data = [
+                'nama' => $member->name,
+                'uuid' => $member->uuid,
+                'phone' => $member->phone,
+                'kode_akses' => $member->kode_akses
+            ];
+            if ($member) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Register Berhasil',
+                    'data' => $member_data
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Register Gagal',
+                    'data' => ''
+                ], 401);
+            }
         }
 
     }
