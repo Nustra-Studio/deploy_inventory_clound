@@ -75,7 +75,7 @@ class ApiMember extends Controller
         $input = $request->data;
         $data = [
             'uuid' => Str::random(60),
-            'nama' => $input['nama'],
+            'name' => $input['nama'],
             'phone' => $input['phone'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
@@ -86,7 +86,7 @@ class ApiMember extends Controller
         ];
         $member = member::create($data);
         $member_data = [
-            'nama' => $member->nama,
+            'nama' => $member->name,
             'uuid' => $member->uuid,
             'phone' => $member->phone,
             'kode_akses' => $member->kode_akses
