@@ -22,7 +22,7 @@ class ApiMember extends Controller
         //
     }
     public function login(Request $request){
-
+        
         $input = $request->all();
         $password = Hash::make($input['password']);
         $member = member::where('phone', $input['nomor_hp'])->first();
@@ -72,11 +72,19 @@ class ApiMember extends Controller
     
     }
     public function register(Request $request){
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
-        $input['kode_akses'] = Str::random(60);
-        $input['expait_kode'] = time() + 600;
-        $member = member::create($input);
+        $input = $request->data;
+        $data = [
+            'uuid' => Str::random(60),
+            'nama' => $input['nama'],
+            'phone' => $input['phone'],
+            'email' => $input['email'],
+            'password' => Hash::make($input['password']),
+            'kode_akses' => Str::random(60),
+            'expait_kode' => time() + 600,
+            'status' => 'member',
+            'alamat' => $input[alamat],
+        ];
+        $member = member::create($data);
         $member_data = [
             'nama' => $member->nama,
             'uuid' => $member->uuid,
