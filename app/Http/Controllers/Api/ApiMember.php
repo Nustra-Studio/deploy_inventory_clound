@@ -39,6 +39,7 @@ class ApiMember extends Controller
                         'nama' => $member->name,
                         'uuid' => $member->uuid,
                         'phone' => $member->phone,
+                        'email' => $member->email,
                     ];
                     return response()->json([
                         'access_token' => $member->kode_akses,
