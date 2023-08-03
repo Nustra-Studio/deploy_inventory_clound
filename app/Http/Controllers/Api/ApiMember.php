@@ -75,7 +75,7 @@ class ApiMember extends Controller
         $datas = $request->data;
         $phone= $datas['phone'];
         $phone_data = 0;
-        $data_hp = member::where('phone', $phone)->first();
+        $data_hp = member::where('phone', $phone)->value('phone');
         $phone_data = $data_hp->phone;
         if($phone = $phone_data){
             return response()->json([
