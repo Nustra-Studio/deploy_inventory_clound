@@ -75,7 +75,7 @@ class ApiMember extends Controller
         $datas = $request->data;
         $phone= $datas['phone'];
         $data_hp = member::where('phone', $phone)->first();
-        if($request->data->phone == $data_hp->phone){
+        if($phone == $data_hp->phone){
             return response()->json([
                 'success' => false,
                 'message' => 'Register Gagal Data Sudah Ada',
