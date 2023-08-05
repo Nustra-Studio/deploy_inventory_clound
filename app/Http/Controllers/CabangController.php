@@ -83,6 +83,14 @@ class CabangController extends Controller
             `updated_at` timestamp NULL DEFAULT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
         DB::statement($query2);
+        user_cabang::create([
+            'cabang_id' => $data['uuid'],
+            'uuid' => Str::random(40),
+            'username' => "supervisor_$nama",
+            'password' => Hash::make('cintabunda123'),
+            'role' => "supervisor",
+            'api_key' => Str::random(40),
+        ]);
         $newdata = [
             'nama' => $data['nama'],
             'alamat' => $data['alamat'],
@@ -94,14 +102,6 @@ class CabangController extends Controller
             'database' => "cabang_$nama",
         ];
         DB::table('cabangs')->insert($newdata);
-        user_cabang::create([
-            'cabang_id' => $data['uuid'],
-            'uuid' => Str::random(40),
-            'username' => "supervisor_$nama",
-            'password' => Hash::make('cintabunda123'),
-            'role' => "supervisor",
-            'api_key' => Str::random(40),
-        ]);
         return redirect()->route('cabang.index')->with('success', 'Data cabang berhasil ditambahkan');
     }
 
