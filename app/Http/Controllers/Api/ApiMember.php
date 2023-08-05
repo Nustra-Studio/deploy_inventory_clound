@@ -24,8 +24,8 @@ class ApiMember extends Controller
     public function home(Request $request){
         $input = $request->all();
         $member = member::where('phone', $input['nomor_hp'])->first();
-        $poin = poin_member::where('member_id', $member->uuid)->first();
-        $transaction = transaction_member::where('member_id', $member->uuid)->limit(5)->get();
+        $poin = poin_member::where('id_member', $member->uuid)->first();
+        $transaction = transaction_member::where('id_member', $member->uuid)->limit(5)->get();
         $data = [
             'member' => $member,
             'poin' => $poin,
