@@ -66,6 +66,24 @@ class ApiCabang extends Controller
             $barang = user_cabang::where('uuid', $uuid)->first();
             return response()->json($barang);
         }
+    
+    public function usercreate(Request $request){
+        $data = $request->data;
+        $username = $data['username'];
+        $password = $data['password'];
+        $uuid = $data['uuid'];
+        $role = $data['role'];
+        $cabang_id = $data['cabang_id'];
+        $user = user_cabang::create([
+            'cabang_id' => $cabang_id,
+            'uuid' => $uuid,
+            'username' => $username,
+            'password' => Hash::make($password),
+            'role' => $role,
+            'api_key' => Str::random(40),
+        ]);
+        return response()->json(["status" => "success",'data' => $user], 200);
+    }
     /**
      * Store a newly created resource in storage.
      *
