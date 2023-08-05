@@ -21,6 +21,19 @@ class ApiMember extends Controller
     {
         //
     }
+    public function poin(Request $request){
+        $input = $request->all();
+        $member = member::where('random_kode', $input['pin'])->first();
+        $poin = poin_member::where('id_member', $member->uuid)->first();
+        $data = [
+            'member' => $member,
+            'poin' => $poin,
+        ];
+        return response()->json($data);
+    }
+    public function belanja(Request $request){
+
+    }
     public function home(Request $request){
         $input = $request->all();
         $member = member::where('phone', $input['nomor_hp'])->first();
@@ -38,12 +51,19 @@ class ApiMember extends Controller
         $input = $request->all();
         $password = Hash::make($input['password']);
         $member = member::where('phone', $input['nomor_hp'])->first();
+        $characters = '0123456789';
+        $randomNumber = '';
+        $length = 16;
+        for ($i = 0; $i < $length; $i++) {
+            $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
+        }
         if ($member && Hash::check($input['password'], $member->password)) {
                 $time = time();
                 $expainds = $member->expait_kode;
                 if ($expainds < $time) {
                     $member->kode_akses = Str::random(60);
                     $member->expait_kode = time() + 600;
+                    $member->random_kode = $randomNumber;
                     $member->save();
                     $member = member::where('phone', $input['nomor_hp'])->first();
                     // data member hanya nama uuid phone dan kode akses
