@@ -187,6 +187,14 @@ class ApiMember extends Controller
 
         }
     }
+    public function membertoken(Request $request){
+        $data = $input['token_member'];
+        $member = member::where('kode_akses', $data)->first();
+    }
+    public function transaction(Request $request){
+        $data = $input['token_member'];
+        $member = member::where('kode_akses', $data)->first();
+    }
 
     /**
      * Update the specified resource in storage.
@@ -201,11 +209,19 @@ class ApiMember extends Controller
         $password = Hash::make($data['password']);
         $email = $data['email'];
         $username = $data['username'];
-        $member = member::where('uuid', $request->uuid)->update([
-            'name' => $username,
-            'email' => $email,
-            'password' => $password,
-        ]);
+        if(empty($data['password'])){
+            $member = member::where('uuid', $request->uuid)->update([
+                'name' => $username,
+                'email' => $email,
+            ]);
+        }
+        else{
+            $member = member::where('uuid', $request->uuid)->update([
+                'name' => $username,
+                'email' => $email,
+                'password' => $password,
+            ]);
+        }
         return response ()->json([
             'success' => true,
             'message' => 'Data Berhasil Diubah',

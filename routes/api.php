@@ -23,6 +23,7 @@ Route::group(['middleware' => 'ApiCabang'], function () {
     Route::get('/supplier', 'Api\ApiCabang@supplier')->name('api.supplier');
     Route::prefix('cabangmember')->group(function () {
         Route::post('/register', 'Api\ApiMember@register')->name('api.member.register');
+        Route::get('/membertoken', 'Api\ApiMember@membertoken')->name('api.member');
     });
     
 });
