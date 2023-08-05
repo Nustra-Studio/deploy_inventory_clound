@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\cabang;
 use App\Models\user_cabang;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 // tambahkan db
 use Illuminate\Support\Facades\DB;
 
