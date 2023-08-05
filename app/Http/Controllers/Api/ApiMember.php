@@ -206,7 +206,6 @@ class ApiMember extends Controller
     public function updatemember (Request $request)
     {
         $data = $request->data;
-        $password = Hash::make($data['password']);
         $email = $data['email'];
         $username = $data['username'];
         if(empty($data['password'])){
@@ -216,11 +215,12 @@ class ApiMember extends Controller
             ]);
         }
         else{
+            $password = Hash::make($data['password']);
             $member = member::where('uuid', $request->uuid)->update([
-                'name' => $username,
-                'email' => $email,
-                'password' => $password,
-            ]);
+            'name' => $username,
+            'email' => $email,
+            'password' => $password,
+        ]);
         }
         return response ()->json([
             'success' => true,
