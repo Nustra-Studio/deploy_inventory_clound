@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\cabang;
+use App\Models\user_cabang;
 // tambahkan db
 use Illuminate\Support\Facades\DB;
 
@@ -91,6 +92,14 @@ class CabangController extends Controller
             'database' => "cabang_$nama",
         ];
         DB::table('cabangs')->insert($newdata);
+        user_cabang::create([
+            'cabang_id' => $data['uuid'],
+            'uuid' => Str::random(40),
+            'username' => "supervisor_$nama",
+            'password' => Hash::make('cintabunda123'),
+            'role' => "supervisor",
+            'api_key' => Str::random(40),
+        ]);
         return redirect()->route('cabang.index')->with('success', 'Data cabang berhasil ditambahkan');
     }
 
