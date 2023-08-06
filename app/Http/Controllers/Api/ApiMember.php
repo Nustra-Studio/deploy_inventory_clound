@@ -19,7 +19,7 @@ class ApiMember extends Controller
      */
     public function index(Request $request)
     {
-        //
+        
     }
     public function poin(Request $request){
         $input = $request->all();
