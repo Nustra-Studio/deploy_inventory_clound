@@ -54,6 +54,13 @@ class ApiMember extends Controller
         $member->random_kode = $random_kode;
         $poin = poin_member::where('id_member', $member->uuid)->first();
         $transaction = transaction_member::where('id_member', $member->uuid)->limit(5)->get();
+        foreach ($transaction as $key => $value) {
+            $transaction[$key]->created_at = date('d-m-Y', strtotime($value->created_at));
+            $amount = $transaction[$key]->harga;
+            $harga = number_format($amount, 0, ',', '.');
+            $transaction[$key]->harga = $harga;
+        }
+        
         $data = [
             'member' => $member,
             'poin' => $poin,
