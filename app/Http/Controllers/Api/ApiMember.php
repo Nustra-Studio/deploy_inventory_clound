@@ -58,7 +58,9 @@ class ApiMember extends Controller
             $amount = $transaction[$key]->harga;
             $harga = number_format($amount, 0, ',', '.');
             $transaction[$key]->harga = $harga;
-            $transaction[$key]->created_at = date("Y-m-d", strtotime($value->created_at));
+            $dateTime = new DateTime($value->created_at);
+            $newDate = $dateTime->format("Y-m-d");
+            $transaction[$key]->created_at = $newDate;
         }
 
         $data = [
