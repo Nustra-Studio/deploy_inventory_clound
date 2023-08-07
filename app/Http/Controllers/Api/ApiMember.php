@@ -47,6 +47,11 @@ class ApiMember extends Controller
     public function home(Request $request){
         $input = $request->all();
         $member = member::where('phone', $input['nomor_hp'])->first();
+        $text = $member->random_kode;
+        $spacedText = chunk_split($text, 4, ' ');
+        // Menghilangkan spasi di akhir hasil
+        $random_kode = rtrim($spacedText);
+        $member->random_kode = $random_kode;
         $poin = poin_member::where('id_member', $member->uuid)->first();
         $transaction = transaction_member::where('id_member', $member->uuid)->limit(5)->get();
         $data = [
