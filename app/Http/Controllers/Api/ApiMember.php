@@ -60,17 +60,17 @@ class ApiMember extends Controller
             $harga = number_format($amount, 0, ',', '.');
             $transaction[$key]->harga = $harga;
         
-            // Format created_at date
-            $dateString = $transaction[$key]->created_at;
-            $dateTime = DateTime::createFromFormat('Y-m-d H:i:s.u', $dateString);
+            // // Format created_at date
+            // $dateString = $transaction[$key]->created_at;
+            // $dateTime = DateTime::createFromFormat('Y-m-d H:i:s.u', $dateString);
             
-            if ($dateTime) {
-                $formattedDate = $dateTime->format('Y-m-d');
-                $transaction[$key]->created_at = $formattedDate;
-            } else {
-                // Handle parsing error if needed
-                // For example: $transaction[$key]->created_at = 'Invalid Date';
-            }
+            // if ($dateTime) {
+            //     $formattedDate = $dateTime->format('Y-m-d');
+            //     $transaction[$key]->created_at = $formattedDate;
+            // } else {
+            //     // Handle parsing error if needed
+            //     // For example: $transaction[$key]->created_at = 'Invalid Date';
+            // }
         }
         
 
