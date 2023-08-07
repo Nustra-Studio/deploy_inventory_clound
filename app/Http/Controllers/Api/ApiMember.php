@@ -24,12 +24,22 @@ class ApiMember extends Controller
     public function poin(Request $request){
         $input = $request->all();
         $member = member::where('random_kode', $input['pin'])->first();
-        $poin = poin_member::where('id_member', $member->uuid)->first();
-        $data = [
-            'member' => $member,
-            'poin' => $poin,
-        ];
-        return response()->json($data);
+        if(empty($member->uuid)){
+            $data = [
+                'success' => false,
+                'message' => 'kode telah kadaluarsa',
+            ];
+            return response()->json($data);
+        }
+        else{
+            $poin = poin_member::where('id_member', $member->uuid)->first();
+            $data = [
+                'member' => $member,
+                'poin' => $poin,
+            ];
+            return response()->json($data);
+        }
+        return response()->json(['success' => false, 'message' => 'pin tidak ditemukan']);
     }
     public function belanja(Request $request){
 
