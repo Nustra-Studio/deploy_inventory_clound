@@ -55,14 +55,24 @@ class ApiMember extends Controller
         $poin = poin_member::where('id_member', $member->uuid)->first();
         $transaction = transaction_member::where('id_member', $member->uuid)->limit(5)->get();
         foreach ($transaction as $key => $value) {
+            // Format harga (price)
             $amount = $transaction[$key]->harga;
             $harga = number_format($amount, 0, ',', '.');
             $transaction[$key]->harga = $harga;
-            $date = $transaction[$key]->created_at;
-            $dateTime = new DateTime($date);
-            $date = $dateTime->format('Y-m-d');
-            $transaction[$key]->created_at = $date;
+        
+            // Format created_at date
+            $dateString = $transaction[$key]->created_at;
+            $dateTime = DateTime::createFromFormat('Y-m-d H:i:s.u', $dateString);
+            
+            if ($dateTime) {
+                $formattedDate = $dateTime->format('Y-m-d');
+                $transaction[$key]->created_at = $formattedDate;
+            } else {
+                // Handle parsing error if needed
+                // For example: $transaction[$key]->created_at = 'Invalid Date';
+            }
         }
+        
 
         $data = [
             'member' => $member,
