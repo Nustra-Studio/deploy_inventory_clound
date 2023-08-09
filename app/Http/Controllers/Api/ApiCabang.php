@@ -10,6 +10,7 @@ use App\Models\cabang;
 use App\Models\suplier;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class ApiCabang extends Controller
 {
