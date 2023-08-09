@@ -53,7 +53,7 @@ class CabangController extends Controller
             `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
             `category_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
             `id_supplier` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-            `kode_barang` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `kode_barang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `harga` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `harga_jual` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `harga_pokok` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
