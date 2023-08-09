@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\member;
 use App\Models\poin_member;
 use App\Models\transaction_member;
+use  App\Models\user_cabang;
+use Illuminate\Support\Facades\DB;
 
 class ApiMember extends Controller
 {
@@ -80,6 +82,35 @@ class ApiMember extends Controller
             'transaction' => $transaction,
         ];
         return response()->json($data);
+    }
+    public function transaksi (Request $request){
+        $input = $request->data;
+        $uuid = $input['uuid'];
+        $user_cabang = user_cabang::where('uuid', $uuid)->first();
+        $id_cabang = $user_cabang->id_cabang;
+        $db_cabang = $user_cabang->database;
+        $create = DB::table("$db_cabang")->create(
+            [
+                'uuid' => Str::random(60),
+                'name' => $input['nama_barang'],
+                'jumlah' => $input['quantity'],
+                'kode_barang' => $input['barcode'],
+                'status' => $input['penjualan'],
+                'id_member' => $input['id_member'],
+                'keterangan' => $input['penjualan'],
+                'harga_pokok' => $input['harga_pokok'],
+                'harga_jual' => $input['harga_jual'],
+            ]
+        );
+    return response()->json([
+        'success' => true,
+        'message' => 'Create Success',
+    ] 200);
+
+
+        
+        
+        
     }
     public function login(Request $request){
         
