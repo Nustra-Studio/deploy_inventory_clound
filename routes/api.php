@@ -27,6 +27,7 @@ Route::group(['middleware' => 'ApiCabang'], function () {
         Route::get('/membertoken', 'Api\ApiMember@membertoken')->name('api.member');
         Route::post('/belanja', 'Api\ApiMember@belanja')->name('api.member.belanja');
         Route::get('/poin','Api\ApiMember@poin')->name('api.member.poin');
+        Route::post('/transaksi','Api\ApiMember@transaksi')->name('api.member.transaksi');
     });
     
 });
