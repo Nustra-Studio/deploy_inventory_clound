@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\user_cabang;
+use App\Models\barang;
+use App\Models\cabang;
 use App\Models\suplier;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -63,7 +65,13 @@ class ApiCabang extends Controller
                 'token' => 'required',
             ]);
             $uuid = $request->input('uuid');
-            $barang = user_cabang::where('uuid', $uuid)->first();
+            $uuid = user_cabang::where('uuid', $uuid)->first();
+            $id = $uuid->cabang_id;
+            $db_cabang = cabang::where('id', $id)->first();
+            $db_cabang = $db_cabang->database;
+            $barang = DB::table("$db_cabang")->get();
+
+
             return response()->json($barang);
         }
     
