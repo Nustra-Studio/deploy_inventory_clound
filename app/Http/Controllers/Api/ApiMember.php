@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\member;
 use App\Models\poin_member;
+use App\Models\cabang;
 use App\Models\transaction_member;
 use  App\Models\user_cabang;
 use Illuminate\Support\Facades\DB;
@@ -88,7 +89,7 @@ class ApiMember extends Controller
         $uuid = $input['uuid'];
         $user_cabang = user_cabang::where('uuid', $uuid)->first();
         $id_cabang = $user_cabang->id_cabang;
-        $db_cabang = $user_cabang->database;
+        $db_cabang = cabang::where('id', $id_cabang)->value('database');
         $create = DB::table("$db_cabang")->create(
             [
                 'uuid' => Str::random(60),
