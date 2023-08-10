@@ -195,6 +195,7 @@ class ApiMember extends Controller
                 'expait_kode' => time() + 600,
                 'status' => 'member',
                 'alamat' => $input['alamat'],
+'random_kode'=>"0987654321234"
             ];
             $member = member::create($data);
             $member_data = [
