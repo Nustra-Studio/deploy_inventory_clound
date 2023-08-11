@@ -98,7 +98,7 @@ class ApiMember extends Controller
             foreach ($inputs as $input) {
             $user_cabang = user_cabang::where('uuid', $uuid)->first();
             $id_cabang = $user_cabang->id_cabang;
-            $db_cabang = cabang::where('id', $id_cabang)->value('database');
+            $db_cabang = cabang::where('uuid', $id_cabang)->value('database');
             $create = DB::table("$db_cabang")->create(
                 [
                     'uuid' => Str::random(60),
