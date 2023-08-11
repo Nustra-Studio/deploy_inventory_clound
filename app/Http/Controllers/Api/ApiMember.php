@@ -99,7 +99,13 @@ class ApiMember extends Controller
             $user_cabang = user_cabang::where('uuid', $uuid)->first();
             $id_cabang = $user_cabang->cabang_id;
             $db_cabang = cabang::where('uuid', $id_cabang)->value('database');
-                return response()->json($db_cabang, 200);
+                return response()->json([
+                    'success' => true,
+                    'database'=> $db_cabang,
+                    "data"=> $input,
+                    'message' => ' Transaction  Success',
+                ], 200);
+
                 
             }
     return response()->json([
