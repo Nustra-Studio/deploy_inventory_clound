@@ -99,13 +99,19 @@ class ApiMember extends Controller
             $user_cabang = user_cabang::where('uuid', $uuid)->first();
             $id_cabang = $user_cabang->cabang_id;
             $db_cabang = cabang::where('uuid', $id_cabang)->value('database');
-                return response()->json([
-                    'success' => true,
-                    'database'=> $db_cabang,
-                    "data"=> $input,
-                    'message' => ' Transaction  Success',
-                ], 200);
-
+            $create = DB::table("$db_cabang")->create(
+                [
+                    'uuid' => Str::random(60),
+                    'name' => $input['nama'],
+                    'jumlah' => $input['quantity'],
+                    'kode_barang' => $input['barkode'],
+                    'status' => 'penjualan',
+                    'id_member' => $input['id_member'],
+                    'keterangan' => 'penjualan',
+                    'harga_pokok' => $input['harga_pokok'],
+                    'harga_jual' => $input['harga_jual'],
+                ]
+            );
                 
             }
     return response()->json([
