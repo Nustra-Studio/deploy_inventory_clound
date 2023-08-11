@@ -49,6 +49,14 @@ class ApiMember extends Controller
     }
     public function home(Request $request){
         $input = $request->all();
+        $characters = '0123456789';
+        $randomNumber = '';
+        $length = 16;
+        for ($i = 0; $i < $length; $i++) {
+            $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        $member->random_kode = $randomNumber;
+        $member->save();
         $member = member::where('phone', $input['nomor_hp'])->first();
         $text = $member->random_kode;
         $spacedText = chunk_split($text, 4, ' ');
@@ -85,24 +93,27 @@ class ApiMember extends Controller
         return response()->json($data);
     }
     public function transaksi (Request $request){
-        $input = $request->data;
-        $uuid = $input['uuid'];
-        $user_cabang = user_cabang::where('uuid', $uuid)->first();
-        $id_cabang = $user_cabang->id_cabang;
-        $db_cabang = cabang::where('id', $id_cabang)->value('database');
-        $create = DB::table("$db_cabang")->create(
-            [
-                'uuid' => Str::random(60),
-                'name' => $input['nama_barang'],
-                'jumlah' => $input['quantity'],
-                'kode_barang' => $input['barcode'],
-                'status' => $input['penjualan'],
-                'id_member' => $input['id_member'],
-                'keterangan' => $input['penjualan'],
-                'harga_pokok' => $input['harga_pokok'],
-                'harga_jual' => $input['harga_jual'],
-            ]
-        );
+        $inputs = $request->data;
+            foreach ($inputs as $input) {
+            $uuid = $inputs['uuid'];
+            $user_cabang = user_cabang::where('uuid', $uuid)->first();
+            $id_cabang = $user_cabang->id_cabang;
+            $db_cabang = cabang::where('id', $id_cabang)->value('database');
+            $create = DB::table("$db_cabang")->create(
+                [
+                    'uuid' => Str::random(60),
+                    'name' => $input['nama'],
+                    'jumlah' => $input['quantity'],
+                    'kode_barang' => $input['barkode'],
+                    'status' => 'penjualan',
+                    'id_member' => $input['id_member'],
+                    'keterangan' => 'penjualan',
+                    'harga_pokok' => $input['harga_pokok'],
+                    'harga_jual' => $input['harga_jual'],
+                ]
+            );
+                
+            }
     return response()->json([
         'success' => true,
         'message' => ' Transaction  Success',
