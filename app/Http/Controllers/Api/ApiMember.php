@@ -100,7 +100,7 @@ class ApiMember extends Controller
             $id_cabang = $user_cabang->cabang_id;
             $db_cabang = cabang::where('uuid', $id_cabang)->value('database');
             $db_cabang = "transaction_$db_cabang"
-            $create = DB::table("$db_cabang")->create(
+            $create = DB::table($db_cabang)->create(
                 [
                     'uuid' => Str::random(60),
                     'name' => $input['nama'],
