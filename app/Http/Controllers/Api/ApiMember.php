@@ -94,8 +94,8 @@ class ApiMember extends Controller
     }
     public function transaksi (Request $request){
         $inputs = $request->data;
+        $uuid = $inputs['uuid'];
             foreach ($inputs as $input) {
-            $uuid = $inputs['uuid'];
             $user_cabang = user_cabang::where('uuid', $uuid)->first();
             $id_cabang = $user_cabang->id_cabang;
             $db_cabang = cabang::where('id', $id_cabang)->value('database');
