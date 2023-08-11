@@ -23,7 +23,7 @@ class ApiCabang extends Controller
     {
         //
     }
-
+    public function dummy()
     /**
      * Show the form for creating a new resource.
      *
@@ -68,7 +68,7 @@ class ApiCabang extends Controller
             $uuid = $request->input('uuid');
             $uuid = user_cabang::where('uuid', $uuid)->first();
             $id = $uuid->cabang_id;
-            $db_cabang = cabang::where('id', $id)->first();
+            $db_cabang = cabang::where('uuid', $id)->first();
             $db_cabang = $db_cabang->database;
             $barang = DB::table("$db_cabang")->get();
 
