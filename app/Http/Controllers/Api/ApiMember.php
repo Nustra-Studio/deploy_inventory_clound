@@ -49,14 +49,6 @@ class ApiMember extends Controller
     }
     public function home(Request $request){
         $input = $request->all();
-        $characters = '0123456789';
-        $randomNumber = '';
-        $length = 16;
-        for ($i = 0; $i < $length; $i++) {
-            $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        $member->random_kode = $randomNumber;
-        $member->save();
         $member = member::where('phone', $input['nomor_hp'])->first();
         $text = $member->random_kode;
         $spacedText = chunk_split($text, 4, ' ');
