@@ -23,7 +23,9 @@ class ApiCabang extends Controller
     {
         //
     }
-    public function dummy()
+    public function dummy(){
+        
+    }
     /**
      * Show the form for creating a new resource.
      *
