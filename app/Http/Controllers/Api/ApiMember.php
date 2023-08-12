@@ -53,6 +53,16 @@ class ApiMember extends Controller
         $random_kode = rtrim($spacedText);
         $member->random_kode = $random_kode;
         $poin = poin_member::where('id_member', $member->uuid)->first();
+        if(empty($poin)){
+            $poin = [
+                'id' => Str::uuid(60),
+                'id_member' => $member->uuid,
+                'poin' => 0,
+                'status' => 'active',
+            ];
+            poin_member::create($poin);
+            $poin = poin_member::where('id_member', $member->uuid)->first();
+        }
         $transaction = transaction_member::where('id_member', $member->uuid)->limit(5)->get();
         foreach ($transaction as $key => $value) {
             // Format harga (price)
