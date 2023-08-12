@@ -57,6 +57,7 @@ class ApiMember extends Controller
         $member->random_kode = $random_kode;
         $poin = poin_member::where('id_member', $member->uuid)->first();
         if(empty($poin)){
+            $member = member::where('phone', $input['nomor_hp'])->first();
             $poin = [
                 'uuid' => Str::uuid(60),
                 'id_member' => $member->uuid,
