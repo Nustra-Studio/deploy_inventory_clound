@@ -8,7 +8,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\member;
 use App\Models\poin_member;
+use App\Models\cabang;
 use App\Models\transaction_member;
+use  App\Models\user_cabang;
+use Illuminate\Support\Facades\DB;
 
 class ApiMember extends Controller
 {
@@ -90,6 +93,39 @@ class ApiMember extends Controller
             'transaction' => $transaction,
         ];
         return response()->json($data);
+    }
+    public function transaksi (Request $request){
+        $inputs = $request->data;
+        $uuid = $request->id_cabang;
+            foreach ($inputs as $input) {
+            $user_cabang = user_cabang::where('uuid', $uuid)->first();
+            $id_cabang = $user_cabang->cabang_id;
+            $db_cabang = cabang::where('uuid', $id_cabang)->value('database');
+            $db_cabang = "transaction_$db_cabang";
+            $create = DB::table($db_cabang)->insert(
+                [
+                    'uuid' => Str::random(60),
+                    'name' => $input['nama'],
+                    'jumlah' => $input['quantity'],
+                    'kode_barang' => $input['barkode'],
+                    'status' => 'penjualan',
+                    'id_member' => $input['id_member'],
+                    'keterangan' => 'penjualan',
+                    'harga_pokok' => $input['harga_pokok'],
+                    'harga_jual' => $input['harga_jual'],
+                ]
+            );
+                
+            }
+    return response()->json([
+        'success' => true,
+        'message' => ' Transaction  Success',
+    ],200);
+
+
+        
+        
+        
     }
     public function login(Request $request){
         
@@ -173,6 +209,7 @@ class ApiMember extends Controller
                 'expait_kode' => time() + 600,
                 'status' => 'member',
                 'alamat' => $input['alamat'],
+'random_kode'=>"0987654321234"
             ];
             $member = member::create($data);
             $member_data = [
