@@ -11,7 +11,7 @@ class poin_member extends Model
     protected $table = 'poin_members';
     protected $fillable = [
         'uuid',
-        'member_id',
+        'id_member',
         'poin',
         'status',
         'expaid'
