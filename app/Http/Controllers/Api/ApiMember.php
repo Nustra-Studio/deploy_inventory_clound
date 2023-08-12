@@ -58,7 +58,7 @@ class ApiMember extends Controller
         $poin = poin_member::where('id_member', $member->uuid)->first();
         if(empty($poin)){
             $poin = [
-                'id' => Str::uuid(60),
+                'uuid' => Str::uuid(60),
                 'id_member' => $member->uuid,
                 'poin' => 0,
                 'status' => 'active',
