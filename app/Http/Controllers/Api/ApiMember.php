@@ -32,7 +32,7 @@ class ApiMember extends Controller
                 'success' => false,
                 'message' => 'kode telah kadaluarsa',
             ];
-            return response()->json($data);
+            return response()->json($data,401);
         }
         else{
             $poin = poin_member::where('id_member', $member->uuid)->first();
