@@ -35,6 +35,10 @@ class ApiCabang extends Controller
     {
         //
     }
+        public function listcabang(){
+        $cabang = cabang::all();
+        return response()->json($cabang);
+    }
     public function supplier(){
         $supplier = suplier::all();
         return response()->json($supplier);
