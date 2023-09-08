@@ -30,25 +30,29 @@ class ApiOwner extends Controller
     }
     public function cabangbarang(){
         $cabang = cabang::all();
+        
+        $results = [];
+
         foreach($cabang as $datas){
             $namas = $datas->nama;
-            if($namas == "Toko Bandung"){
-
-            }
-            else{
-            $nama = str_replace(' ', '_', $namas);
-            $database = "transaction_cabang_$nama";
-            $startDate = now()->subWeek(); // Mengambil tanggal satu minggu yang lalu dari sekarang
-            $endDate = now(); // Mengambil tanggal saat ini
-            $datas = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
+        
+            if($namas !== "Toko Bandung"){ // Jika bukan "Toko Bandung"
+                $nama = str_replace(' ', '_', $namas);
+                $database = "transaction_cabang_$nama";
+                $startDate = now()->subWeek();
+                $endDate = now();
+        
+                $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
+        
+                $results = array_merge($results, $result);
             }
         }
-        return response()->json(
-            [ 
-                "hasil"=>$datas,
-                "cabang"=>$namas
-            ]
-        );
+        
+        return response()->json([
+            "hasil" => $results,
+            "cabang" => $namas // Ini akan berisi nama cabang terakhir dalam loop
+        ]);
+        
         
     }
     public function gudangadd(){
