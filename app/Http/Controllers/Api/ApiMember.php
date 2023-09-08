@@ -103,6 +103,7 @@ class ApiMember extends Controller
             $id_cabang = $user_cabang->cabang_id;
             $db_cabang = cabang::where('uuid', $id_cabang)->value('database');
             $db_cabang = "transaction_$db_cabang";
+            $dates = date('Y-m-d H:i:s');
             $create = DB::table($db_cabang)->insert(
                 [
                     'uuid' => Str::random(60),
@@ -114,6 +115,7 @@ class ApiMember extends Controller
                     'keterangan' => 'penjualan',
                     'harga_pokok' => $input['harga_pokok'],
                     'harga_jual' => $input['harga_jual'],
+                    'create_at' => $dates
                 ]
             );
                 

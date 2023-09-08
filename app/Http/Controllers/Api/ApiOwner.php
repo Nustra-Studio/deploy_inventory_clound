@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\user_cabang;
+use App\Models\barang;
+use App\Models\cabang;
+use App\Models\suplier;
+use DB;
 
 class ApiOwner extends Controller
 {
@@ -15,6 +20,32 @@ class ApiOwner extends Controller
     public function index()
     {
         //
+    }
+    public function cabang(){
+        $cabang = cabang::all();
+        return response()->json($cabang);
+    }
+    public function cabanglaporan(){
+
+    }
+    public function cabangbarang(){
+        $cabang = cabang::all();
+        foreach($cabang as $datas){
+            $namas = $datas->nama;
+            $nama = str_replace(' ', '_', $namas);
+            $database = "transaction_$nama";
+            $startDate = now()->subWeek(); // Mengambil tanggal satu minggu yang lalu dari sekarang
+            $endDate = now(); // Mengambil tanggal saat ini
+            $data = $database::whereBetween('create_at', [$startDate, $endDate])->get();
+            return response()->json($data);
+        }
+        
+    }
+    public function gudangadd(){
+
+    }
+    public function gudangout(){
+
     }
 
     /**

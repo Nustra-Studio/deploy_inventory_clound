@@ -17,14 +17,14 @@ class ApiOwner
      */
     public function handle(Request $request, Closure $next)
     {
-        $token = $request->input('access_token');
-        $token_db = member::where('kode_akses', $token)->value('kode_akses');
-        if (!$token ) {
-            return response()->json(['message' => 'pleast enter token akses'], 401);
-        }
-        elseif ($token != $token_db) {
-            return response()->json(['message' => 'token akses tidak valid'], 401);
-        }
+        // $token = $request->input('access_token');
+        // $token_db = member::where('kode_akses', $token)->value('kode_akses');
+        // if (!$token ) {
+        //     return response()->json(['message' => 'pleast enter token akses'], 401);
+        // }
+        // elseif ($token != $token_db) {
+        //     return response()->json(['message' => 'token akses tidak valid'], 401);
+        // }
 
         return $next($request);
     }
