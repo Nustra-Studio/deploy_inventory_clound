@@ -48,7 +48,7 @@ Route::prefix('member')->group(function () {
 
 Route::prefix('owner')->group(function (){
     Route::post('/login', 'Api\ApiOwner@login')->name('api.owner.login');
-    Route::group(['middleware'=>'ApiOwener'], function(){
+    Route::group(['middleware'=>'ApiOwner'], function(){
         // get cabang name
         Route::get('/listcabang', 'Api\ApiOwner@cabang')->name('api.owner.cabang');
         Route::get('/laporan','Api\ApiOwner@cabanglaporan')->name('api.owner.laporan');
