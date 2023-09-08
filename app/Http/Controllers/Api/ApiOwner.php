@@ -47,8 +47,15 @@ foreach($cabang as $datas){
         $results = $results->concat($result);
     }
 }
+        $data = json_decode($results, true);
 
-return response()->json($results);
+        // Menggunakan array_unique untuk menghapus duplikat id
+        $unique_ids = array_unique(array_column($data, 'id'));
+
+        // Menghitung jumlah id unik
+        $total_unique_ids = count($unique_ids);
+
+        return response()->json($total_unique_ids);
 
         
         
