@@ -31,7 +31,7 @@ class ApiOwner extends Controller
     public function cabangbarang(){
         $cabang = cabang::all();
         
-        $results = [];
+        $results = collect();
 
         foreach($cabang as $datas){
             $namas = $datas->nama;
@@ -44,7 +44,7 @@ class ApiOwner extends Controller
         
                 $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
         
-                $results = array_merge($results, $result);
+                $results = $results->concat($result);
             }
         }
         
@@ -52,6 +52,7 @@ class ApiOwner extends Controller
             "hasil" => $results,
             "cabang" => $namas // Ini akan berisi nama cabang terakhir dalam loop
         ]);
+        
         
         
     }
