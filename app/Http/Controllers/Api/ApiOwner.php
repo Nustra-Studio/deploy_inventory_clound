@@ -33,7 +33,7 @@ class ApiOwner extends Controller
         foreach($cabang as $datas){
             $namas = $datas->nama;
             $nama = str_replace(' ', '_', $namas);
-            $database = "transaction_$nama";
+            $database = "transaction_cabang_$nama";
             $startDate = now()->subWeek(); // Mengambil tanggal satu minggu yang lalu dari sekarang
             $endDate = now(); // Mengambil tanggal saat ini
             $data = DB::table($database)->whereBetween('create_at', [$startDate, $endDate])->get();
