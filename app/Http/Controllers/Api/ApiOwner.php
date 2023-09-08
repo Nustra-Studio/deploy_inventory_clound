@@ -32,12 +32,17 @@ class ApiOwner extends Controller
         $cabang = cabang::all();
         foreach($cabang as $datas){
             $namas = $datas->nama;
+            if($namas == "Toko Bandung"){
+
+            }
+            else{
             $nama = str_replace(' ', '_', $namas);
             $database = "transaction_cabang_$nama";
             $startDate = now()->subWeek(); // Mengambil tanggal satu minggu yang lalu dari sekarang
             $endDate = now(); // Mengambil tanggal saat ini
             $data = DB::table($database)->whereBetween('create_at', [$startDate, $endDate])->get();
             return response()->json($data);
+            }
         }
         
     }
