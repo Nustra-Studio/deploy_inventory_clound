@@ -43,14 +43,17 @@ class ApiOwner extends Controller
                 $endDate = now();
         
                 $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
+                $result =[
+                    "cabang"=>$namas,
+                    "data"=>$result
+                ]
         
                 $results = $results->concat($result);
             }
         }
         
         return response()->json([
-            "hasil" => $results,
-            "cabang" => $namas // Ini akan berisi nama cabang terakhir dalam loop
+            "hasil" => $results
         ]);
         
         
