@@ -51,7 +51,7 @@ Route::prefix('owner')->group(function (){
     Route::group(['middleware'=>'ApiOwener'], function(){
         // get cabang name
         Route::get('/listcabang', 'Api\ApiOwner@cabang')->name('api.owner.cabang');
-        Route::get('/laporan','Api\ApiOwner@cabanglaporan')->name('api.owner.laporan')
+        Route::get('/laporan','Api\ApiOwner@cabanglaporan')->name('api.owner.laporan');
         Route::get('/home', 'Api\ApiOwner@cabangbarang')->name('api.owner.cabangbarang');
         Route::get('/gudang/add', 'Api\ApiOwner@gudangadd')->name('api.owner.gudangadd');
         Route::get('/gudang/out', 'Api\ApiOwner@gudangout')->name('api.owner.gudangout');
