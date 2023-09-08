@@ -31,31 +31,25 @@ class ApiOwner extends Controller
     public function cabangbarang(){
         $cabang = cabang::all();
         
-        $results = collect();
+$results = collect();
 
-        foreach($cabang as $datas){
-            $namas = $datas->nama;
-        
-            if($namas !== "Toko Bandung"){ // Jika bukan "Toko Bandung"
-                $nama = str_replace(' ', '_', $namas);
-                $database = "transaction_cabang_$nama";
-                $startDate = now()->subWeek();
-                $endDate = now();
-        
-                $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
-                $result =[
-                    "cabang"=>$namas,
-                    "data"=>$result
-                ];
-        
-                $results = $results->concat($result);
-            }
-        }
-        
-        return response()->json([
-            "hasil" => $results
-        ]);
-        
+foreach($cabang as $datas){
+    $namas = $datas->nama;
+
+    if($namas !== "Toko Bandung"){ // Jika bukan "Toko Bandung"
+        $nama = str_replace(' ', '_', $namas);
+        $database = "transaction_cabang_$nama";
+        $startDate = now()->subWeek();
+        $endDate = now();
+
+        $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
+
+        $results = $results->concat($result);
+    }
+}
+
+return response()->json($results);
+
         
         
     }
