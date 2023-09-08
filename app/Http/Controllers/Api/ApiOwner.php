@@ -41,11 +41,12 @@ class ApiOwner extends Controller
             $startDate = now()->subWeek(); // Mengambil tanggal satu minggu yang lalu dari sekarang
             $endDate = now(); // Mengambil tanggal saat ini
             $datas = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
-            $data = [ 
-                "hasil"=>$datas,
-                "cabang"=>$namas
-            ]
-            return response()->json($data);
+            return response()->json(
+                [ 
+                    "hasil"=>$datas,
+                    "cabang"=>$namas
+                ]
+            );
             }
         }
         
