@@ -30,33 +30,40 @@ class ApiOwner extends Controller
     }
     public function cabangbarang(){
         $cabang = cabang::all();
-        
-$results = collect();
+        $results = collect();
 
-foreach($cabang as $datas){
-    $namas = $datas->nama;
+        foreach($cabang as $datas){
+            $namas = $datas->nama;
 
-    if($namas !== "Toko Bandung"){ // Jika bukan "Toko Bandung"
-        $nama = str_replace(' ', '_', $namas);
-        $database = "transaction_cabang_$nama";
-        $startDate = now()->subWeek();
-        $endDate = now();
+            if($namas !== "Toko Bandung"){ // Jika bukan "Toko Bandung"
+                $nama = str_replace(' ', '_', $namas);
+                $database = "transaction_cabang_$nama";
+                $startDate = now()->subWeek();
+                $endDate = now();
 
-        $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
+                $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
 
-        $results = $results->concat($result);
+                $results = $results->concat($result);
+            }
+        }
+            $data = json_decode($results, true);
+
+            $id_counts_per_day = [];
+
+            foreach ($data as $entry) {
+                $created_at = new DateTime($entry['created_at']);
+                $date = $created_at->format('Y-m-d');
+                $id_value = $entry['id'];
+
+                if (array_key_exists($date, $id_counts_per_day)) {
+                    $id_counts_per_day[$date][$id_value] = isset($id_counts_per_day[$date][$id_value]) ? $id_counts_per_day[$date][$id_value] + 1 : 1;
+                } else {
+                    $id_counts_per_day[$date][$id_value] = 1;
+                }
+            }
+
+            return response()->json($id_counts_per_day);
     }
-}
-        $data = json_decode($results, true);
-
-        // Menggunakan array_unique untuk menghapus duplikat id
-        $unique_ids = array_unique(array_column($data, 'id'));
-
-        // Menghitung jumlah id unik
-        $total_unique_ids = count($unique_ids);
-
-        return response()->json($total_unique_ids);
-
         
         
     }
