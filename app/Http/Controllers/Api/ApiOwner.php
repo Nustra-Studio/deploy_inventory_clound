@@ -40,7 +40,7 @@ class ApiOwner extends Controller
             $database = "transaction_cabang_$nama";
             $startDate = now()->subWeek(); // Mengambil tanggal satu minggu yang lalu dari sekarang
             $endDate = now(); // Mengambil tanggal saat ini
-            $data = DB::table($database)->whereBetween('create_at', [$startDate, $endDate])->get();
+            $data = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
             return response()->json($data);
             }
         }

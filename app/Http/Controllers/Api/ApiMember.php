@@ -115,7 +115,7 @@ class ApiMember extends Controller
                     'keterangan' => 'penjualan',
                     'harga_pokok' => $input['harga_pokok'],
                     'harga_jual' => $input['harga_jual'],
-                    'create_at' => $dates
+                    'created_at' => $dates
                 ]
             );
                 
