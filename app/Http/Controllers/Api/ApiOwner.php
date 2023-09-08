@@ -65,8 +65,6 @@ class ApiOwner extends Controller
             return response()->json($id_counts_per_day);
     }
         
-        
-    }
     public function gudangadd(){
 
     }
