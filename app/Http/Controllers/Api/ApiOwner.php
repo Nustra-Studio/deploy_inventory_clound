@@ -42,11 +42,10 @@ class ApiOwner extends Controller
             $endDate = now(); // Mengambil tanggal saat ini
             $datas = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
             }
-            $data[] = $datas
         }
         return response()->json(
             [ 
-                "hasil"=>$data,
+                "hasil"=>$datas,
                 "cabang"=>$namas
             ]
         );
