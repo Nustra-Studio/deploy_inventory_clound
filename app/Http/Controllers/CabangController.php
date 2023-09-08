@@ -49,7 +49,7 @@ class CabangController extends Controller
         $database = "cabang_$nama";
         $query = "
         CREATE TABLE cabang_$nama (
-            `id` bigint(20) UNSIGNED AUTO_INCREMENT NOT NULL,
+            `id` bigint(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
             `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
             `category_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
             `id_supplier` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -69,7 +69,7 @@ class CabangController extends Controller
         DB::statement($query);
         $query2 = " 
         CREATE TABLE `transaction_$database` (
-            `id` bigint(20) UNSIGNED AUTO_INCREMENT NOT NULL,
+            `id` bigint(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
             `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
             `name` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `jumlah` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
