@@ -46,7 +46,7 @@ class ApiOwner extends Controller
                 $result =[
                     "cabang"=>$namas,
                     "data"=>$result
-                ]
+                ];
         
                 $results = $results->concat($result);
             }
