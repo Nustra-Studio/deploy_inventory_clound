@@ -12,6 +12,7 @@ use App\Models\cabang;
 use App\Models\transaction_member;
 use  App\Models\user_cabang;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ApiMember extends Controller
 {
@@ -98,28 +99,52 @@ class ApiMember extends Controller
     public function transaksi (Request $request){
         $inputs = $request->data;
         $uuid = $request->id_cabang;
+        $transaction_member = 0;
+        $id_member = [];
             foreach ($inputs as $input) {
-            $user_cabang = user_cabang::where('uuid', $uuid)->first();
-            $id_cabang = $user_cabang->cabang_id;
-            $db_cabang = cabang::where('uuid', $id_cabang)->value('database');
+            // $user_cabang = user_cabang::where('uuid', $uuid)->first();
+            // $id_cabang = $user_cabang->cabang_id;
+            $db_cabang = cabang::where('uuid', $uuid)->value('database');
             $db_cabang = "transaction_$db_cabang";
             $dates = date('Y-m-d H:i:s');
-            $create = DB::table($db_cabang)->insert(
-                [
-                    'uuid' => Str::random(60),
-                    'name' => $input['nama'],
-                    'jumlah' => $input['quantity'],
-                    'kode_barang' => $input['barkode'],
-                    'status' => 'penjualan',
-                    'id_member' => $input['id_member'],
-                    'keterangan' => 'penjualan',
-                    'harga_pokok' => $input['harga_pokok'],
-                    'harga_jual' => $input['harga_jual'],
-                    'created_at' => $dates
-                ]
-            );
+                if($input['id_member']!== null ){
+                    $uang = $input['quantity'] * $input['harga_jual'];
+                    $transaction_member += $uang;
+                    $id_member[] = $input['id_member'];
+                }
+            // $create = DB::table($db_cabang)->insert(
+            //     [
+            //         'uuid' => Str::random(60),
+            //         'name' => $input['nama'],
+            //         'jumlah' => $input['quantity'],
+            //         'kode_barang' => $input['barkode'],
+            //         'status' => 'penjualan',
+            //         'id_member' => $input['id_member'],
+            //         'keterangan' => 'penjualan',
+            //         'harga_pokok' => $input['harga_pokok'],
+            //         'harga_jual' => $input['harga_jual'],
+            //         'created_at' => $dates
+            //     ]
+            // );
                 
             }
+            $uuid_member = member::where('phone',$id_member[0])->first();
+            $poin = poin_member::where('id_member', $uuid_member->uuid)->first();
+            // $created_at = $poin->created_at;
+            // $tahunDepan = $created_at->addYear();
+            $basis = 25000;
+            $hasilPembagian = $transaction_member / $basis;
+            $hasilBulatan = floor($hasilPembagian);
+            $poin = $poin->poin += $hasilBulatan;
+            $data = [
+                'uuid' => Str::uuid(60),
+                'id_member' => $uuid_member->uuid,
+                'poin' => $poin,
+                'status'=>'active',
+                'expaid'=> "",
+            ];
+        poin_member::where('id_member',$uuid_member->uuid)->update($data);
+
     return response()->json([
         'success' => true,
         'message' => ' Transaction  Success',
