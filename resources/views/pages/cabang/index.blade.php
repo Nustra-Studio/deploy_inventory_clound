@@ -54,11 +54,13 @@
                 <td>
                   <div class="text-end">
                     <a href="/cabang/{{$item->uuid}}/edit" class="btn btn-primary btn-sm">Edit</a>
-                    <form id="form-delete-{{ $item->id }}" action="{{ route('cabang.destroy', $item->uuid) }}" method="POST" style="display: none;">
+                    <form id="form-delete-{{ $item->id }}" action="{{ route('cabang.destroy', $item->id) }}" method="POST">
                       @csrf
                       @method('DELETE')
+                      <div class="text-end">
+                          <button type="submit" class="btn btn-danger btn-sm delete-button" data-form-delete="{{ $item->id }}">Delete</button>
+                      </div>
                   </form>
-                  <button class="btn btn-danger btn-sm delete-button" data-form-delete="{{ $item->id }}">Delete</button>
                   </div>
               </tr>
           @endforeach

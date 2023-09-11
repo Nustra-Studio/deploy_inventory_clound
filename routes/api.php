@@ -22,6 +22,7 @@ Route::group(['middleware' => 'ApiCabang'], function () {
     Route::get('/barang', 'Api\ApiCabang@barang')->name('api.barang');
     Route::get('/supplier', 'Api\ApiCabang@supplier')->name('api.supplier');
     Route::post('/createuser','Api\ApiCabang@usercreate')->name('api.createuser');
+    Route::post('/deletetransaction','Api\ApiCabang@deletebarang')->name('api.deletebarang');
     // listcabang dengan model
     Route::get('/listcabang', 'Api\ApiCabang@listcabang')->name('api.listcabang');
     Route::prefix('cabangmember')->group(function () {
@@ -55,6 +56,8 @@ Route::prefix('owner')->group(function (){
         Route::get('/home', 'Api\ApiOwner@cabangbarang')->name('api.owner.cabangbarang');
         Route::get('/gudang/add', 'Api\ApiOwner@gudangadd')->name('api.owner.gudangadd');
         Route::get('/gudang/out', 'Api\ApiOwner@gudangout')->name('api.owner.gudangout');
+        Route::get('/top-10', 'Api\ApiOwner@top')->name('api.owner.top');
+        Route::get('/hariancabang','Api\ApiOwner@hariancabang')->name('api.harian.cabang');
 
     });
 });

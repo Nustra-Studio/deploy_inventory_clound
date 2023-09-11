@@ -32,39 +32,122 @@ class ApiOwner extends Controller
     public function cabangbarang(){
         $cabang = cabang::all();
         $results = collect();
-
-        foreach($cabang as $datas){
+        
+        foreach ($cabang as $datas) {
             $namas = $datas->nama;
-
-            if($namas !== "Toko Bandung"){ // Jika bukan "Toko Bandung"
+        
+            if ($namas !== "Toko Bandung") { // Jika bukan "Toko Bandung"
                 $nama = str_replace(' ', '_', $namas);
                 $database = "transaction_cabang_$nama";
                 $startDate = now()->subWeek();
                 $endDate = now();
-
+        
                 $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
-
+        
                 $results = $results->concat($result);
             }
         }
-            $data = json_decode($results, true);
-
-            $id_counts_per_day = [];
-
-            foreach ($data as $entry) {
-                $created_at = new DateTime($entry['created_at']);
-                $date = $created_at->format('Y-m-d');
-                $id_value = $entry['id'];
-
-                if (array_key_exists($date, $id_counts_per_day)) {
-                    $id_counts_per_day[$date][$id_value] = isset($id_counts_per_day[$date][$id_value]) ? $id_counts_per_day[$date][$id_value] + 1 : 1;
-                } else {
-                    $id_counts_per_day[$date][$id_value] = 1;
-                }
+        
+        $data = json_decode($results, true);
+        
+        $id_counts_per_day = [];
+        
+        foreach ($data as $entry) {
+            $created_at = new DateTime($entry['created_at']);
+            $date = $created_at->format('Y-m-d');
+            $id_value = $entry['id'];
+            $jumlah = 0;
+        
+            // Mengecek apakah tanggal sudah ada dalam array atau belum
+            if (array_key_exists($date, $id_counts_per_day)) {
+                // Tanggal sudah ada, tambahkan jumlah id
+                $id_counts_per_day[$date] += $entry['jumlah'];
+            } else {
+                // Tanggal belum ada, inisialisasi jumlah id dengan 1
+                $id_counts_per_day[$date] = 1;
             }
-
-            return response()->json($id_counts_per_day);
+        }
+        
+        // Mengurutkan hasil berdasarkan tanggal terkecil
+        ksort($id_counts_per_day);
+        
+        return response()->json($id_counts_per_day);
+        
+        
     }
+    public function top(){
+        $cabang = cabang::all();
+        $results = collect();
+        $id_counts = [];
+        $id_uuid = [];
+        $id_name = [];
+        
+        foreach ($cabang as $datas) {
+            $namas = $datas->nama;
+        
+            if ($namas !== "Toko Bandung") { // Jika bukan "Toko Bandung"
+                $nama = str_replace(' ', '_', $namas);
+                $database = "transaction_cabang_$nama";
+                $startDate = now()->subWeek();
+                $endDate = now();
+        
+                $result = DB::table($database)->get();
+                $results = $results->concat($result);
+            }
+        }
+        
+        $data = $results->toArray();
+        
+        foreach ($data as $item) {
+            $data_barang = $item->kode_barang;
+        
+            if (array_key_exists($data_barang, $id_counts)) {
+                $id_counts[$data_barang] += $item->jumlah;
+                $id_name[$data_barang] = $item->name;
+                $id_uuid[$data_barang] = $item->uuid;
+            } else {
+                $id_counts[$data_barang] = $item->jumlah;
+                $id_name[$data_barang] = $item->name;
+                $id_uuid[$data_barang] = $item->uuid;
+            }
+        }
+        
+        $data_final = [];
+        
+        foreach ($id_uuid as $kode_barang => $name) {
+            $data_final[] = [
+                "name" => $id_name[$kode_barang],
+                "kode_barang" => $id_uuid[$kode_barang],
+                "jumlah" => $id_counts[$kode_barang]
+            ];
+        }
+        
+        return response()->json($data_final);
+        
+        
+    }
+    public function hariancabang(){
+        $cabang = cabang::all();
+        $results = [];
+        foreach ($cabang as $datas) {
+            $namas = $datas->nama;
+        
+            if ($namas!== "Toko Bandung") { // Jika bukan "Toko Bandung"
+                $nama = str_replace(' ', '_', $namas);
+                $database = "transaction_cabang_$nama";
+                $startDate = now()->subDay(); // Change to subDay() for daily data
+                $endDate = now();
+
+    $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])->get();
+                $result = [
+                    "name" => $namas,
+                    "data" => $result
+                ];
+                $results[] = $result;
+            }
+        }
+        return response()->json($results, 200);
+    } 
         
     public function gudangadd(){
 

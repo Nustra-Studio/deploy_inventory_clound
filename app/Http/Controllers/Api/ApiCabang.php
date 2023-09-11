@@ -109,7 +109,20 @@ class ApiCabang extends Controller
     {
         //
     }
+    public function deletebarang (Request $request){
+        $uuid = $request->input('uuid');
+        $uuid = user_cabang::where('uuid', $uuid)->first();
+        $id = $uuid->cabang_id;
+        $db_cabang = cabang::where('uuid', $id)->first();
+        $db_cabang = $db_cabang->database;
+        $barang = DB::table("$db_cabang")->get();
+        foreach ($barang as $item){
+            DB::table("$db_cabang")->where('uuid', $item->uuid)->delete();
+        }
+        return response()->json("Semua data telah dihapus.", 200);
 
+
+    }
     /**
      * Display the specified resource.
      *
