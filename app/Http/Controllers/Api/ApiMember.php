@@ -111,22 +111,29 @@ class ApiMember extends Controller
                     $uang = $input['quantity'] * $input['harga_jual'];
                     $transaction_member += $uang;
                     $id_member[] = $input['id_member'];
+                    $history = [
+                        'uuid' => Str::uuid(60),
+                        'nama_barang' =>$input['nama'],
+                        'jumlah_barang'=>$input['quantity'],
+                        'harga'=> $input['harga_jual'],
+                        'id_member'=>$input['id_member']
+                    ]
+                    transaction_member::insert($history);
                 }
-            // $create = DB::table($db_cabang)->insert(
-            //     [
-            //         'uuid' => Str::random(60),
-            //         'name' => $input['nama'],
-            //         'jumlah' => $input['quantity'],
-            //         'kode_barang' => $input['barkode'],
-            //         'status' => 'penjualan',
-            //         'id_member' => $input['id_member'],
-            //         'keterangan' => 'penjualan',
-            //         'harga_pokok' => $input['harga_pokok'],
-            //         'harga_jual' => $input['harga_jual'],
-            //         'created_at' => $dates
-            //     ]
-            // );
-                
+            $create = DB::table($db_cabang)->insert(
+                [
+                    'uuid' => Str::random(60),
+                    'name' => $input['nama'],
+                    'jumlah' => $input['quantity'],
+                    'kode_barang' => $input['barkode'],
+                    'status' => 'penjualan',
+                    'id_member' => $input['id_member'],
+                    'keterangan' => 'penjualan',
+                    'harga_pokok' => $input['harga_pokok'],
+                    'harga_jual' => $input['harga_jual'],
+                    'created_at' => $dates
+                ]
+            );
             }
             $uuid_member = member::where('phone',$id_member[0])->first();
             $poin = poin_member::where('id_member', $uuid_member->uuid)->first();
