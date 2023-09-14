@@ -118,7 +118,7 @@ class ApiMember extends Controller
                         'harga'=> $input['harga_jual'],
                         'id_member'=>$input['id_member']
                     ]
-                    transaction_member::insert($history);
+                    transaction_member::create($history);
                 }
             $create = DB::table($db_cabang)->insert(
                 [
