@@ -111,14 +111,13 @@ class ApiMember extends Controller
                     $uang = $input['quantity'] * $input['harga_jual'];
                     $transaction_member += $uang;
                     $id_member[] = $input['id_member'];
-                    $history = [
+                    $add =transaction_member::create( [
                         'uuid' => Str::uuid(60),
                         'nama_barang' =>$input['nama'],
                         'jumlah_barang'=>$input['quantity'],
                         'harga'=> $input['harga_jual'],
                         'id_member'=>$input['id_member']
-                    ]
-                    transaction_member::create($history);
+                    ]);
                 }
             $create = DB::table($db_cabang)->insert(
                 [
