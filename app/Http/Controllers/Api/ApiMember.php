@@ -68,7 +68,7 @@ class ApiMember extends Controller
             poin_member::create($poin);
             $poin = poin_member::where('id_member', $member->uuid)->first();
         }
-        $transaction = transaction_member::where('id_member', $member->uuid)->limit(5)->get();
+        $transaction = transaction_member::where('id_member', $member->phone)->limit(5)->get();
         foreach ($transaction as $key => $value) {
             // Format harga (price)
             $amount = $transaction[$key]->harga;
