@@ -53,6 +53,11 @@ class BarangController extends Controller
     public function inputcreate(Request $request){
         $data = $request->input('data_table_values');
         $data = json_decode($data, true);
+        $bulan = date('m');
+        $tahun = date('y');
+        $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
+        $singkatan = "PM";
+        $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
         $uuid = Str::uuid()->toString();
         foreach ($data as $row) {
             $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
@@ -78,6 +83,7 @@ class BarangController extends Controller
             'harga_pokok' => $kode->harga_pokok,
             'harga_jual' => $kode->harga_jual,
             'id_supllayer' => $supplier,
+            'kode_transaction'=>$kode_tranasction,
             'status' => 'masuk',
         ];
         $push = history_transaction::create($data_history);

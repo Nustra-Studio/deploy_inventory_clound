@@ -70,9 +70,17 @@ class SupplierController extends Controller
     {
         //
     }
-    public function caribarang($id){
+    public function caribarang(Request $request,$id){
         $ids = suplier::where('nama', $id)->value('uuid');
-        $data = barang::where('id_supplier', $ids)->get();
+        if($request->filled('q')){
+            $data = barang::where('id_supplier', $ids)->where('name', 'LIKE', '%'. $request->get('q'). '%')->get();
+        }
+        elseif($request->filled('namaproduct')){
+            $data = barang::where('id_supplier', $ids)->where('name', 'LIKE', '%'. $request->get('namaproduct'). '%')->get();
+        }
+        else{
+            $data = barang::where('id_supplier', $ids)->get();
+        }
         return response()->json($data);
     }
     /**

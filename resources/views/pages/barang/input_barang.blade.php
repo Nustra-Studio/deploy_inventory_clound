@@ -1,9 +1,10 @@
 @extends('layout.master')
 
 @section('content')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>  --}}
+
 @php
     use App\Models\category_cabang;
     use App\Models\suplier;
@@ -154,11 +155,11 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label">Harga Pokok</label>
-                                            <input class="form-control mb-4 mb-md-0" name="harga_pokok" type="number" />
+                                            <input class="form-control mb-4 mb-md-0" id="harga_pokok" name="harga_pokok" type="number" />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Harga Jual</label>
-                                            <input class="form-control" name="harga_jual" type="number" />
+                                            <input class="form-control" id="harga_jual" name="harga_jual" type="number" />
                                         </div>
                                     </div>
                                     <label for="">Harga Khusus</label>
@@ -284,36 +285,89 @@
                         }
                     </script>
                     <script>
+                        function handleProductChange(event) {
+                        const selectedProduct = event.target.value; // Assuming the value contains the product name
+                        console.log('Selected product:', selectedProduct);
+                        changeharga(selectedProduct);
+                    }
 
-            function update() {
-				const supplier = document.getElementById('supplier-input').value;
-                var Url = '/product/'+ supplier +'/show';
-                $('#product-name-input').select2({
-                    placeholder: 'Select Product',
-                    ajax: {
-                        url: Url,
-                        dataType: 'json',
-                        delay: 250,
-                        processResults: function (data) {
-                            return {
-                                results: $.map(data, function (item) {
-                                    return {
-                                        text: item.name,
-                                        id: item.name
+                        function updateSelect2(supplier) {
+                            const url = `/product/${supplier}/show`;
+                    
+                            $("#product-name-input").select2({
+                                ajax: {
+                                    url: url,
+                                    dataType: 'json',
+                                    delay: 250,
+                                    processResults: function (data) {
+                                        return {
+                                            results: $.map(data, function (item) {
+                                                return {
+                                                    text: item.name,
+                                                    id: item.name
+                                                };
+                                            })
+                                        };
+                                    },
+                                    cache: true
+                                },
+                                placeholder: 'Select Product',
+                                minimumResultsForSearch: 0,
+                                // containerCssClass: 'custom-select2-container' // Check this line
+                            }).on('change', handleProductChange);
+                        }
+                    
+                        function handleSupplierChange() {
+                            const supplier = document.getElementById('supplier-input').value;
+                            $("select.select2-hidden-accessible").select2('destroy');
+                            updateSelect2(supplier);
+                        }
+                    
+                        // Initial setup
+                        function initialize() {
+                            const selectElement = document.getElementById("supplier-input");
+                            selectElement.addEventListener('change', handleSupplierChange);
+                            handleSupplierChange(); // Call handleSupplierChange initially
+                        }
+                    
+                        // Call initialize when the document is ready
+                        document.addEventListener('DOMContentLoaded', initialize);
+                        function changeharga (event){
+                            const supplier = document.getElementById('supplier-input').value;
+                            const url = `/product/${supplier}/show?namaproduct=${event}`;
+                            $.ajax({
+                                    type: 'GET',
+                                    url: url,
+                                    success: function(data) {
+                                    // Assuming the response data is an array with the structure you provided
+                                    if (Array.isArray(data) && data.length > 0) {
+                                        // Extract harga_pokok and harga_jual from the first item in the array
+                                        var hargaPokok = data[0].harga_pokok;
+                                        var hargaJual = data[0].harga_jual;
+
+                                        // Log the extracted values
+                                        console.log('Harga Pokok:', hargaPokok);
+                                        console.log('Harga Jual:', hargaJual);
+                                        var newPokok = parseInt(hargaPokok);
+                                        var newJual = parseInt(hargaJual);
+                                        // Get the input element by its ID
+                                        var inputpokok = document.getElementById("harga-pokok-input");
+                                        var inputjual = document.getElementById("harga-jual-input");
+                                        // Set the value of the input element to the new value
+                                        inputpokok.value = newPokok;
+                                        inputjual.value = newJual;
+                                    } else {
+                                        console.error('Invalid or empty response data.');
                                     }
-                                })
-                            };
-                        },
-                        cache: true
-                    },// Gunakan tema bootstrap
-                    minimumResultsForSearch: 0,
-                    containerCssClass: 'custom-select2-container'
-                });
-                
-			}
+                                    },
+                                    error: function(jqXHR, textStatus, errorThrown) {
+                                    console.error('Error:', textStatus, errorThrown);
+                                    }
+                                });
+                        }
 
-			update();
-</script>
+                    </script>
+    
                     
                     
                 </div>
@@ -347,3 +401,11 @@
     <script src="{{ asset('assets/js/pickr.js') }}"></script>
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
 @endpush --}}
+@push('custom-scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+@endpush

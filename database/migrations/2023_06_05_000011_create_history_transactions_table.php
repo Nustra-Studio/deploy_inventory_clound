@@ -29,6 +29,7 @@ return new class extends Migration
             // string keterangan status
             $table->string('keterangan')->nullable();
             $table->string('status')->nullable();
+            $table->string('kode_transaction')->nullable();
             // time date masuk barang
             $table->timestamps();
         });

@@ -44,6 +44,11 @@ class DistribusiController extends Controller
     }
     public function barangstore(Request $request)
     {
+        $bulan = date('m');
+        $tahun = date('y');
+        $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
+        $singkatan = "PD";
+        $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
         $total = count($request->input('jumlah'));
         $database = cabang::where('uuid', '=' ,"$request->id_cabang")->value('database');
         $nama = cabang::where('uuid', '=' ,"$request->id_cabang")->value('nama');
@@ -71,6 +76,7 @@ class DistribusiController extends Controller
                     'id_supllayer' => $data->id_supplier,
                     'status' => 'keluar',
                     'keterangan' => 'distribusi',
+                    'kode_transaction'=>$kode_tranasction,
                     'id_cabang' => $request->id_cabang,
                 ];
                 history_transaction::create($data_history);
@@ -90,7 +96,7 @@ class DistribusiController extends Controller
                     'harga_jual' => $data->harga_jual,
                     'stok' => $stocks,
                     'kode_barang' => $data->kode_barang,
-                    'keterangan' => $data->keterangan,
+                    'keterangan' => $kode_tranasction,
                 ]);
                 $uuid= hash('sha256', uniqid(mt_rand(), true));
                 $data_history = [
@@ -104,6 +110,7 @@ class DistribusiController extends Controller
                     'id_supllayer' => $data->id_supplier,
                     'status' => 'keluar',
                     'keterangan' => 'distribusi',
+                    'kode_transaction'=>$kode_tranasction,
                     'id_cabang' => $request->id_cabang,
                 ];
                 history_transaction::create($data_history);

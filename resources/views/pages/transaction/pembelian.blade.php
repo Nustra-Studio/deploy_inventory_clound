@@ -70,6 +70,7 @@
             <thead>
               <tr>
                 <th>No</th>
+                <th>Kode</th>
                 <th>Product</th>
                 <th>Kode Barang</th>
                 <th>Jumlah</th>
@@ -86,6 +87,7 @@
               @endphp
               <tr>
                 <td>{{ $loop->iteration }}</td>
+                <td>{{$item->kode_transaction}}</td>
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->kode_barang}}</td>
                 <td>{{ $item->jumlah }}</td>
