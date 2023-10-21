@@ -16,34 +16,29 @@
               <img class="wd-80 ht-80 rounded-circle" src="{{ url('https://via.placeholder.com/80x80') }}" alt="">
             </div>
             <div class="text-center">
-              <p class="tx-16 fw-bolder">Amiah Burton</p>
-              <p class="tx-12 text-muted">amiahburton@gmail.com</p>
+              <p class="tx-16 fw-bolder">{{auth()->user()->name}}</p>
             </div>
           </div>
           <ul class="list-unstyled p-1">
             <li class="dropdown-item py-2">
-              <a href="{{ url('/general/profile') }}" class="text-body ms-0">
-                <i class="me-2 icon-md" data-feather="user"></i>
-                <span>Profile</span>
+              @if (auth()->user()->role == "admin")
+              <a type="button" href="javascript:;" class="text-body ms-0"
+              data-bs-toggle="modal" data-bs-target="#add_user" 
+              data-bs-whatever="Add User"
+              >
+                <i class="me-2 icon-md" data-feather="user-plus"></i>
+                <span>Add User</span>
               </a>
+              @endif
             </li>
             <li class="dropdown-item py-2">
-              <a href="javascript:;" class="text-body ms-0">
-                <i class="me-2 icon-md" data-feather="edit"></i>
-                <span>Edit Profile</span>
-              </a>
-            </li>
-            <li class="dropdown-item py-2">
-              <a href="javascript:;" class="text-body ms-0">
-                <i class="me-2 icon-md" data-feather="repeat"></i>
-                <span>Switch User</span>
-              </a>
-            </li>
-            <li class="dropdown-item py-2">
-              <a href="javascript:;" class="text-body ms-0">
+              <form id="logout" method="POST" action="{{url('/logout')}}">
+                @csrf
+              <a href="javascript:{}" onclick="document.getElementById('logout').submit();" class="text-body ms-0">
                 <i class="me-2 icon-md" data-feather="log-out"></i>
                 <span>Log Out</span>
               </a>
+              </form>
             </li>
           </ul>
         </div>

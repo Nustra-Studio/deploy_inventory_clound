@@ -56,7 +56,47 @@ License: For each use you must have a valid license purchased only from above li
       @include('layout.header')
       <div class="page-content">
         @yield('content')
-
+        {{-- Modal add user --}}
+        <div class="modal fade" id="add_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form 
+                action="{{ route('user.store') }}" 
+                method="POST" 
+                enctype="multipart/form-data"
+                >
+                  @csrf
+                  <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Username</label>
+                    <input type="text" required class="form-control" id="recipient-name" name="username">
+                  </div>
+                  <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Role</label>
+                    <select  class="form-control" required id="message-text" name="role">
+                      <option value="">Select Role</option>
+                      <option value="operator">Operator</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Password</label>
+                    <input type="text" required class="form-control" id="message-text" name="password">
+                  </div>
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
         @if (session('success'))
         <script>
             Swal.fire({
