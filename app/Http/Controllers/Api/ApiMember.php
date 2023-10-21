@@ -219,7 +219,7 @@ class ApiMember extends Controller
     
     }
     public function register(Request $request){
-        $datas = $request->data;
+        $datas = $request;
         $phone= $datas['phone'];
         $phone_data = 0;
         $data_hp = member::where('phone', $phone)->value('phone');
@@ -340,8 +340,39 @@ class ApiMember extends Controller
         $member = member::where('kode_akses', $data)->first();
     }
     public function transaction(Request $request){
-        $data = $input['token_member'];
-        $member = member::where('kode_akses', $data)->first();
+        $input = $request->data;
+        $bulan = $input['bulan'];
+        $tahun = $input['tahun'];
+        $id_member = $input['nomor_hp'];
+        $now = Carbon::now();
+        if(!empty($id_member)){
+            if(empty($bulan)){
+                $data = transaction_member::where('id_member',$id_member)
+                ->whereYear('created_at', $now->year)
+                ->whereMonth('created_at', $now->month)
+                ->get();
+            }
+            else{
+                $data = transaction_member::where('id_member',$id_member)
+                ->whereYear('created_at',$tahun)
+                ->whereMonth('created_at', $bulan)
+                ->get();
+            }
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Data Ditemukan',
+                    'data' => $data
+                ], 200); 
+        }
+        else{
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'id_member not empty',
+                ], 402);
+        }
+        
     }
 
     /**
