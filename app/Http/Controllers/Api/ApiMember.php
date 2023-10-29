@@ -31,7 +31,7 @@ class ApiMember extends Controller
         if(empty($member->uuid)){
             $data = [
                 'success' => false,
-                'message' => 'kode telah kadaluars',
+                'message' => 'kode telah kadaluarsa',
             ];
             return response()->json($data,401);
         }
