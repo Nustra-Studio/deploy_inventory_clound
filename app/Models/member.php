@@ -9,6 +9,7 @@ class member extends Model
 {
     use HasFactory;
     protected $table = 'members';
+    public $incrementing = true;
     protected $fillable = [
         'uuid',
         'name',
