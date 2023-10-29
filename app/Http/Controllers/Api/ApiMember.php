@@ -222,7 +222,7 @@ class ApiMember extends Controller
         $characters = '0123456789';
         $randomNumber = '';
         $length = 16;
-        $uuid =  Str::random(60);
+        $uuid =Str::random(60);
         for ($i = 0; $i < $length; $i++) {
             $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
         }
@@ -252,6 +252,7 @@ class ApiMember extends Controller
                 'alamat' => $input['alamat'],
                 'random_kode'=>$randomNumber
             ];
+            $member = member::create($data);
             $poin = [
                 'uuid' => Str::uuid(60),
                 'id_member' => $uuid,
@@ -259,7 +260,6 @@ class ApiMember extends Controller
                 'status' => 'active',
             ];
             poin_member::create($poin);
-            $member = member::create($data);
             $member_data = [
                 'nama' => $member->name,
                 'uuid' => $member->uuid,
