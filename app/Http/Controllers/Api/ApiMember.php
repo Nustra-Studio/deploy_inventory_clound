@@ -219,6 +219,12 @@ class ApiMember extends Controller
     
     }
     public function register(Request $request){
+        $characters = '0123456789';
+        $randomNumber = '';
+        $length = 16;
+        for ($i = 0; $i < $length; $i++) {
+            $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
+        }
         $datas = $request;
         $phone= $datas['phone'];
         $phone_data = 0;
@@ -243,7 +249,7 @@ class ApiMember extends Controller
                 'expait_kode' => time() + 600,
                 'status' => 'member',
                 'alamat' => $input['alamat'],
-'random_kode'=>"0987654321234"
+                'random_kode'=>$randomNumber
             ];
             $member = member::create($data);
             $member_data = [
