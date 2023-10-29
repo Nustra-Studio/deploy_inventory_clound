@@ -222,7 +222,7 @@ class ApiMember extends Controller
         $characters = '0123456789';
         $randomNumber = '';
         $length = 16;
-        $uuid =Str::random(60);
+        $uuid =Str::uuid(60);
         for ($i = 0; $i < $length; $i++) {
             $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
         }
