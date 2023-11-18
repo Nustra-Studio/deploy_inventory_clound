@@ -153,7 +153,8 @@ class ApiCabang extends Controller
     public function opnamelist(Request $request){
         $id_toko = $request->input('uuid');
         $data = opname::where('id_toko',$id_toko)->where('status','new')->get();
-        if(empty($data)){
+        $datas = opname::where('id_toko',$id_toko)->where('status','new')->frist();
+        if(empty($datas)){
             return response()->json(
                 [
                     'status'=>'tidak ada data opname terbaru',
