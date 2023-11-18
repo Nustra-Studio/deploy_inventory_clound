@@ -14,6 +14,8 @@ class opname extends Model
         'barcode',
         'stock',
         'perubahan',
-        'id_toko'
+        'id_toko',
+        'status',
+        'keterangan'
     ];
 }

@@ -8,6 +8,7 @@ use App\Models\user_cabang;
 use App\Models\barang;
 use App\Models\cabang;
 use App\Models\suplier;
+use App\Models\opname;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -133,7 +134,27 @@ class ApiCabang extends Controller
     {
         //
     }
+    public function opname(Request $request){
+        $id_toko = $request->input('uuid');
+        $data = $request->data;
+        $uuid = $data['uuid'];
+        $barcode = $data['barcode'];
+        $stock = $data['stock'];
+        opname::create([
+                'id_toko'=>$id_toko,
+                'uuid'=>$uuid,
+                'barcode'=>$barcode,
+                'perubahan'=>'',
+                'stock'=>$stock
+            ]);
+        return response()->json("Semua data telah buat.", 200);
+    }
+    public function opnamelist(Request $request){
 
+    }
+    public function returnopname (Request $request){
+
+    }
     /**
      * Show the form for editing the specified resource.
      *

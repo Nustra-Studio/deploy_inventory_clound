@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('stock')->nullabel();
             $table->string('perubahan')->nullabel();
             $table->string('id_toko')->nullabel();
+            $table->string('status')->nullabel();
+            $table->string('keterangan')->nullabel();
             $table->timestamps();
         });
     }
