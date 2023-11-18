@@ -145,15 +145,30 @@ class ApiCabang extends Controller
                 'uuid'=>$uuid,
                 'barcode'=>$barcode,
                 'perubahan'=>'',
-                'stock'=>$stock
+                'stock'=>$stock,
+                'status'=>'old',
             ]);
         return response()->json("Semua data telah buat.", 200);
     }
     public function opnamelist(Request $request){
-
+        $id_toko = $request->input('uuid');
+        $data = opname::where('id_toko',$id_toko)->where('status','new')->get();
+        return response()->json(
+            [
+                'status'=>'succes read data',
+                'data'=>$data
+            ],200
+        );
     }
     public function returnopname (Request $request){
-
+        $uuid = $request->input('id_barang');
+        $data = opname::where('uuid',$uuid)->frist();
+        $data->delete();
+        return response()->json(
+            [
+                'message'=>'success update data',
+                'uuid'=>$uuid
+            ],200);
     }
     /**
      * Show the form for editing the specified resource.
