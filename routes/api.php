@@ -23,6 +23,11 @@ Route::group(['middleware' => 'ApiCabang'], function () {
     Route::get('/supplier', 'Api\ApiCabang@supplier')->name('api.supplier');
     Route::post('/createuser','Api\ApiCabang@usercreate')->name('api.createuser');
     Route::post('/deletetransaction','Api\ApiCabang@deletebarang')->name('api.deletebarang');
+    Route::prefix('opname')->group(function () {
+        Route::post('/push','Api\Apicabang@opname')->name('api.opname');
+        Route::get('/get','Api\Apicabang@opnamelist')->name('api.list.opname');
+        Route::post('/return','Api\Apicabang@returnopname')->name('api.returnopname');
+    });
     // listcabang dengan model
     Route::get('/listcabang', 'Api\ApiCabang@listcabang')->name('api.listcabang');
     Route::prefix('cabangmember')->group(function () {
