@@ -88,34 +88,22 @@ class OpnameController extends Controller
     }
     public function login(Request $request)
     {
-        $username = $request->input('username');
-        $password = $request->input('password');
+        $credentials = $request->only('username', 'password');
 
-        if ($this->authenticate($username, $password)) {
-            $user = $this->getUserByUsername($username);
-
-            // Simpan ID pengguna dalam sesi
-            session(['user_id' => $user->id]);
-
-            return redirect('/opname');
+        if ($this->customAuthenticate($credentials)) {
+            return redirect()->intended('/opname');
         } else {
-            return redirect('/login')->with('error', 'Invalid credentials');
+            return redirect('/opname/login')->with('error', 'Invalid credentials');
         }
     }
 
-    private function authenticate($username, $password)
+    private function customAuthenticate($credentials)
     {
-        $user = user_cabang::where('username', $username)->first();
-
-        if ($user && password_verify($password, $user->password)) {
+        if (Auth::guard('user_cabang')->attempt($credentials)) {
             return true;
         }
 
         return false;
     }
 
-    private function getUserByUsername($username)
-    {
-        return user_cabang::where('username', $username)->first();
-    }
 }

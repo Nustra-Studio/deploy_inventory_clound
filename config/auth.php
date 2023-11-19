@@ -40,7 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-
+        'user_cabang' => [
+            'driver' => 'session',
+            'provider' => 'user_cabang',
+        ],
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -70,6 +73,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
+        'user_cabang' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\user_cabang::class,
+        ],
+        
 
         // 'users' => [
         //     'driver' => 'database',

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Opname
 {
@@ -17,7 +18,7 @@ class Opname
     public function handle(Request $request, Closure $next)
     {
          // Cek apakah pengguna telah login
-         if (auth()->check()) {
+         if (Auth::guard('user_cabang')->check()) {
             return $next($request);
         }
 
