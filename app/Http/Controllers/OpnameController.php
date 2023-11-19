@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\user_cabang;
+use App\Models\UserCabang;
 use Illuminate\Support\Facades\Auth;
 
 class OpnameController extends Controller

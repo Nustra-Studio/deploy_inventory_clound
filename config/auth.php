@@ -75,7 +75,7 @@ return [
         ],
         'user_cabang' => [
             'driver' => 'eloquent',
-            'model' => App\Models\user_cabang::class,
+            'model' => App\Models\UserCabang::class,
         ],
         
 
