@@ -31,7 +31,7 @@
               <a href="#" class=" text-center noble-ui-logo d-block mb-2">Cinta<span>Bunda</span></a>
               <form class="forms-sample"
                 form method="POST"
-                action="{{ route('login') }}">
+                action="{{ route('opname.login') }}">
                 @csrf
                 <div class="mb-3">
                   <label for="userEmail" class="form-label">Username</label>
