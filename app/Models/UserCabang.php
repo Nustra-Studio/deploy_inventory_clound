@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserCabang extends Authenticatable
 {
-    protected $table = 'user_cabang';
+    protected $table = 'user_cabangs';
 
     protected $fillable = [
         'username', 'password',
