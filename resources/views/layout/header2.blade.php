@@ -16,7 +16,7 @@
               <img class="wd-80 ht-80 rounded-circle" src="{{ url('https://via.placeholder.com/80x80') }}" alt="">
             </div>
             <div class="text-center">
-              <p class="tx-16 fw-bolder">{{$username}}</p>
+              <p class="tx-16 fw-bolder">{{auth()->user()->name}}</p>
             </div>
           </div>
           <ul class="list-unstyled p-1">
@@ -32,7 +32,7 @@
               @endif
             </li>
             <li class="dropdown-item py-2">
-              <form id="logout" method="POST" action="{{url('/logout')}}">
+              <form id="logout" method="POST" action="{{url('/opname/logout')}}">
                 @csrf
               <a href="javascript:{}" onclick="document.getElementById('logout').submit();" class="text-body ms-0">
                 <i class="me-2 icon-md" data-feather="log-out"></i>
