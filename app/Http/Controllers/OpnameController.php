@@ -16,7 +16,8 @@ class OpnameController extends Controller
      */
     public function index()
     {
-        //
+        $id = Auth::guard('user_cabang')->user()->id;
+        return view('pages.opname.index',compact($id));
     }
 
     /**
@@ -106,6 +107,11 @@ class OpnameController extends Controller
         }
 
         return false;
+    }
+    public function logout()
+    {
+        Auth::guard('user_cabang')->logout();
+        return redirect('/opname/login');
     }
 
 }

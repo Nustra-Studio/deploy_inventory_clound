@@ -8,6 +8,8 @@
 @php
     use App\Models\category_cabang;
     use App\Models\suplier;
+    use App\Models\user_cabang;
+    $user = user_cabang::where('id',$id)->first();
     $cabang = category_cabang::all();
     $supplier = suplier::all();
 @endphp
