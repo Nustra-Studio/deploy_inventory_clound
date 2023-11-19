@@ -17,7 +17,7 @@ class Opname
     public function handle(Request $request, Closure $next)
     {
          // Cek apakah pengguna telah login
-        if (Auth::check()) {
+         if (auth()->check()) {
             return $next($request);
         }
 
