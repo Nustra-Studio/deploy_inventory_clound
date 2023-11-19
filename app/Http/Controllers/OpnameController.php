@@ -16,8 +16,7 @@ class OpnameController extends Controller
      */
     public function index()
     {
-        $id = Auth::guard('user_cabang')->user()->id;
-        return view('pages.opname.index',compact($id));
+        return view('pages.opname.index');
     }
 
     /**
