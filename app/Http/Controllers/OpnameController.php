@@ -84,7 +84,7 @@ class OpnameController extends Controller
     }
     public function showLoginForm()
     {
-        return view('auth.login_opname');
+        return view('pages.auth.login_opname');
     }
     public function login(Request $request)
     {
