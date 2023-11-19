@@ -1,3 +1,11 @@
+@php
+
+use App\Models\user_cabang;
+use Illuminate\Support\Facades\Auth;
+$id = Auth::guard('user_cabang')->user()->id;
+$username = Auth::guard('user_cabang')->user()->username;
+$user = user_cabang::where('id',$id)->first();
+@endphp
 <nav class="navbar">
   <a href="#" class="sidebar-toggler">
     <i data-feather="menu"></i>
@@ -16,11 +24,11 @@
               <img class="wd-80 ht-80 rounded-circle" src="{{ url('https://via.placeholder.com/80x80') }}" alt="">
             </div>
             <div class="text-center">
-              <p class="tx-16 fw-bolder">{{auth()->user()->name}}</p>
+              <p class="tx-16 fw-bolder">{{$username}}</p>
             </div>
           </div>
           <ul class="list-unstyled p-1">
-            <li class="dropdown-item py-2">
+            {{-- <li class="dropdown-item py-2">
               @if (auth()->user()->role == "admin")
               <a type="button" href="javascript:;" class="text-body ms-0"
               data-bs-toggle="modal" data-bs-target="#add_user" 
@@ -30,7 +38,7 @@
                 <span>Add User</span>
               </a>
               @endif
-            </li>
+            </li> --}}
             <li class="dropdown-item py-2">
               <form id="logout" method="POST" action="{{url('/opname/logout')}}">
                 @csrf

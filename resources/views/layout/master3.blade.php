@@ -10,17 +10,7 @@
 	<meta name="keywords" content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, laravel, theme, front-end, ui kit, web">
 
   <title>Nustra Studio Admin</title>
-  @php
-  use App\Models\category_cabang;
-  use App\Models\suplier;
-  use App\Models\user_cabang;
-  use Illuminate\Support\Facades\Auth;
-  $id = Auth::guard('user_cabang')->user()->id;
-  $username = Auth::guard('user_cabang')->user()->username;
-  $user = user_cabang::where('id',$id)->first();
-  $cabang = category_cabang::all();
-  $supplier = suplier::all();
-@endphp
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,7 +48,7 @@
       <div class="page-content">
         @yield('content')
         {{-- Modal add user --}}
-        <div class="modal fade" id="add_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="add_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -97,7 +87,7 @@
             </form>
             </div>
           </div>
-        </div>
+        </div> --}}
         @if (session('success'))
         <script>
             Swal.fire({

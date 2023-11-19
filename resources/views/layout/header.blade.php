@@ -16,7 +16,7 @@
               <img class="wd-80 ht-80 rounded-circle" src="{{ url('https://via.placeholder.com/80x80') }}" alt="">
             </div>
             <div class="text-center">
-              <p class="tx-16 fw-bolder">{{$username}}</p>
+              <p class="tx-16 fw-bolder">{{auth()->user()->name}}</p>
             </div>
           </div>
           <ul class="list-unstyled p-1">
