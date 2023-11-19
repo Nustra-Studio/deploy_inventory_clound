@@ -5,6 +5,16 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>  --}}
 
+@php
+    use App\Models\category_cabang;
+    use App\Models\suplier;
+    use App\Models\user_cabang;
+    use Illuminate\Support\Facades\Auth;
+    $id = Auth::guard('user_cabang')->user()->id;
+    $user = user_cabang::where('id',$id)->first();
+    $cabang = category_cabang::all();
+    $supplier = suplier::all();
+@endphp
     <div class="row">
         <div class="col-md-12 grid-margin">
         <div class="card">
