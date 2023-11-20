@@ -187,11 +187,11 @@
                         // }
                     
                         // // Initial setup
-                        // function initialize() {
-                        //     const selectElement = document.getElementById("supplier-input");
-                        //     selectElement.addEventListener('change', handleSupplierChange);
-                        //     handleSupplierChange(); // Call handleSupplierChange initially
-                        // }
+                        function initialize() {
+                            const selectElement = document.getElementById("product-name-input");
+                            selectElement.addEventListener('change', handleSupplierChange);
+                            handleSupplierChange(); // Call handleSupplierChange initially
+                        }
                     
                         // Call initialize when the document is ready
                         document.addEventListener('DOMContentLoaded', initialize);
