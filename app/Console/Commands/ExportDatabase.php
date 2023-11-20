@@ -49,11 +49,5 @@ class ExportDatabase extends Command
             $this->error('Error exporting database.');
         }
 
-        if ($resultCode === 0) {
-            $this->info('Database exported successfully.');
-            $this->info('Backup file saved at: ' . $backupPath);
-        } else {
-            $this->error('Error exporting database.');
-        }
     }
 }
