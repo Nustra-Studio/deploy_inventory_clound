@@ -40,7 +40,7 @@ class ExportDatabase extends Command
         );
 
         // Eksekusi perintah mysqldump
-        exec($command, $output, $resultCode);
+        shell_exec($command);
 
         if ($resultCode === 0) {
             $this->info('Database exported successfully.');
