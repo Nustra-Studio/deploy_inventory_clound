@@ -130,9 +130,34 @@
                         changeharga(selectedProduct);
                     }
 
-                        function updateSelect2(id) {
-                            const url = `/opname/${id}/show`;
+                        // function updateSelect2(id) {
+                        //     const url = `/opname/${id}/show`;
                     
+                        //     $("#product-name-input").select2({
+                        //         ajax: {
+                        //             url: url,
+                        //             dataType: 'json',
+                        //             delay: 250,
+                        //             processResults: function (data) {
+                        //                 return {
+                        //                     results: $.map(data, function (item) {
+                        //                         return {
+                        //                             text: item.barcode,
+                        //                             id: item.barcode
+                        //                         };
+                        //                     })
+                        //                 };
+                        //             },
+                        //             cache: true
+                        //         },
+                        //         placeholder: 'Select Product',
+                        //         minimumResultsForSearch: 0,
+                        //         // containerCssClass: 'custom-select2-container' // Check this line
+                        //     }).on('change', handleProductChange);
+                        // }
+                        $(document).ready(function() {
+                            const id = document.getElementById('id_toko').value;
+                            const url = `/opname/${id}/show`;
                             $("#product-name-input").select2({
                                 ajax: {
                                     url: url,
@@ -154,8 +179,7 @@
                                 minimumResultsForSearch: 0,
                                 // containerCssClass: 'custom-select2-container' // Check this line
                             }).on('change', handleProductChange);
-                        }
-                    
+                        });
                         // function handleSupplierChange() {
                         //     const supplier = document.getElementById('supplier-input').value;
                         //     $("select.select2-hidden-accessible").select2('destroy');
