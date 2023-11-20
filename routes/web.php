@@ -41,6 +41,7 @@ Route::group(['prefix' => 'error'], function(){
         Route::get('/login', 'OpnameController@showLoginForm');
         Route::post('/login', 'OpnameController@login')->name('opname.login');
         Route::post('/logout','OpnameController@logout');
+        Route::get('/{id}/show', 'OpnameController@product')->name('opname.product');
     });
     Route::middleware(['auth'])->group(function () {
         Route::prefix('resource')->group(function () {

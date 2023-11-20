@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\user_cabang;
 use App\Models\UserCabang;
+use App\Models\opname;
 use Illuminate\Support\Facades\Auth;
 
 class OpnameController extends Controller
@@ -61,7 +62,18 @@ class OpnameController extends Controller
     {
         //
     }
-
+    public function product(Request $request,$id){
+        if($request->filled('q')){
+            $data = opname::where('id_toko', $id)->where('barcode', 'LIKE', '%'. $request->get('q'). '%')->get();
+        }
+        elseif($request->filled('namaproduct')){
+            $data = opname::where('id_toko', $id)->where('barcode', 'LIKE', '%'. $request->get('namaproduct'). '%')->get();
+        }
+        else{
+            $data = opname::where('id_toko', $id)->get();
+        }
+        return response()->json($data);
+    }
     /**
      * Update the specified resource in storage.
      *
