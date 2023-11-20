@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
+use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 class ExportDatabase extends Command
 {
     /**
@@ -30,17 +32,22 @@ class ExportDatabase extends Command
         $backupFileName = 'backup_' . now()->format('Y-m-d_H-i-s') . '.sql';
         $backupPath = storage_path('app/backups/' . $backupFileName);
 
-        $command = sprintf(
-            'mysqldump -u%s -p%s -h %s %s > %s',
-            config('database.connections.mysql.username'),
-            config('database.connections.mysql.password'),
-            config('database.connections.mysql.host'),
+        $process = new Process([
+            'mysqldump',
+            '-u' . config('database.connections.mysql.username'),
+            '-p' . config('database.connections.mysql.password'),
+            '-h' . config('database.connections.mysql.host'),
             config('database.connections.mysql.database'),
-            $backupPath
-        );
-
-        // Eksekusi perintah mysqldump
-        shell_exec($command);
+        ]);
+        
+        try {
+            $process->mustRun();
+            $output = $process->getOutput();
+            $this->info('Database exported successfully.');
+            // Simpan $output ke file jika perlu
+        } catch (ProcessFailedException $exception) {
+            $this->error('Error exporting database.');
+        }
 
         if ($resultCode === 0) {
             $this->info('Database exported successfully.');
