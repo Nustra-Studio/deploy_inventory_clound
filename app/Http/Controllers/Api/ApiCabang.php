@@ -135,7 +135,7 @@ class ApiCabang extends Controller
         //
     }
     public function opname(Request $request){
-        $id_toko = $request->input('uuid');
+        $id_toko = $request->input('id_toko');
         $data = $request->data;
         $uuid = $data['uuid'];
         $barcode = $data['barcode'];
