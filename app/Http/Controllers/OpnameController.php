@@ -38,7 +38,11 @@ class OpnameController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->input('data_table_values');
+        $data = json_decode($data, true);
+        foreach($data as $item){
+            
+        }
     }
 
     /**
