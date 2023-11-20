@@ -65,7 +65,7 @@
                         </table>
                     </div>
                     <form class="forms-sample"
-                    action="{{ route('opname') }}" 
+                    action="{{ route('opname.store') }}" 
                     method="POST" 
                     enctype="multipart/form-data" 
                     >
