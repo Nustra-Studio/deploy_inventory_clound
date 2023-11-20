@@ -100,7 +100,7 @@
                                 'Name': Name,
                                 'jumlah': jumlah,
                                 'old': old,
-                                'id_toko',id
+                                'id_toko':id,
                                             };
                             existingValues.push(rowValues);
                             $('#data-table-values').val(JSON.stringify(existingValues));
