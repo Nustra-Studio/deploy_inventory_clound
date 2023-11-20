@@ -97,7 +97,7 @@
                             // Create the delete button with red color and label
                             const deleteButton = `<button class="btn btn-danger btn-sm" onclick="deleteRow(this)">Hapus</button>`;
                             const rowValues = {
-                                'Name': Name,
+                                'barcode': Name,
                                 'jumlah': jumlah,
                                 'old': old,
                                 'id_toko':id,
