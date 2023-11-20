@@ -196,34 +196,37 @@
                         // Call initialize when the document is ready
                         document.addEventListener('DOMContentLoaded', initialize);
                         function changeharga (event){
-                            const id = document.getElementById('id_toko').value;
-                            const url = `/opname/${id}/show?namaproduct=${event}`;
-                            $.ajax({
-                                    type: 'GET',
-                                    url: url,
-                                    success: function(data) {
-                                    // Assuming the response data is an array with the structure you provided
-                                    if (Array.isArray(data) && data.length > 0) {
-                                        // Extract harga_pokok and harga_jual from the first item in the array
-                                        var stock = data[0].stock;
+                            function changeharga(event) {
+    const id = document.getElementById('id_toko').value;
+    const url = `/opname/${id}/show?namaproduct=${event}`;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (data) {
+            // Assuming the response data is an array with the structure you provided
+            if (Array.isArray(data) && data.length > 0) {
+                // Extract stock from the first item in the array
+                var stock = data[0].stock;
 
-                                        // Log the extracted values
-                                        console.log('stock:', stock);
-                                        var newstock = parseInt(stock);
-                                        // Get the input element by its ID
-                                        var inputpokok = document.getElementById('jumlah-input').value = '';
-                                        var inputjual =  document.getElementById('old-jumlah').value = '';
-                                        // Set the value of the input element to the new value
-                                        inputpokok.value = newstock;
-                                        inputjual.value = newstock;
-                                    } else {
-                                        console.error('Invalid or empty response data.');
-                                    }
-                                    },
-                                    error: function(jqXHR, textStatus, errorThrown) {
-                                    console.error('Error:', textStatus, errorThrown);
-                                    }
-                                });
+                // Log the extracted values
+                console.log('stock:', stock);
+                var newstock = parseInt(stock);
+                // Get the input elements by their IDs
+                var inputpokok = document.getElementById('jumlah-input');
+                var inputjual = document.getElementById('old-jumlah');
+                // Set the value of the input elements to the new value
+                inputpokok.value = newstock;
+                inputjual.value = newstock;
+            } else {
+                console.error('Invalid or empty response data.');
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error('Error:', textStatus, errorThrown);
+        }
+    });
+}
+
                         }
 
                     </script>
