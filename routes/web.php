@@ -38,8 +38,8 @@ Route::group(['prefix' => 'error'], function(){
         });
 
         Route::prefix('opname')->group(function () {
-            Route::get('/login', 'OpnameController@showLoginForm');
-            Route::post('/login', 'OpnameController@login')->name('opname.login');
+            Route::get('/login', 'OpnameController@showLoginForm')->name('opname.login.view');
+            Route::post('/logi', 'OpnameController@login')->name('opname.login');
             Route::post('/logout', 'OpnameController@logout');
         });
 
