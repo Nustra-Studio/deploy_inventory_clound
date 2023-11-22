@@ -39,7 +39,6 @@
                 </div>
                 <!-- Rest of the form content -->
                 <input type="button" class="btn btn-success me-2" value="Tambah" onclick="addRow()" />
-                <button onclick="window.history.go(-1); return false;" type="submit" value="Cancel" class="btn btn-secondary">Cancel</button>
             </form>
 
             </div>
