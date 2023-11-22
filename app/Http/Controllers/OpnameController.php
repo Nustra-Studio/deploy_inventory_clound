@@ -113,7 +113,7 @@ class OpnameController extends Controller
     public function logout()
     {
         Auth::guard('user_cabang')->logout();
-        return redirect('/opname/login');
+        return redirect('/login-opname');
     }
 
 }

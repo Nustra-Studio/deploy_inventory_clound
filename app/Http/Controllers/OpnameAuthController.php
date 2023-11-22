@@ -33,7 +33,7 @@ class OpnameAuthController extends Controller
                 return redirect()->intended('/opname');
             } else {
                 \Log::warning('Login failed. Invalid credentials');
-                return redirect('/opname/login')->with('error', 'Invalid credentials');
+                return redirect('/login-opname')->with('error', 'Invalid credentials');
             }
         }
         
