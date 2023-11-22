@@ -17,14 +17,18 @@ class Opname
      */
     public function handle(Request $request, Closure $next)
     {
-         // Cek apakah pengguna telah login
-         if (Auth::guard('user_cabang')->check()) {
+        // Debug statement
+        dd('Opname middleware executed');
+    
+        // Cek apakah pengguna telah login
+        if (Auth::guard('user_cabang')->check()) {
             return $next($request);
         }
-
+    
         // Jika pengguna belum login, arahkan ke halaman login
-        else{
+        else {
             return redirect('/opname/login');
         }
     }
+    
 }
