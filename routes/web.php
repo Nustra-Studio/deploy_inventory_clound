@@ -39,7 +39,10 @@ Route::group(['prefix' => 'error'], function(){
         });
     });
     Route::prefix('opname')->group(function () {
-        Route::get('/login', 'OpnameController@showLoginForm');
+        // Route::get('/login', 'OpnameController@showLoginForm');
+        Route::get('/login',function(){
+            return view('pages.auth.login_opname');
+        });
         Route::post('/login', 'OpnameController@login')->name('opname.login');
         Route::post('/logout','OpnameController@logout');
     });
