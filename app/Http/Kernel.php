@@ -65,7 +65,7 @@ class Kernel extends HttpKernel
         'ApiMember'=> \App\Http\Middleware\ApiMember::class,
         'ApiOwner'=> \App\Http\Middleware\ApiOwner::class,
         'CheckRole'=> \App\Http\Middleware\CheckRole::class,
-        'AuthOpname'=>\App\Http\Middleware\Opname::class,
+        'opname'=>\App\Http\Middleware\Opname::class,
     ];
 
     /**

@@ -32,16 +32,17 @@ Route::group(['prefix' => 'error'], function(){
     Route::get('404', function () { return view('pages.error.404'); });
     Route::get('500', function () { return view('pages.error.500'); });
 });
-    Route::middleware(['AuthOpname'])->group(function () {
-        Route::resource('opname', OpnameController::class);
+        Route::middleware(['opname'])->group(function () {
+            Route::resource('opname', OpnameController::class);
             Route::get('opname/{id}/show', 'OpnameController@product')->name('opname.product');
+        });
 
-    });
-    Route::prefix('opname')->group(function () {
-        Route::get('/login', 'OpnameController@showLoginForm');
-        Route::post('/login', 'OpnameController@login')->name('opname.login');
-        Route::post('/logout','OpnameController@logout');
-    });
+        Route::prefix('opname')->group(function () {
+            Route::get('/login', 'OpnameController@showLoginForm');
+            Route::post('/login', 'OpnameController@login')->name('opname.login');
+            Route::post('/logout', 'OpnameController@logout');
+        });
+
     Route::middleware(['auth'])->group(function () {
         Route::prefix('resource')->group(function () {
             // buat kan route barang resource metode get 
