@@ -34,9 +34,8 @@ Route::group(['prefix' => 'error'], function(){
 });
     Route::middleware(['AuthOpname'])->group(function () {
         Route::resource('opname', OpnameController::class);
-        Route::prefix('opname')->group(function () {
-            Route::get('/{id}/show', 'OpnameController@product')->name('opname.product');
-        });
+            Route::get('opname/{id}/show', 'OpnameController@product')->name('opname.product');
+
     });
     Route::prefix('opname')->group(function () {
         Route::get('/login', 'OpnameController@showLoginForm');
