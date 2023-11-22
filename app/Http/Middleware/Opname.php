@@ -15,17 +15,19 @@ class Opname
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
-    {
-        \Log::info('Opname middleware started');
-    
-        if (Auth::guard('user_cabang')->check()) {
-            return $next($request);
-        } else {
-            \Log::warning('Opname middleware: Redirecting to login');
-            return redirect('/opname/login');
+        // Opname Middleware
+        public function handle(Request $request, Closure $next)
+        {
+            \Log::info('Opname middleware started');
+
+            if (Auth::guard('user_cabang')->check()) {
+                return $next($request);
+            } else {
+                \Log::warning('Opname middleware: Redirecting to login');
+                return redirect('/opname/login');
+            }
         }
-    }
+
     
     
 }
