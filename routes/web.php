@@ -39,9 +39,9 @@ Route::group(['prefix' => 'error'], function(){
 
         Route::prefix('opname')->group(function () {
             \Log::info('Opname controller started');
-            Route::get('/login', 'OpnameController@showLoginForm')->name('opname.login.view');
-            Route::post('/logi', 'OpnameController@login')->name('opname.login');
-            Route::post('/logout', 'OpnameController@logout');
+            Route::get('/login', 'OpnameAuthController@showLoginForm')->name('opname.login.view');
+            Route::post('/login', 'OpnameAuthController@login')->name('opname.login');
+            Route::post('/logout', 'OpnameAuthController@logout');
         });
 
     Route::middleware(['auth'])->group(function () {
