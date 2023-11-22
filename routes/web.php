@@ -32,12 +32,11 @@ Route::group(['prefix' => 'error'], function(){
     Route::get('404', function () { return view('pages.error.404'); });
     Route::get('500', function () { return view('pages.error.500'); });
 });
-    Route::middleware()->group(function () {
+
         Route::resource('opname', OpnameController::class);
         Route::prefix('opname')->group(function () {
             Route::get('/{id}/show', 'OpnameController@product')->name('opname.product');
         });
-    });
     Route::prefix('opname')->group(function () {
         // Route::get('/login', 'OpnameController@showLoginForm');
         Route::get('/login',function(){
