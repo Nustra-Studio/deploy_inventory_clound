@@ -19,6 +19,10 @@ class OpnameController extends Controller
     {
         return view('pages.opname.index');
     }
+    public function __construct()
+    {
+        $this->middleware('opname');
+    }
 
     /**
      * Show the form for creating a new resource.
