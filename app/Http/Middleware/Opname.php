@@ -23,6 +23,8 @@ class Opname
         }
 
         // Jika pengguna belum login, arahkan ke halaman login
-        return redirect('/opname/login');
+        else{
+            return redirect('/opname/login');
+        }
     }
 }
