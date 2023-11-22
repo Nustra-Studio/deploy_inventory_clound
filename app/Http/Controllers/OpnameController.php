@@ -113,7 +113,7 @@ class OpnameController extends Controller
     public function showLoginForm()
     {
         // return view('pages.auth.login_opname');
-        dd('return login');
+        \Log::info('login page running');
     }
     public function login(Request $request)
     {
