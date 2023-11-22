@@ -18,7 +18,7 @@ class Opname
     public function handle(Request $request, Closure $next)
     {
         // Debug statement
-        dd('Opname middleware executed');
+        // dd('Opname middleware executed');
     
         // Cek apakah pengguna telah login
         if (Auth::guard('user_cabang')->check()) {
