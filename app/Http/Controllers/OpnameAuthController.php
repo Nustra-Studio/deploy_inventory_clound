@@ -11,14 +11,17 @@ use Illuminate\Support\Facades\Auth;
 
 class OpnameAuthController extends Controller
 {
-        public function __construct()
-        {
-            $this->middleware('opname');
-        }
-        public function showLoginForm()
-        {
+        // public function __construct()
+        // {
+        //     $this->middleware('opname');
+        // }
+        // public function showLoginForm()
+        // {
+        //     // return view('pages.auth.login_opname');
+        //     // \Log::info('login page running');
+        // }
+        public function index(){
             return view('pages.auth.login_opname');
-            \Log::info('login page running');
         }
         public function login(Request $request)
         {
@@ -43,9 +46,5 @@ class OpnameAuthController extends Controller
 
             return false;
         }
-        public function logout()
-        {
-            Auth::guard('user_cabang')->logout();
-            return redirect('/opname/login');
-        }
+
 }

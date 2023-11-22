@@ -36,12 +36,12 @@ Route::group(['prefix' => 'error'], function(){
             Route::resource('opname', OpnameController::class);
             Route::get('opname/{id}/show', 'OpnameController@product')->name('opname.product');
         });
-
+        Route::get('/login-opname', 'OpnameAuthController@index')->name('opname.login');
         Route::prefix('opname')->group(function () {
             \Log::info('Opname controller started');
-            Route::get('/login', 'OpnameAuthController@showLoginForm')->name('opname.login.view');
+            Route::get('/login', 'OpnameAuthController@index')->name('opname.login');
             Route::post('/login', 'OpnameAuthController@login')->name('opname.login');
-            Route::post('/logout', 'OpnameAuthController@logout');
+            Route::post('/logout', 'OpnameController@logout');
         });
 
     Route::middleware(['auth'])->group(function () {

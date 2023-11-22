@@ -24,7 +24,7 @@ class Opname
                 return $next($request);
             } else {
                 \Log::warning('Opname middleware: Redirecting to login');
-                return redirect('/opname/login');
+                return redirect('/login-opname');
             }
         }
 
