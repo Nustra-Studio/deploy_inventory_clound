@@ -38,6 +38,7 @@ class CategoryCabangController extends Controller
      */
     public function store(Request $request)
     {
+        $url = env('APP_API');
         $data = $request->all();
         $datanew = [
             'name' => $data['name'],

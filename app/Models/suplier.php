@@ -14,6 +14,7 @@ class suplier extends Model
         'product',
         'keterangan',
         'alamat',
+        'status',
         'telepon',
         'category_barang_id',
         'uuid',

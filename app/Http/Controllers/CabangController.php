@@ -94,7 +94,6 @@ class CabangController extends Controller
         $newdata = [
             'nama' => $data['nama'],
             'alamat' => $data['alamat'],
-            'keterangan' => $data['keterangan'],
             'kepala_cabang' => $data['kepala_cabang'],
             'telepon' => $data['telepon'],
             'category_id' => $data['category_id'],
@@ -143,7 +142,6 @@ class CabangController extends Controller
         $this->validate($request, [
             'nama' => 'required',
             'alamat' => 'required',
-            'keterangan' => 'required',
             'kepala_cabang' => 'required',
             'telepon' => 'required',
             'category_id' => 'required',
@@ -153,7 +151,6 @@ class CabangController extends Controller
         $newdata = [
             'nama' => $data['nama'],
             'alamat' => $data['alamat'],
-            'keterangan' => $data['keterangan'],
             'kepala_cabang' => $data['kepala_cabang'],
             'telepon' => $data['telepon'],
             'category_id' => $data['category_id'],

@@ -52,10 +52,6 @@
                     @endforeach
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="exampleInputUsername4" class="form-label">Keterangan</label>
-                <input type="text" name="keterangan" class="form-control" id="exampleInputUsername4" autocomplete="off" placeholder="Keterangan Cabang">
-            </div>
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button  
             onclick="window.history.go(-1); return false;"

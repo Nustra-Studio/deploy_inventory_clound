@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('telepon');
             $table->string('product');
             $table->string('keterangan');
+            $table->string('status');
             // category_barang berhubungan dengan tabel category_barang
             $table->string('category_barang_id');
             $table->timestamps();
