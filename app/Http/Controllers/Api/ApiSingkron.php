@@ -66,7 +66,7 @@ class ApiSingkron extends Controller
         }
     }
     
-    private function categorybarang(){
+    private function categorybarang($request){
         $data = $request->only(['name', 'keterangan', 'uuid']);
     
         try {

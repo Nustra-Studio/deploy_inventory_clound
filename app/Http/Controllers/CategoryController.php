@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\category_barang;
+use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CategoryController extends Controller
