@@ -35,18 +35,22 @@ class ApiSingkron extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $name = $request->input('key');
+        $response = $this->$name($request);
+        return response()->$response;
     }
 
-    private function categorycabang(){
+    private function categorycabang($request){
         $data = $request->all();
         $datanew = [
             'name' => $data['name'],
             'keterangan' => $data['keterangan'],
             'uuid' => $data['uuid'],
+            'status'=>'singkron'
         ];
         DB::table('category_cabangs')->insert($datanew);
-        return redirect()->route('categorycabang.index')->with('success','Data Berhasil Ditambahkan');
+        $response =json(['status'=>'success','message'=>'success import data'], 200);
+        return $response;
     }
     private function categorybarang(){
         $data = $request->all();

@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 Route::post('/login', 'Api\ApiCabang@login')->name('api.login');
+Route::post('/singkron','Api\ApiSingkron@store');
 Route::group(['middleware' => 'ApiCabang'], function () {
     // get route barang
     Route::get('/barang', 'Api\ApiCabang@barang')->name('api.barang');
@@ -65,4 +66,5 @@ Route::prefix('owner')->group(function (){
         Route::get('/hariancabang','Api\ApiOwner@hariancabang')->name('api.harian.cabang');
 
     });
+
 });

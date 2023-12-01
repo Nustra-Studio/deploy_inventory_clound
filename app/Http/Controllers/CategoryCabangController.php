@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\category_cabangs;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CategoryCabangController extends Controller
 {
@@ -39,14 +40,40 @@ class CategoryCabangController extends Controller
     public function store(Request $request)
     {
         $url = env('APP_API');
+        $response = Http::timeout(1)->get($url);
+
+        if ($response->successful()) {
+            $datanew = [
+                'key'=>'categorycabang',
+                'name' => $data['name'],
+                'keterangan' => $data['keterangan'],
+                'uuid' => $data['uuid'],
+                'status'=>'singkron'
+            ];
+            $url ="$url/api/singkron";
+            $response = Http::post($url, $datanew);
+            $apiResponse = $response->json();
+            dd($apiResponse);
+            $datanew = [
+                'name' => $data['name'],
+                'keterangan' => $data['keterangan'],
+                'uuid' => $data['uuid'],
+                'status'=>'singkron'
+            ];
+            DB::table('category_cabangs')->insert($datanew);
+
+            // return redirect()->route('categorycabang.index')->with('success','Data Berhasil Ditambahkan Dan Juga Ke server');
+        } else {
+            $datanew = [
+                'name' => $data['name'],
+                'keterangan' => $data['keterangan'],
+                'uuid' => $data['uuid'],
+                'status'=>'not_singkron'
+            ];
+            DB::table('category_cabangs')->insert($datanew);
+            return redirect()->route('categorycabang.index')->with('success','Data Berhasil Ditambahkan Tapi Tidak Keserver');
+        }
         $data = $request->all();
-        $datanew = [
-            'name' => $data['name'],
-            'keterangan' => $data['keterangan'],
-            'uuid' => $data['uuid'],
-        ];
-        DB::table('category_cabangs')->insert($datanew);
-        return redirect()->route('categorycabang.index')->with('success','Data Berhasil Ditambahkan');
     }
 
     /**
