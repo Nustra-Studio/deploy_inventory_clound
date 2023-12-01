@@ -71,25 +71,25 @@ class CategoryCabangController extends Controller
     }
     
     private function sendToApi($url, $data)
-{
-    try {
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post("$url/api/singkron", $data);
+    {
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("$url/api/singkron", $data);
 
-        if ($response->successful()) {
-            return $response->json();
-        } else {
-            \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
+                return null;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error sending data to API: ' . $e->getMessage());
             return null;
         }
-    } catch (\Exception $e) {
-        \Log::error('Error sending data to API: ' . $e->getMessage());
-        return null;
     }
-}
 
-    
+        
     private function storeLocally($datas)
     {
         try {

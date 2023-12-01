@@ -87,7 +87,7 @@ class CategoryController extends Controller
     }
     
         
-        private function storeLocally($datas)
+    private function storeLocally($datas)
         {
             try {
                 category_barang::insert($datas);

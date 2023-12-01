@@ -43,67 +43,120 @@ class CabangController extends Controller
     {
         // create database for request data
         $data = $request->all();
-        // create new data
-        $namas = $data['nama'];
-        $nama = str_replace(' ', '_', $namas);
-        $database = "cabang_$nama";
-        $query = "
-        CREATE TABLE cabang_$nama (
-            `id` bigint(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-            `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-            `category_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-            `id_supplier` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-            `kode_barang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `harga` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `harga_jual` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `harga_pokok` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `harga_grosir` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `stok` int(48) NOT NULL,
-            `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-            `merek_barang` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `type_barang_id` varchar(158) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `created_at` timestamp NULL DEFAULT NULL,
-            `updated_at` timestamp NULL DEFAULT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
-        DB::statement($query);
-        $query2 = " 
-        CREATE TABLE `transaction_$database` (
-            `id` bigint(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-            `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-            `name` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `jumlah` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `kode_barang` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `status` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `id_member` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `harga_pokok` int(21) DEFAULT NULL,
-            `harga_jual` int(21) DEFAULT NULL,
-            `created_at` timestamp NULL DEFAULT NULL,
-            `updated_at` timestamp NULL DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
-        DB::statement($query2);
-        user_cabang::create([
-            'cabang_id' => $data['uuid'],
-            'uuid' => Str::random(40),
-            'username' => "supervisor_$nama",
-            'password' => Hash::make('cintabunda123'),
-            'role' => "supervisor",
-            'api_key' => Str::random(40),
-        ]);
-        $newdata = [
-            'nama' => $data['nama'],
-            'alamat' => $data['alamat'],
-            'kepala_cabang' => $data['kepala_cabang'],
-            'telepon' => $data['telepon'],
-            'category_id' => $data['category_id'],
-            'uuid'=> $data['uuid'],
-            'database' => "cabang_$nama",
-        ];
-        DB::table('cabangs')->insert($newdata);
-        return redirect()->route('cabang.index')->with('success', 'Data cabang berhasil ditambahkan');
+        $url = env('APP_API');
+        $response = Http::timeout(1)->get($url);
+    
+        if ($response->successful()) { // Gunakan only untuk memfilter data
+            $data['keterangan'] = 'singkron';
+            $data['key']= 'cabang';
+    
+            // Kirim data ke server API
+            $apiResponse = $this->sendToApi($url, $data);
+    
+            // Cek status dari respons API
+            if ($apiResponse && $apiResponse['status'] === 'success') {
+                // Simpan data ke database lokal
+                $data = $request->all(); // Gunakan only untuk memfilter data
+                $data['keterangan'] = 'singkron';
+                $this->storeLocally($data);
+                return redirect()->route('cabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+            } else {
+                // Tangani kesalahan respons API
+                return redirect()->route('cabang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+            }
+        } else {
+            // Simpan data ke database lokal tanpa menyinkronkan ke server
+            $data = $request->all();
+            $data['keterangan'] = 'not_singkron';
+            $this->storeLocally($data);
+            return redirect()->route('cabang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+        }
+    }
+    private function sendToApi($url, $data)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("$url/api/singkron", $data);
+
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
+                return null;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error sending data to API: ' . $e->getMessage());
+            return null;
+        }
     }
 
+        
+    private function storeLocally($data)
+    {
+        try {
+            $namas = $data['nama'];
+            $nama = str_replace(' ', '_', $namas);
+            $database = "cabang_$nama";
+            $query = "
+            CREATE TABLE cabang_$nama (
+                `id` bigint(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+                `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                `category_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                `id_supplier` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                `kode_barang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `harga` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `harga_jual` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `harga_pokok` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `harga_grosir` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `stok` int(48) NOT NULL,
+                `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                `merek_barang` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `type_barang_id` varchar(158) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `created_at` timestamp NULL DEFAULT NULL,
+                `updated_at` timestamp NULL DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            DB::statement($query);
+            $query2 = " 
+            CREATE TABLE `transaction_$database` (
+                `id` bigint(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+                `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                `name` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `jumlah` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `kode_barang` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `status` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `id_member` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `harga_pokok` int(21) DEFAULT NULL,
+                `harga_jual` int(21) DEFAULT NULL,
+                `created_at` timestamp NULL DEFAULT NULL,
+                `updated_at` timestamp NULL DEFAULT NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            DB::statement($query2);
+            user_cabang::create([
+                'cabang_id' => $data['uuid'],
+                'uuid' => Str::random(40),
+                'username' => "supervisor_$nama",
+                'password' => Hash::make('cintabunda123'),
+                'role' => "supervisor",
+                'api_key' => Str::random(40),
+            ]);
+            $newdata = [
+                'nama' => $data['nama'],
+                'alamat' => $data['alamat'],
+                'kepala_cabang' => $data['kepala_cabang'],
+                'telepon' => $data['telepon'],
+                'category_id' => $data['category_id'],
+                'uuid'=> $data['uuid'],
+                'database' => "cabang_$nama",
+            ];
+            DB::table('cabangs')->insert($newdata);
+        } catch (\Exception $e) {
+            \Log::error('Error storing data locally: ' . $e->getMessage());
+        }
+    }
+    
     /**
      * Display the specified resource.
      *
