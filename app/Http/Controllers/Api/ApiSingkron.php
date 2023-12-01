@@ -149,6 +149,7 @@ class ApiSingkron extends Controller
                 'category_id' => $data['category_id'],
                 'uuid'=> $data['uuid'],
                 'database' => "cabang_$nama",
+                'keterangan'=>$data['keterangan']
             ];
             DB::table('cabangs')->insert($newdata);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);

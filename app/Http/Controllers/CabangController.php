@@ -7,6 +7,7 @@ use App\Models\cabang;
 use App\Models\user_cabang;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 // tambahkan db
 use Illuminate\Support\Facades\DB;
 

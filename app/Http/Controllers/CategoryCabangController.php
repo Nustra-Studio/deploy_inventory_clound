@@ -44,7 +44,7 @@ class CategoryCabangController extends Controller
     
         if ($response->successful()) {
             $data = $request->only(['name', 'keterangan', 'uuid']); // Gunakan only untuk memfilter data
-            $data['status'] = 'singkron';
+            $data['keterangan'] = 'singkron';
             $data['key']= 'categorycabang';
     
             // Kirim data ke server API
@@ -54,7 +54,7 @@ class CategoryCabangController extends Controller
             if ($apiResponse && $apiResponse['status'] === 'success') {
                 // Simpan data ke database lokal
                 $datas = $request->only(['name', 'keterangan', 'uuid']); // Gunakan only untuk memfilter data
-                $datas['status'] = 'singkron';
+                $datas['keterangan'] = 'singkron';
                 $this->storeLocally($datas);
                 return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
             } else {
@@ -64,7 +64,7 @@ class CategoryCabangController extends Controller
         } else {
             // Simpan data ke database lokal tanpa menyinkronkan ke server
             $data = $request->only(['name', 'keterangan', 'uuid']);
-            $data['status'] = 'not_singkron';
+            $data['keterangan'] = 'not_singkron';
             $this->storeLocally($data);
             return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
         }
