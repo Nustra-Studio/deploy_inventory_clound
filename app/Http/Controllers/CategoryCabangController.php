@@ -41,43 +41,64 @@ class CategoryCabangController extends Controller
     {
         $url = env('APP_API');
         $response = Http::timeout(1)->get($url);
-
+    
         if ($response->successful()) {
-            $data = $request->all();
-            $datanew = [
-                'key'=>'categorycabang',
-                'name' => $data['name'],
-                'keterangan' => $data['keterangan'],
-                'uuid' => $data['uuid'],
-                'status'=>'singkron'
-            ];
-            $url ="$url/api/singkron";
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post($url, $datanew );
-            $apiResponse = $response->json();
-            dd($apiResponse);
-            $datanew = [
-                'name' => $data['name'],
-                'keterangan' => $data['keterangan'],
-                'uuid' => $data['uuid'],
-                'status'=>'singkron'
-            ];
-            DB::table('category_cabangs')->insert($datanew);
-
-            // return redirect()->route('categorycabang.index')->with('success','Data Berhasil Ditambahkan Dan Juga Ke server');
+            $data = $request->only(['name', 'keterangan', 'uuid']); // Gunakan only untuk memfilter data
+            $data['status'] = 'singkron';
+            $data['key']= 'categorycabang';
+    
+            // Kirim data ke server API
+            $apiResponse = $this->sendToApi($url, $data);
+    
+            // Cek status dari respons API
+            if ($apiResponse && $apiResponse['status'] === 'success') {
+                // Simpan data ke database lokal
+                $datas = $request->only(['name', 'keterangan', 'uuid']); // Gunakan only untuk memfilter data
+                $datas['status'] = 'singkron';
+                $this->storeLocally($datas);
+                return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+            } else {
+                // Tangani kesalahan respons API
+                return redirect()->route('categorycabang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+            }
         } else {
-            $data = $request->all();
-            $datanew = [
-                'name' => $data['name'],
-                'keterangan' => $data['keterangan'],
-                'uuid' => $data['uuid'],
-                'status'=>'not_singkron'
-            ];
-            DB::table('category_cabangs')->insert($datanew);
-            return redirect()->route('categorycabang.index')->with('success','Data Berhasil Ditambahkan Tapi Tidak Keserver');
+            // Simpan data ke database lokal tanpa menyinkronkan ke server
+            $data = $request->only(['name', 'keterangan', 'uuid']);
+            $data['status'] = 'not_singkron';
+            $this->storeLocally($data);
+            return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
         }
     }
+    
+    private function sendToApi($url, $data)
+{
+    try {
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post("$url/api/singkron", $data);
+
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
+            return null;
+        }
+    } catch (\Exception $e) {
+        \Log::error('Error sending data to API: ' . $e->getMessage());
+        return null;
+    }
+}
+
+    
+    private function storeLocally($datas)
+    {
+        try {
+            DB::table('category_cabangs')->insert($datas);
+        } catch (\Exception $e) {
+            \Log::error('Error storing data locally: ' . $e->getMessage());
+        }
+    }
+    
 
     /**
      * Display the specified resource.

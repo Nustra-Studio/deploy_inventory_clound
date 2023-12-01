@@ -37,11 +37,63 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     { 
-        $data = $request->all();
-        category_barang::create($data);
-        return redirect()->route('category.index')->with('success','Data Berhasil Ditambahkan');
+        $url = env('APP_API');
+        $response = Http::timeout(1)->get($url);
+    
+        if ($response->successful()) {
+            $data = $request->only(['name','uuid']); // Gunakan only untuk memfilter data
+            $data['keterangan'] = 'singkron';
+            $data['key']= 'categorybarang';
+    
+            // Kirim data ke server API
+            $apiResponse = $this->sendToApi($url, $data);
+            if ($apiResponse && $apiResponse['status'] === 'success') {
+                // Simpan data ke database lokal
+                $datas = $request->only(['name','uuid']); // Gunakan only untuk memfilter data
+                $datas['keterangan'] = 'singkron';
+                $this->storeLocally($datas);
+                return redirect()->route('category.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+            } else {
+                // Tangani kesalahan respons API
+                return redirect()->route('category.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+            }
+        } else {
+            // Simpan data ke database lokal tanpa menyinkronkan ke server
+            $data = $request->only(['name', 'keterangan', 'uuid']);
+            $data['keterangan'] = 'not_singkron';
+            $this->storeLocally($data);
+            return redirect()->route('category.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+        }
 
     }
+    private function sendToApi($url, $data)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("$url/api/singkron", $data);
+    
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
+                return null;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error sending data to API: ' . $e->getMessage());
+            return null;
+        }
+    }
+    
+        
+        private function storeLocally($datas)
+        {
+            try {
+                category_barang::insert($datas);
+            } catch (\Exception $e) {
+                \Log::error('Error storing data locally: ' . $e->getMessage());
+            }
+        }
 
     /**
      * Display the specified resource.

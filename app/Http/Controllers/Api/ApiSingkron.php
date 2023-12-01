@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\category_barang;
 
 
 class ApiSingkron extends Controller
@@ -66,9 +67,15 @@ class ApiSingkron extends Controller
     }
     
     private function categorybarang(){
-        $data = $request->all();
-        category_barang::create($data);
-        return redirect()->route('category.index')->with('success','Data Berhasil Ditambahkan');
+        $data = $request->only(['name', 'keterangan', 'uuid']);
+    
+        try {
+            category_barang::insert($datas);
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
+        } catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     private function cabang()
     {
