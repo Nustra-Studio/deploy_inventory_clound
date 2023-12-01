@@ -35,24 +35,34 @@ class ApiSingkron extends Controller
      */
     public function store(Request $request)
     {
-        $name = $request->all();
-        $name = $name['key'];
-        $response = $this->$name($request);
-        return response()->$response;
-    }
+        $key = $request->input('key');
+    
+        if (method_exists($this, $key)) {
+            try {
+                $response = $this->{$key}($request);
+                return $response;
+            } catch (\Exception $e) {
 
-    private function categorycabang($request){
-        $data = $request->all();
-        $datanew = [
-            'name' => $data['name'],
-            'keterangan' => $data['keterangan'],
-            'uuid' => $data['uuid'],
-            'status'=>'singkron'
-        ];
-        DB::table('category_cabangs')->insert($datanew);
-        $response =json(['status'=>'success','message'=>'success import data'], 200);
-        return $response;
+                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            }
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Invalid key'], 400);
+        }
     }
+    
+    private function categorycabang($request)
+    {
+        $data = $request->only(['name', 'keterangan', 'uuid']);
+    
+        try {
+            DB::table('category_cabangs')->insert($data);
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
+        } catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+    
     private function categorybarang(){
         $data = $request->all();
         category_barang::create($data);
