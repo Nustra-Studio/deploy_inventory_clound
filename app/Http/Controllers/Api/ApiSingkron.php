@@ -70,7 +70,7 @@ class ApiSingkron extends Controller
         $data = $request->only(['name', 'keterangan', 'uuid']);
     
         try {
-            category_barang::insert($datas);
+            category_barang::insert($data);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         } catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
