@@ -35,7 +35,8 @@ class ApiSingkron extends Controller
      */
     public function store(Request $request)
     {
-        $name = $request->input('key');
+        $name = $request->all();
+        $name = $name['key'];
         $response = $this->$name($request);
         return response()->$response;
     }

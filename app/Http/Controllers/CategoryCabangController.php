@@ -43,6 +43,7 @@ class CategoryCabangController extends Controller
         $response = Http::timeout(1)->get($url);
 
         if ($response->successful()) {
+            $data = $request->all();
             $datanew = [
                 'key'=>'categorycabang',
                 'name' => $data['name'],
@@ -51,7 +52,9 @@ class CategoryCabangController extends Controller
                 'status'=>'singkron'
             ];
             $url ="$url/api/singkron";
-            $response = Http::post($url, $datanew);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post($url, $datanew );
             $apiResponse = $response->json();
             dd($apiResponse);
             $datanew = [
@@ -64,6 +67,7 @@ class CategoryCabangController extends Controller
 
             // return redirect()->route('categorycabang.index')->with('success','Data Berhasil Ditambahkan Dan Juga Ke server');
         } else {
+            $data = $request->all();
             $datanew = [
                 'name' => $data['name'],
                 'keterangan' => $data['keterangan'],
@@ -73,7 +77,6 @@ class CategoryCabangController extends Controller
             DB::table('category_cabangs')->insert($datanew);
             return redirect()->route('categorycabang.index')->with('success','Data Berhasil Ditambahkan Tapi Tidak Keserver');
         }
-        $data = $request->all();
     }
 
     /**
