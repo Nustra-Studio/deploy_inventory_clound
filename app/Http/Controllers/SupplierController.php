@@ -47,19 +47,86 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        $data =[
-            'nama' => $request->nama,
-            'product' => $request->supplier,
-            'keterangan' => $request->keterangan,
-            'alamat' => $request->alamat,
-            'telepon' => $request->telepon,
-            'category_barang_id'=> $request->category,
-            'uuid' => $request->uuid,
-        ];
-        DB::table('supliers')->insert($data);
-        return redirect()->route('supllier.index')->with('success', 'Data supplier berhasil ditambahkan');
+        $url = env('APP_API');
+        $response = Http::timeout(1)->get($url);
+            if ($response->successful()) {
+                $data =[
+                    'nama' => $request->nama,
+                    'product' => $request->supplier,
+                    'keterangan' => 'singkron',
+                    'alamat' => $request->alamat,
+                    'telepon' => $request->telepon,
+                    'category_barang_id'=> $request->category,
+                    'uuid' => $request->uuid,
+                ];
+                $data['key']= 'supplier';
+        
+                // Kirim data ke server API
+                $apiResponse = $this->sendToApi($url, $data);
+        
+                // Cek status dari respons API
+                if ($apiResponse && $apiResponse['status'] === 'success') {
+                    // Simpan data ke database lokal
+                    $datas =[
+                        'nama' => $request->nama,
+                        'product' => $request->supplier,
+                        'keterangan' => 'singkron',
+                        'alamat' => $request->alamat,
+                        'telepon' => $request->telepon,
+                        'category_barang_id'=> $request->category,
+                        'uuid' => $request->uuid,
+                    ];
+                    $this->storeLocally($datas);
+                    return redirect()->route('supllier.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+                } else {
+                    // Tangani kesalahan respons API
+                    return redirect()->route('supllier.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+                }
+            } else {
+                // Simpan data ke database lokal tanpa menyinkronkan ke server
+                $datas =[
+                    'nama' => $request->nama,
+                    'product' => $request->supplier,
+                    'keterangan' => 'not_singkron',
+                    'alamat' => $request->alamat,
+                    'telepon' => $request->telepon,
+                    'category_barang_id'=> $request->category,
+                    'uuid' => $request->uuid,
+                ];
+                $this->storeLocally($datas);
+                return redirect()->route('supllier.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+            }
+
+    }
+    private function sendToApi($url, $data)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("$url/api/singkron", $data);
+
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
+                return null;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error sending data to API: ' . $e->getMessage());
+            return null;
+        }
     }
 
+        
+    private function storeLocally($datas)
+    {
+        
+        try {
+            DB::table('supliers')->insert($datas);
+        } catch (\Exception $e) {
+            \Log::error('Error storing data locally: ' . $e->getMessage());
+        }
+    }
     /**
      * Display the specified resource.
      *

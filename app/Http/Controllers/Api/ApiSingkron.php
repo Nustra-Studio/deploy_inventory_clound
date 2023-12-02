@@ -159,7 +159,7 @@ class ApiSingkron extends Controller
         }
 
     }
-    private function supplier(){
+    private function supplier($request){
         $data =[
             'nama' => $request->nama,
             'product' => $request->supplier,
@@ -169,8 +169,13 @@ class ApiSingkron extends Controller
             'category_barang_id'=> $request->category,
             'uuid' => $request->uuid,
         ];
-        DB::table('supliers')->insert($data);
-        return redirect()->route('supllier.index')->with('success', 'Data supplier berhasil ditambahkan');
+        try {
+            DB::table('supliers')->insert($data);
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
+        } catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     private function barang()
     {   
