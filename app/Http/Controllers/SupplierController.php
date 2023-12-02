@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\suplier;
 use App\Models\barang;
+use Illuminate\Support\Facades\Http;
 
 class SupplierController extends Controller
 {
