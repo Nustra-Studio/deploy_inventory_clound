@@ -100,6 +100,32 @@ class ApiCabang extends Controller
         ]);
         return response()->json(["status" => "success",'data' => $user], 200);
     }
+    public function userupdate(Request $request){
+        $data = $request->data;
+        $password = $data['password'];
+        $uuid = $data['uuid'];
+        $role = $data['role'];
+        $id_cabang = $data['id_cabang'];
+        $datas = user_cabang::where('uuid',$uuid)
+        ->where('cabang_id',$id_cabang)
+        ->update([
+            'password' => Hash::make($password),
+            'role' => $role
+        ]);
+        return response()->json(["status" => "success",'data' => $datas], 200);
+    }
+    public function userdelete(Request $request){
+        $data = $request->data;
+        $password = $data['password'];
+        $uuid = $data['uuid'];
+        $role = $data['role'];
+        $id_cabang = $data['id_cabang'];
+        $datas = user_cabang::where('uuid',$uuid)
+        ->where('cabang_id',$id_cabang)
+        ->first();
+        $datas->delete();
+        return response()->json(["status" => "success Delete Data User"], 200);
+    }
     /**
      * Store a newly created resource in storage.
      *

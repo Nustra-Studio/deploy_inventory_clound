@@ -59,8 +59,8 @@ class SupplierController extends Controller
                     'telepon' => $request->telepon,
                     'category_barang_id'=> $request->category,
                     'uuid' => $request->uuid,
+                    'key' => 'supplier'
                 ];
-                $data['key']= 'supplier';
         
                 // Kirim data ke server API
                 $apiResponse = $this->sendToApi($url, $data);
