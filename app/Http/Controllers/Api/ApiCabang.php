@@ -125,8 +125,7 @@ class ApiCabang extends Controller
         $id_cabang = $data['cabang_id'];
         $datas = user_cabang::where('uuid',$uuid)
         ->where('cabang_id',$id_cabang)
-        ->first();
-        $datas->delete();
+        ->delete();
         if(!empty($datas)){
             return response()->json(["status" => "success Delete user cabang"], 200);
         }
