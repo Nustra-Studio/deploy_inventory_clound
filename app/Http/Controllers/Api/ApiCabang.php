@@ -121,15 +121,18 @@ class ApiCabang extends Controller
     }
     public function userdelete(Request $request){
         $data = $request->data;
-        $password = $data['password'];
         $uuid = $data['uuid'];
-        $role = $data['role'];
         $id_cabang = $data['cabang_id'];
         $datas = user_cabang::where('uuid',$uuid)
         ->where('cabang_id',$id_cabang)
         ->first();
         $datas->delete();
-        return response()->json(["status" => "success Delete Data User"], 200);
+        if(!empty($datas)){
+            return response()->json(["status" => "success Delete user cabang"], 200);
+        }
+        else{
+            return response()->json(["status" => "error data not found"], 404);
+        }
     }
     /**
      * Store a newly created resource in storage.
