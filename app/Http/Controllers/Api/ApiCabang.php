@@ -105,7 +105,7 @@ class ApiCabang extends Controller
         $password = $data['password'];
         $uuid = $data['uuid'];
         $role = $data['role'];
-        $id_cabang = $data['id_cabang'];
+        $id_cabang = $data['cabang_id'];
         $datas = user_cabang::where('uuid',$uuid)
         ->where('cabang_id',$id_cabang)
         ->update([
@@ -119,7 +119,7 @@ class ApiCabang extends Controller
         $password = $data['password'];
         $uuid = $data['uuid'];
         $role = $data['role'];
-        $id_cabang = $data['id_cabang'];
+        $id_cabang = $data['cabang_id'];
         $datas = user_cabang::where('uuid',$uuid)
         ->where('cabang_id',$id_cabang)
         ->first();
