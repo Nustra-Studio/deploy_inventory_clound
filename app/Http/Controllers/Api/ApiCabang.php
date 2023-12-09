@@ -112,7 +112,12 @@ class ApiCabang extends Controller
             'password' => Hash::make($password),
             'role' => $role
         ]);
-        return response()->json(["status" => "success",'data' => $datas], 200);
+        if(!empty($datas)){
+            return response()->json(["status" => "success update data"], 200);
+        }
+        else{
+            return response()->json(["status" => "error data not found"], 404);
+        }
     }
     public function userdelete(Request $request){
         $data = $request->data;
