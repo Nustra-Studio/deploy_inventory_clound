@@ -53,13 +53,7 @@ class ApiSingkron extends Controller
     
         if (method_exists($this, $key)) {
             try {
-                if($key !="barang"||"input_barang"){
-                    $response = $this->{$key}($request);
-                }
-                else{
-                    return response()->json(['status' => 'error','data'=>$request
-                    , 'message' => $e->getMessage()], 500);
-                }
+                $response = $this->{$key}($request);
                 return $response;
             } catch (\Exception $e) {
 
