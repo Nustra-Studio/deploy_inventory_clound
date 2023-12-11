@@ -48,56 +48,78 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        $url = env('APP_API');
-        $response = Http::timeout(1)->get($url);
+        try {
+            $url = env('APP_API');
+            
+            // Make an HTTP request to the API
+            $response = Http::timeout(1)->get($url);
+        
+            // Check if the API request was successful
             if ($response->successful()) {
-                $data =[
+                $data = [
                     'nama' => $request->nama,
-                    'product' => $request->supplier,
+                    'supplier' => $request->supplier,
                     'keterangan' => 'singkron',
                     'alamat' => $request->alamat,
                     'telepon' => $request->telepon,
-                    'category_barang_id'=> $request->category,
+                    'category' => $request->category,
                     'uuid' => $request->uuid,
                     'key' => 'supplier'
                 ];
         
-                // Kirim data ke server API
+                // Send data to the server API
                 $apiResponse = $this->sendToApi($url, $data);
         
-                // Cek status dari respons API
+                // Check the status of the API response
                 if ($apiResponse && $apiResponse['status'] === 'success') {
-                    // Simpan data ke database lokal
-                    $datas =[
+                    // Save data locally to the database
+                    $localData =[
                         'nama' => $request->nama,
                         'product' => $request->supplier,
                         'keterangan' => 'singkron',
                         'alamat' => $request->alamat,
                         'telepon' => $request->telepon,
-                        'category_barang_id'=> $request->category,
+                        'category_barang_id' => $request->category,
                         'uuid' => $request->uuid,
-                    ];
-                    $this->storeLocally($datas);
+                    ]; // Exclude 'key' from local storage
+                    $this->storeLocally($localData);
+        
                     return redirect()->route('supllier.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
                 } else {
-                    // Tangani kesalahan respons API
+                    // Handle API response errors
                     return redirect()->route('supllier.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
                 }
             } else {
-                // Simpan data ke database lokal tanpa menyinkronkan ke server
-                $datas =[
+                // Save data locally without synchronizing to the server
+                $localData = [
                     'nama' => $request->nama,
                     'product' => $request->supplier,
                     'keterangan' => 'not_singkron',
                     'alamat' => $request->alamat,
                     'telepon' => $request->telepon,
-                    'category_barang_id'=> $request->category,
+                    'category_barang_id' => $request->category,
                     'uuid' => $request->uuid,
                 ];
-                $this->storeLocally($datas);
+                $this->storeLocally($localData);
+        
                 return redirect()->route('supllier.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
             }
-
+        } catch (\Exception $e) {
+               // Save data locally without synchronizing to the server
+               $localData = [
+                'nama' => $request->nama,
+                'product' => $request->supplier,
+                'keterangan' => 'not_singkron',
+                'alamat' => $request->alamat,
+                'telepon' => $request->telepon,
+                'category_barang_id' => $request->category,
+                'uuid' => $request->uuid,
+            ];
+            $this->storeLocally($localData);
+    
+            return redirect()->route('supllier.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+        
+        }
     }
     private function sendToApi($url, $data)
     {

@@ -39,35 +39,44 @@ class CategoryCabangController extends Controller
      */
     public function store(Request $request)
     {
-        $url = env('APP_API');
-        $response = Http::timeout(1)->get($url);
-    
-        if ($response->successful()) {
-            $data = $request->only(['name', 'keterangan', 'uuid']); // Gunakan only untuk memfilter data
-            $data['keterangan'] = 'singkron';
-            $data['key']= 'categorycabang';
-    
-            // Kirim data ke server API
-            $apiResponse = $this->sendToApi($url, $data);
-    
-            // Cek status dari respons API
-            if ($apiResponse && $apiResponse['status'] === 'success') {
-                // Simpan data ke database lokal
-                $datas = $request->only(['name', 'keterangan', 'uuid']); // Gunakan only untuk memfilter data
-                $datas['keterangan'] = 'singkron';
-                $this->storeLocally($datas);
-                return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
-            } else {
-                // Tangani kesalahan respons API
-                return redirect()->route('categorycabang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+            try {
+                $url = env('APP_API');
+                $response = Http::timeout(1)->get($url);
+
+                if ($response->successful()) {
+                    $data = $request->only(['name', 'keterangan', 'uuid']);
+                    $data['keterangan'] = 'singkron';
+                    $data['key'] = 'categorycabang';
+
+                    // Kirim data ke server API
+                    $apiResponse = $this->sendToApi($url, $data);
+
+                    // Cek status dari respons API
+                    if ($apiResponse && $apiResponse['status'] === 'success') {
+                        // Simpan data ke database lokal
+                        $datas = $request->only(['name', 'keterangan', 'uuid']);
+                        $datas['keterangan'] = 'singkron';
+                        $this->storeLocally($datas);
+                        return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+                    } else {
+                        // Tangani kesalahan respons API
+                        return redirect()->route('categorycabang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+                    }
+                } else {
+                    // Simpan data ke database lokal tanpa menyinkronkan ke server
+                    $data = $request->only(['name', 'keterangan', 'uuid']);
+                    $data['keterangan'] = 'not_singkron';
+                    $this->storeLocally($data);
+                    return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+                }
+            } catch (\Exception $e) {
+              // Simpan data ke database lokal tanpa menyinkronkan ke server
+                $data = $request->only(['name', 'keterangan', 'uuid']);
+                $data['keterangan'] = 'not_singkron';
+                $this->storeLocally($data);
+                return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
             }
-        } else {
-            // Simpan data ke database lokal tanpa menyinkronkan ke server
-            $data = $request->only(['name', 'keterangan', 'uuid']);
-            $data['keterangan'] = 'not_singkron';
-            $this->storeLocally($data);
-            return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
-        }
+
     }
     
     private function sendToApi($url, $data)

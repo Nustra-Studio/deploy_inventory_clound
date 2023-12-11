@@ -14,6 +14,7 @@ use Mike42\Escpos\CapabilityProfile;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\Printer;
+use Illuminate\Support\Facades\Http;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BarangController extends Controller
@@ -147,24 +148,117 @@ class BarangController extends Controller
             'id_supllayer' => $request->id_supplier,
             'status' => 'masuk',
         ];
-        $push = barang::create($data_master);
-        $up = history_transaction::create($data_history);
-            for($j=0; $j < count($request->nama); $j++){
-                $uuid= hash('sha256', uniqid(mt_rand(), true));
-                $data_harga = [
-                    'uuid' => $uuid,
-                    'id_barang'=> $request->uuid,
-                    'harga' => $request->harga[$j],
-                    'jumlah_minimal' => $request->jumlah_minimal[$j],
-                    'diskon' => $request->diskon[$j],
-                    'keterangan' => $request->nama[$j],
-                    // 'satuan' => $request->satuan[$j],
+        try{
+            if ($response->successful()) {
+                // Prepare data for API request
+                $data = [
+                    'data_history'=>$data_history,
+                    'data_master'=>$data_master
                 ];
-                $push = harga_khusus::create($data_harga);
+                $data['key'] = 'barang';
+        
+                // Send data to the server API
+                $apiResponse = $this->sendToApi($url, $data);
+        
+                // Check the status of the API response
+                if ($apiResponse && $apiResponse['status'] === 'success') {
+                    // Save data locally to the database
+                    $data_master =[
+                        'name' => $request->name,
+                        'merek_barang' => $request->merek_barang,
+                        'uuid' => $request->uuid,
+                        'id_supplier' => $request->supplier,
+                        'category_id' => $request->category_barang,
+                        'harga_pokok' => $request->harga_pokok,
+                        'harga_jual' => $request->harga_jual,
+                        'stok' => $request->jumlah,
+                        'kode_barang' => $kode,
+                        'keterangan' => 'singkron',
+                    ];
+                    $this->storeLocally($data_master , $data_history , $request);
+        
+                    return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+                } else {
+                    // Handle API response errors
+                    return redirect()->route('barang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+                }
+            } else {
+                // Save data locally without synchronizing to the server
+                $data_master =[
+                    'name' => $request->name,
+                    'merek_barang' => $request->merek_barang,
+                    'uuid' => $request->uuid,
+                    'id_supplier' => $request->supplier,
+                    'category_id' => $request->category_barang,
+                    'harga_pokok' => $request->harga_pokok,
+                    'harga_jual' => $request->harga_jual,
+                    'stok' => $request->jumlah,
+                    'kode_barang' => $kode,
+                    'keterangan' => 'not_singkron',
+                ];
+                $this->storeLocally($data_master , $data_history , $request);
+        
+                return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
             }
-            return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Tambahkan');
+        }
+        catch (\Exception $e) {
+            $data_master =[
+                'name' => $request->name,
+                'merek_barang' => $request->merek_barang,
+                'uuid' => $request->uuid,
+                'id_supplier' => $request->supplier,
+                'category_id' => $request->category_barang,
+                'harga_pokok' => $request->harga_pokok,
+                'harga_jual' => $request->harga_jual,
+                'stok' => $request->jumlah,
+                'kode_barang' => $kode,
+                'keterangan' => 'not_singkron',
+            ];
+            $this->storeLocally($data_master , $data_history , $request);
+    
+            return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+        }
     }
-
+    private function sendToApi($url, $data)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("$url/api/singkron", $data);
+    
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
+                return null;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error sending data to API: ' . $e->getMessage());
+            return null;
+        }
+    }
+    private function storeLocally($data_master, $data_history , $request)
+        {
+            try {
+                $push = barang::create($data_master);
+                $up = history_transaction::create($data_history);
+                    for($j=0; $j < count($request->nama); $j++){
+                        $uuid= hash('sha256', uniqid(mt_rand(), true));
+                        $data_harga = [
+                            'uuid' => $uuid,
+                            'id_barang'=> $request->uuid,
+                            'harga' => $request->harga[$j],
+                            'jumlah_minimal' => $request->jumlah_minimal[$j],
+                            'diskon' => $request->diskon[$j],
+                            'keterangan' => $request->nama[$j],
+                            // 'satuan' => $request->satuan[$j],
+                        ];
+                        $push = harga_khusus::create($data_harga);
+                    }
+            } catch (\Exception $e) {
+                \Log::error('Error storing data locally: ' . $e->getMessage());
+            }
+        }
     /**
      * Display the specified resource.
      *

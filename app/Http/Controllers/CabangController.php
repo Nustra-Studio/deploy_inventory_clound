@@ -42,36 +42,35 @@ class CabangController extends Controller
      */
     public function store(Request $request)
     {
-        // create database for request data
+                // create database for request data
         $data = $request->all();
         $url = env('APP_API');
         $response = Http::timeout(1)->get($url);
-    
-        if ($response->successful()) { // Gunakan only untuk memfilter data
+
+        try {
             $data['keterangan'] = 'singkron';
-            $data['key']= 'cabang';
-    
+            $data['key'] = 'cabang';
+
             // Kirim data ke server API
             $apiResponse = $this->sendToApi($url, $data);
-    
+
             // Cek status dari respons API
             if ($apiResponse && $apiResponse['status'] === 'success') {
                 // Simpan data ke database lokal
-                $data = $request->all(); // Gunakan only untuk memfilter data
-                $data['keterangan'] = 'singkron';
                 $this->storeLocally($data);
                 return redirect()->route('cabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
             } else {
                 // Tangani kesalahan respons API
-                return redirect()->route('cabang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+                throw new \Exception('Terjadi kesalahan saat menyinkronkan data ke server');
             }
-        } else {
+        } catch (\Exception $e) {
+            // Tangani kesalahan apapun yang terjadi
             // Simpan data ke database lokal tanpa menyinkronkan ke server
-            $data = $request->all();
             $data['keterangan'] = 'not_singkron';
             $this->storeLocally($data);
-            return redirect()->route('cabang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+            return redirect()->route('cabang.index')->with('error', $e->getMessage());
         }
+
     }
     private function sendToApi($url, $data)
     {
@@ -178,7 +177,7 @@ class CabangController extends Controller
     public function edit($id)
     {
                 // create database for request data
-                $data = cabang::where('uuid', $id)->first();
+                $data = cabang::where('id', $id)->first();
                 return view('pages.cabang.update', compact('data'));
             
     }
@@ -222,12 +221,12 @@ class CabangController extends Controller
     public function destroy($id)
     {
                 // delete data
-                $data = cabang::where('uuid', $id)->first();
+                $data = cabang::where('id', $id)->first();
                 $nama = str_replace(' ', '_', $data->nama);
                 $database = "cabang_$nama";
                 DB::statement("DROP TABLE cabang_$nama");
                 DB::statement("DROP TABLE transaction_$database");
-                cabang::where('uuid', $id)->delete();
+                cabang::where('id', $id)->delete();
                 return redirect()->route('cabang.index')->with('success', 'Data cabang berhasil dihapus');
     }
 }

@@ -177,61 +177,57 @@ class ApiSingkron extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-    private function barang()
+    private function barang($request)
     {   
-        $data_terakhir = DB::table('barangs')->latest('kode_barang')->first();
-        $kode_terakhir = $data_terakhir->kode_barang;
-        $kategori = category_barang::where('uuid',$request->category_barang)->value('name') ;
-        $bulan = date('m');
-        $tahun = date('y');
-        if ($kode_terakhir > 999) {
-                $nomorUrut = str_pad(mt_rand(1000, 9999), 4, '0', STR_PAD_LEFT);
-            } else {
-                $nomorUrut = str_pad(mt_rand(1, 999), 3, '0', STR_PAD_LEFT);
-            }
-
-        $kode = $kategori . $bulan . $tahun . $nomorUrut;
-        $data_master =[
-            'name' => $request->name,
-            'merek_barang' => $request->merek_barang,
-            'uuid' => $request->uuid,
-            'id_supplier' => $request->supplier,
-            'category_id' => $request->category_barang,
-            'harga_pokok' => $request->harga_pokok,
-            'harga_jual' => $request->harga_jual,
-            'stok' => $request->jumlah,
-            'kode_barang' => $kode,
-            'keterangan' => $request->keterangan,
-        ];
-        $uuid= hash('sha256', uniqid(mt_rand(), true));
-        $data_history = [
-            'uuid' => $uuid,
-            'name' => $request->name,
-            'jumlah' => $request->jumlah,
-            'kode_barang' => $kode,
-            'uuid_barang' => $request->uuid,
-            'harga_pokok' => $request->harga_pokok,
-            'harga_jual' => $request->harga_jual,
-            'id_supllayer' => $request->id_supplier,
-            'status' => 'masuk',
-        ];
-        $push = barang::create($data_master);
-        $up = history_transaction::create($data_history);
-            for($j=0; $j < count($request->nama); $j++){
-                $uuid= hash('sha256', uniqid(mt_rand(), true));
-                $data_harga = [
-                    'uuid' => $uuid,
-                    'id_barang'=> $request->uuid,
-                    'harga' => $request->harga[$j],
-                    'jumlah_minimal' => $request->jumlah_minimal[$j],
-                    'diskon' => $request->diskon[$j],
-                    'keterangan' => $request->nama[$j],
-                    // 'satuan' => $request->satuan[$j],
-                ];
-                $push = harga_khusus::create($data_harga);
-            }
-            return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Tambahkan');
+        try{
+            $request = $request->data_master;
+            $data_master =[
+                'name' => $request->name,
+                'merek_barang' => $request->merek_barang,
+                'uuid' => $request->uuid,
+                'id_supplier' => $request->supplier,
+                'category_id' => $request->category_barang,
+                'harga_pokok' => $request->harga_pokok,
+                'harga_jual' => $request->harga_jual,
+                'stok' => $request->jumlah,
+                'kode_barang' => $kode,
+                'keterangan' => $request->keterangan,
+            ];
+            $request = $request->data_history;
+            $uuid= hash('sha256', uniqid(mt_rand(), true));
+            $data_history = [
+                'uuid' => $uuid,
+                'name' => $request->name,
+                'jumlah' => $request->jumlah,
+                'kode_barang' => $kode,
+                'uuid_barang' => $request->uuid,
+                'harga_pokok' => $request->harga_pokok,
+                'harga_jual' => $request->harga_jual,
+                'id_supllayer' => $request->id_supplier,
+                'status' => 'masuk',
+            ];
+            $push = barang::create($data_master);
+            $up = history_transaction::create($data_history);
+                for($j=0; $j < count($request->nama); $j++){
+                    $uuid= hash('sha256', uniqid(mt_rand(), true));
+                    $data_harga = [
+                        'uuid' => $uuid,
+                        'id_barang'=> $request->uuid,
+                        'harga' => $request->harga[$j],
+                        'jumlah_minimal' => $request->jumlah_minimal[$j],
+                        'diskon' => $request->diskon[$j],
+                        'keterangan' => $request->nama[$j],
+                        // 'satuan' => $request->satuan[$j],
+                    ];
+                    $push = harga_khusus::create($data_harga);
+                }
+        return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
+        }
+    catch (\Exception $e) {
+        // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
+}
     private function input_barang()
     {
         $data = $request->input('data_table_values');
