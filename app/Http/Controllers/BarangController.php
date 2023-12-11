@@ -149,6 +149,8 @@ class BarangController extends Controller
             'status' => 'masuk',
         ];
         try{
+            $url = env('APP_API');
+            $response = Http::timeout(1)->get($url);
             if ($response->successful()) {
                 // Prepare data for API request
                 $data = [
@@ -198,7 +200,7 @@ class BarangController extends Controller
                 ];
                 $this->storeLocally($data_master , $data_history , $request);
         
-                return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+                return redirect()->route('barang.index')->with('success', "$response");
             }
         }
         catch (\Exception $e) {
