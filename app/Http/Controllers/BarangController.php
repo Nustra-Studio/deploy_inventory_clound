@@ -148,6 +148,22 @@ class BarangController extends Controller
             'id_supllayer' => $request->id_supplier,
             'status' => 'masuk',
         ];
+        $data_hargas = [];
+
+        for ($j = 0; $j < count($request->nama); $j++) {
+            $uuid = hash('sha256', uniqid(mt_rand(), true));
+            $data_harga = [
+                'uuid' => $uuid,
+                'id_barang' => $request->uuid[$j],
+                'harga' => $request->harga[$j],
+                'jumlah_minimal' => $request->jumlah_minimal[$j],
+                'diskon' => $request->diskon[$j],
+                'keterangan' => $request->nama[$j],
+                // 'satuan' => $request->satuan[$j],
+            ];
+        
+            $data_hargas[] = $data_harga;
+        }
         try{
             $url = env('APP_API');
             $response = Http::timeout(1)->get($url);
@@ -155,7 +171,8 @@ class BarangController extends Controller
                 // Prepare data for API request
                 $data = [
                     'data_history'=>$data_history,
-                    'data_master'=>$data_master
+                    'data_master'=>$data_master,
+                    'data_harga'=>$data_hargas
                 ];
                 $data['key'] = 'barang';
         
