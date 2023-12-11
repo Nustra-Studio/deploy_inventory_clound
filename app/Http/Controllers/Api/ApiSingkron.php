@@ -190,7 +190,7 @@ class ApiSingkron extends Controller
                 'harga_pokok' => $request->harga_pokok,
                 'harga_jual' => $request->harga_jual,
                 'stok' => $request->jumlah,
-                'kode_barang' => $kode,
+                'kode_barang' => $request->kode,
                 'keterangan' => $request->keterangan,
             ];
             $request = $request->data_history;
