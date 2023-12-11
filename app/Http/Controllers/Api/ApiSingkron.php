@@ -181,6 +181,7 @@ class ApiSingkron extends Controller
     private function barang($request)
     {   
         try{
+            $requests = $request;
             $data_harga= $request->data_harga;
             $request = $request->data_master;
             $request = json_encode($request);
@@ -197,10 +198,10 @@ class ApiSingkron extends Controller
                 'kode_barang' => $request['kode_barang'],
                 'keterangan' => $request['keterangan'],
             ];
-            $request = $request->data_history;
+            $push = barang::create($data_master);
+            $request = $requests->data_history;
             $request = json_encode($request);
             $request = json_decode($request, true);
-            $uuid= hash('sha256', uniqid(mt_rand(), true));
             $uuid= hash('sha256', uniqid(mt_rand(), true));
             $data_history = [
                 'uuid' => $uuid,
@@ -213,7 +214,6 @@ class ApiSingkron extends Controller
                 'id_supllayer' => $request['id_supllayer'],
                 'status' => 'masuk',
             ];
-            $push = barang::create($data_master);
             $up = history_transaction::create($data_history);
             $push = harga_khusus::create($data_harga);
         return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
