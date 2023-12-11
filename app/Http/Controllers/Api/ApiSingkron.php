@@ -232,7 +232,8 @@ class ApiSingkron extends Controller
         }
     catch (\Exception $e) {
         // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
-        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        return response()->json(['status' => 'error','data'=>$request
+                    , 'message' => $e->getMessage()], 500);
     }
 }
     private function input_barang()
