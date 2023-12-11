@@ -182,6 +182,7 @@ class ApiSingkron extends Controller
     {   
         try{
             $request = $request->data_master;
+            $request = json_encode($request);
             $request = json_decode($request, true);
             $data_master =[
                 'name' => $request->name,
@@ -196,6 +197,7 @@ class ApiSingkron extends Controller
                 'keterangan' => $request->keterangan,
             ];
             $request = $request->data_history;
+            $request = json_encode($request);
             $request = json_decode($request, true);
             $uuid= hash('sha256', uniqid(mt_rand(), true));
             $data_history = [
