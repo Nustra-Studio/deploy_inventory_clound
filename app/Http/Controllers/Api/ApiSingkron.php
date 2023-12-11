@@ -189,11 +189,11 @@ class ApiSingkron extends Controller
                 'name' => $request['name'],
                 'merek_barang' => $request['merek_barang'],
                 'uuid' => $request['uuid'],
-                'id_supplier' => $request['supplier'],
-                'category_id' => $request['category_barang'],
+                'id_supplier' => $request['id_supplier'],
+                'category_id' => $request['category_id'],
                 'harga_pokok' => $request['harga_pokok'],
                 'harga_jual' => $request['harga_jual'],
-                'stok' => $request['jumlah'],
+                'stok' => $request['stok'],
                 'kode_barang' => $request['kode_barang'],
                 'keterangan' => $request['keterangan'],
             ];
@@ -207,10 +207,10 @@ class ApiSingkron extends Controller
                 'name' => $request['name'],
                 'jumlah' => $request['jumlah'],
                 'kode_barang' => $request['kode_barang'],
-                'uuid_barang' => $request['uuid'],
+                'uuid_barang' => $request['uuid_barang'],
                 'harga_pokok' => $request['harga_pokok'],
                 'harga_jual' => $request['harga_jual'],
-                'id_supllayer' => $request['id_supplier'],
+                'id_supllayer' => $request['id_supllayer'],
                 'status' => 'masuk',
             ];
             $push = barang::create($data_master);
