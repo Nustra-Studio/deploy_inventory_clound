@@ -215,7 +215,7 @@ class ApiSingkron extends Controller
                 'status' => 'masuk',
             ];
             $up = history_transaction::create($data_history);
-            $push = harga_khusus::create($data_harga);
+            $push = harga_khusus::insert($data_harga);
         return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         }
     catch (\Exception $e) {
