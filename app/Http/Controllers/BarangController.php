@@ -134,7 +134,7 @@ class BarangController extends Controller
             'harga_jual' => $request->harga_jual,
             'stok' => $request->jumlah,
             'kode_barang' => $kode,
-            'keterangan' => $request->keterangan,
+            'keterangan' => 'singkron',
         ];
         $uuid= hash('sha256', uniqid(mt_rand(), true));
         $data_history = [
