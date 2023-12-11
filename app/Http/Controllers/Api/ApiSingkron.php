@@ -185,7 +185,7 @@ class ApiSingkron extends Controller
             $request = json_encode($request);
             $request = json_decode($request, true);
             $data_master =[
-                'name' => $request->name,
+                'name' => $request['name'],
                 'merek_barang' => $request->merek_barang,
                 'uuid' => $request->uuid,
                 'id_supplier' => $request->supplier,
