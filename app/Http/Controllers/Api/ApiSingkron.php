@@ -228,7 +228,6 @@ class ApiSingkron extends Controller
     {
         try {
             $request = $request->data_main;
-            $data = json_encode($request);
             $data = json_decode($request, true);
             $bulan = date('m');
             $tahun = date('y');
