@@ -215,7 +215,7 @@ class ApiSingkron extends Controller
                 'status' => 'masuk',
             ];
             $up = history_transaction::create($data_history);
-            if(!empty($data_harga)){
+            if(is_array($data_harga) && !empty($data_harga)){
                 $push = harga_khusus::insert($data_harga);
             }
             
