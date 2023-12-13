@@ -65,8 +65,10 @@ class BarangController extends Controller
             $response = Http::timeout(1)->get($url);
             if ($response->successful()) {
                 // Prepare data for API request
-                $data['keterangan'] = "singkron";
-                $data['key'] = 'input_barang';
+                $data = [
+                    'request'=>$request,
+                    'key'=>'input_barang'
+                ];
         
                 // Send data to the server API
                 $apiResponse = $this->sendToApi($url, $data);
@@ -76,8 +78,8 @@ class BarangController extends Controller
                     // Save data locally to the database
                     $data = $request->input('data_table_values');
                     $data = json_decode($data, true);
-                    $data['keterangan'] = "singkron";
-                    $this->storeinput($data,$request);
+                    $keterangan = 'singkron';
+                    $this->storeinput($data,$request,$keterangan);
         
                     return redirect()->route('barang.index')->with('success', "Data berhasil disimpan dan disinkronkan ke server $apiResponse");
                 } else {
@@ -89,9 +91,8 @@ class BarangController extends Controller
                 // Save data locally without synchronizing to the server
                 $data = $request->input('data_table_values');
                 $data = json_decode($data, true);
-                $data['keterangan'] = "not_singkron";
-
-                $this->storeinput($data,$request);
+                $keterangan = 'not_singkron';
+                $this->storeinput($data,$request,$keterangan);
         
                 return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tidak tersingkron ke server');
             }
@@ -100,9 +101,8 @@ class BarangController extends Controller
             {
                 $data = $request->input('data_table_values');
                 $data = json_decode($data, true);
-                $data['keterangan'] = "not_singkron";
-
-                $this->storeinput($data,$request);
+                $keterangan = 'not_singkron';
+                $this->storeinput($data,$request,$keterangan);
         
                 return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tidak tersingkron ke server');
             }
@@ -293,20 +293,22 @@ class BarangController extends Controller
                 \Log::error('Error storing data locally: ' . $e->getMessage());
             }
         }
-    private function storeinput($data , $request){
+    private function storeinput($data , $request ,$keterangan){
         try {
+                $data = json_encode($request->data_table_values);
                 $bulan = date('m');
                 $tahun = date('y');
                 $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
                 $singkatan = "PM";
                 $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
                 $uuid = Str::uuid()->toString();
-                $keterangan = $data['keterangan'];
                 foreach ($data as $row) {
                     // $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
-                    $stock = barang::where('name', $row['Name'])->value('stok');
-                    $kode = barang::where('name', $row['Name'])->first();
-                    $stock = $stock + $row['jumlah'];
+                    // $stock = barang::where('name', $row['Name'])->value('stok');
+                    $Name = $row['Name'];
+                    $kode = barang::where('name', $Name)->first();
+                    $stock = $kode->stock;
+                    $stock = $stock + $row["jumlah"];
                     $supplier = $kode->id_supplier;
                     DB::table('barangs')->updateOrInsert(
                         ['name' => $row['Name']],
