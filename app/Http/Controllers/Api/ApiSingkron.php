@@ -227,7 +227,9 @@ class ApiSingkron extends Controller
     private function input_barang($request)
     {
         try {
-            $data = json_decode($request->data, true);
+            $request = $request->data;
+            $data = json_encode($request);
+            $data = json_decode($request, true);
             $bulan = date('m');
             $tahun = date('y');
             $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
