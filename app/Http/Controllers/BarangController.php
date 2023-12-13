@@ -79,7 +79,7 @@ class BarangController extends Controller
                     $data['keterangan'] = "singkron";
                     $this->storeinput($data,$request);
         
-                    return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+                    return redirect()->route('barang.index')->with('success', "Data berhasil disimpan dan disinkronkan ke server $apiResponse");
                 } else {
                     // Handle API response errors
                     return redirect()->route('barang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');

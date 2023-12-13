@@ -226,52 +226,54 @@ class ApiSingkron extends Controller
 }
     private function input_barang($request)
     {
-        try {
-            $data = $request;
-            $bulan = date('m');
-            $tahun = date('y');
-            $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
-            $singkatan = "PM";
-            $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
-            $uuid = Str::uuid()->toString();
-            $keterangan = $data['keterangan'];
-            foreach ($data as $row) {
-                // $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
-                $stock = barang::where('name', $row['Name'])->value('stok');
-                $kode = barang::where('name', $row['Name'])->first();
-                $stock = $stock + $row['jumlah'];
-                $supplier = $kode->id_supplier;
-                DB::table('barangs')->updateOrInsert(
-                    ['name' => $row['Name']],
-                    [
-                        'stok' => $stock,
-                        'Harga_pokok' => $row['Harga_pokok'],
-                        'harga_jual' => $row['harga_jual'],
-                        'id_supplier' => $supplier,
-                    ]
-                );
-                $uuid= hash('sha256', uniqid(mt_rand(), true));
-                $data_history = [
-                'uuid' => $uuid,
-                'name' => $row['Name'],
-                'jumlah' => $row['jumlah'],
-                'kode_barang' => $kode->kode_barang,
-                'uuid_barang' => $kode->uuid,
-                'harga_pokok' => $kode->harga_pokok,
-                'harga_jual' => $kode->harga_jual,
-                'id_supllayer' => $supplier,
-                'kode_transaction'=>$kode_tranasction,
-                'status' => 'masuk',
-                'keterangan'=> $keterangan
-            ];
-            $push = history_transaction::create($data_history);
-            }
-        }
-        catch (\Exception $e) {
-            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
-            return response()->json(['status' => 'error','data'=>$data
-                        , 'message' => $e->getMessage()], 500);
-        }
+
+        // try {
+        //     $data = $request->all();
+        //     $bulan = date('m');
+        //     $tahun = date('y');
+        //     $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
+        //     $singkatan = "PM";
+        //     $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
+        //     $uuid = Str::uuid()->toString();
+        //     $keterangan = $data['keterangan'];
+        //     foreach ($data as $row) {
+        //         // $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
+        //         $stock = barang::where('name', $row['Name'])->value('stok');
+        //         $kode = barang::where('name', $row['Name'])->first();
+        //         $stock = $stock + $row['jumlah'];
+        //         $supplier = $kode->id_supplier;
+        //         DB::table('barangs')->updateOrInsert(
+        //             ['name' => $row['Name']],
+        //             [
+        //                 'stok' => $stock,
+        //                 'Harga_pokok' => $row['Harga_pokok'],
+        //                 'harga_jual' => $row['harga_jual'],
+        //                 'id_supplier' => $supplier,
+        //             ]
+        //         );
+        //         $uuid= hash('sha256', uniqid(mt_rand(), true));
+        //         $data_history = [
+        //         'uuid' => $uuid,
+        //         'name' => $row['Name'],
+        //         'jumlah' => $row['jumlah'],
+        //         'kode_barang' => $kode->kode_barang,
+        //         'uuid_barang' => $kode->uuid,
+        //         'harga_pokok' => $kode->harga_pokok,
+        //         'harga_jual' => $kode->harga_jual,
+        //         'id_supllayer' => $supplier,
+        //         'kode_transaction'=>$kode_tranasction,
+        //         'status' => 'masuk',
+        //         'keterangan'=> $keterangan
+        //     ];
+        //     $push = history_transaction::create($data_history);
+        //     }
+        // }
+        // catch (\Exception $e) {
+        //     // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+        //     return response()->json(['status' => 'error','data'=>$data
+        //                 , 'message' => $e->getMessage()], 500);
+        // }
+        return response()->json(['status' => 'success','data'=>$request, 'message' => 'Data berhasil disimpan secara lokal'], 200);
     }
     private function distribusi()
     {
