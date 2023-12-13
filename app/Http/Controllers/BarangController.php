@@ -65,10 +65,8 @@ class BarangController extends Controller
             $response = Http::timeout(1)->get($url);
             if ($response->successful()) {
                 // Prepare data for API request
+                $data = $request;
                 $data['keterangan'] = "singkron";
-                $data = [
-                    'data_main'=>$data
-                ];
                 $data['key'] = 'input_barang';
         
                 // Send data to the server API

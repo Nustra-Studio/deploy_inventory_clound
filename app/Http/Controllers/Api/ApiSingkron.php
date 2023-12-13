@@ -227,7 +227,8 @@ class ApiSingkron extends Controller
     private function input_barang($request)
     {
         try {
-            $request = $request->data_main;
+            $data = $request->input('data_table_values');
+            $data = json_decode($data, true);
             $data = json_decode($request, true);
             $bulan = date('m');
             $tahun = date('y');
@@ -235,7 +236,7 @@ class ApiSingkron extends Controller
             $singkatan = "PM";
             $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
             $uuid = Str::uuid()->toString();
-            $keterangan = $data['keterangan'];
+            $keterangan = $request['keterangan'];
             foreach ($data as $row) {
                 $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
                 $stock = barang::where('name', $row['Name'])->value('stok');
