@@ -227,7 +227,7 @@ class ApiSingkron extends Controller
     private function input_barang($request)
     {
         try {
-            $request = $request->data;
+            $request = $request->data_main;
             $data = json_encode($request);
             $data = json_decode($request, true);
             $bulan = date('m');
@@ -270,7 +270,7 @@ class ApiSingkron extends Controller
     }
         catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
-            return response()->json(['status' => 'error','data'=>$request
+            return response()->json(['status' => 'error','data'=>$data
                         , 'message' => $e->getMessage()], 500);
         }
         return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Tambahkan');

@@ -67,7 +67,7 @@ class BarangController extends Controller
                 // Prepare data for API request
                 $data['keterangan'] = "singkron";
                 $data = [
-                    'data'=>$data
+                    'data_main'=>$data
                 ];
                 $data['key'] = 'input_barang';
         
