@@ -164,7 +164,7 @@ class BarangController extends Controller
             'status' => 'masuk',
         ];
         $data_hargas = [];
-
+        if(!empty($request->nama)){
         for ($j = 0; $j < count($request->nama); $j++) {
             $uuid = hash('sha256', uniqid(mt_rand(), true));
             $data_harga = [
@@ -179,6 +179,7 @@ class BarangController extends Controller
         
             $data_hargas[] = $data_harga;
         }
+    }
         try{
             $url = env('APP_API');
             $response = Http::timeout(1)->get($url);
@@ -276,6 +277,7 @@ class BarangController extends Controller
             try {
                 $push = barang::create($data_master);
                 $up = history_transaction::create($data_history);
+                if(!empty($request->nama)){
                     for($j=0; $j < count($request->nama); $j++){
                         $uuid= hash('sha256', uniqid(mt_rand(), true));
                         $data_harga = [
@@ -289,6 +291,7 @@ class BarangController extends Controller
                         ];
                         $push = harga_khusus::create($data_harga);
                     }
+                }
             } catch (\Exception $e) {
                 \Log::error('Error storing data locally: ' . $e->getMessage());
             }

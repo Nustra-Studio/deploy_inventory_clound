@@ -215,7 +215,10 @@ class ApiSingkron extends Controller
                 'status' => 'masuk',
             ];
             $up = history_transaction::create($data_history);
-            $push = harga_khusus::insert($data_harga);
+            if(!empty($data_harga)){
+                $push = harga_khusus::insert($data_harga);
+            }
+            
         return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         }
         catch (\Exception $e) {
@@ -229,6 +232,7 @@ class ApiSingkron extends Controller
 
         try {
             $data = $request->only(['request']);
+            $data = $data->request;
             $data = $request->input('data_table_values');
             $data = json_decode($data, true);
             $bulan = date('m');
