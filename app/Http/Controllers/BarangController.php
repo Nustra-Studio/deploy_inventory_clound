@@ -65,7 +65,6 @@ class BarangController extends Controller
             $response = Http::timeout(1)->get($url);
             if ($response->successful()) {
                 // Prepare data for API request
-                $data = $request;
                 $data['keterangan'] = "singkron";
                 $data['key'] = 'input_barang';
         
@@ -103,7 +102,7 @@ class BarangController extends Controller
                 $data = json_decode($data, true);
                 $data['keterangan'] = "not_singkron";
 
-                $this->storeLocally($data,$request);
+                $this->storeinput($data,$request);
         
                 return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tidak tersingkron ke server');
             }
@@ -304,10 +303,11 @@ class BarangController extends Controller
                 $uuid = Str::uuid()->toString();
                 $keterangan = $data['keterangan'];
                 foreach ($data as $row) {
-                    $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
+                    // $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
                     $stock = barang::where('name', $row['Name'])->value('stok');
                     $kode = barang::where('name', $row['Name'])->first();
                     $stock = $stock + $row['jumlah'];
+                    $supplier = $kode->id_supplier;
                     DB::table('barangs')->updateOrInsert(
                         ['name' => $row['Name']],
                         [

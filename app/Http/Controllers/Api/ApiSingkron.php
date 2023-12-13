@@ -227,20 +227,20 @@ class ApiSingkron extends Controller
     private function input_barang($request)
     {
         try {
-            $data = $request->input('data_table_values');
-            $data = json_decode($data, true);
+            $data = $request;
             $bulan = date('m');
             $tahun = date('y');
             $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
             $singkatan = "PM";
             $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
             $uuid = Str::uuid()->toString();
-            $keterangan = $request['keterangan'];
+            $keterangan = $data['keterangan'];
             foreach ($data as $row) {
-                $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
+                // $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
                 $stock = barang::where('name', $row['Name'])->value('stok');
                 $kode = barang::where('name', $row['Name'])->first();
                 $stock = $stock + $row['jumlah'];
+                $supplier = $kode->id_supplier;
                 DB::table('barangs')->updateOrInsert(
                     ['name' => $row['Name']],
                     [
@@ -266,13 +266,12 @@ class ApiSingkron extends Controller
             ];
             $push = history_transaction::create($data_history);
             }
-    }
+        }
         catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
             return response()->json(['status' => 'error','data'=>$data
                         , 'message' => $e->getMessage()], 500);
         }
-        return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Tambahkan');
     }
     private function distribusi()
     {
