@@ -218,52 +218,58 @@ class ApiSingkron extends Controller
             $push = harga_khusus::insert($data_harga);
         return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         }
-    catch (\Exception $e) {
-        // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
-        return response()->json(['status' => 'error','data'=>$request
-                    , 'message' => $e->getMessage()], 500);
-    }
-}
-    private function input_barang()
-    {
-        $data = $request->input('data_table_values');
-        $data = json_decode($data, true);
-        $bulan = date('m');
-        $tahun = date('y');
-        $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
-        $singkatan = "PM";
-        $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
-        $uuid = Str::uuid()->toString();
-        foreach ($data as $row) {
-            $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
-            $stock = barang::where('name', $row['Name'])->value('stok');
-            $kode = barang::where('name', $row['Name'])->first();
-            $stock = $stock + $row['jumlah'];
-            DB::table('barangs')->updateOrInsert(
-                ['name' => $row['Name']],
-                [
-                    'stok' => $stock,
-                    'Harga_pokok' => $row['Harga_pokok'],
-                    'harga_jual' => $row['harga_jual'],
-                    'id_supplier' => $supplier,
-                ]
-            );
-            $uuid= hash('sha256', uniqid(mt_rand(), true));
-            $data_history = [
-            'uuid' => $uuid,
-            'name' => $row['Name'],
-            'jumlah' => $row['jumlah'],
-            'kode_barang' => $kode->kode_barang,
-            'uuid_barang' => $kode->uuid,
-            'harga_pokok' => $kode->harga_pokok,
-            'harga_jual' => $kode->harga_jual,
-            'id_supllayer' => $supplier,
-            'kode_transaction'=>$kode_tranasction,
-            'status' => 'masuk',
-        ];
-        $push = history_transaction::create($data_history);
+        catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error','data'=>$request
+                        , 'message' => $e->getMessage()], 500);
         }
-        
+}
+    private function input_barang($request)
+    {
+        try {
+            $bulan = date('m');
+            $tahun = date('y');
+            $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
+            $singkatan = "PM";
+            $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
+            $uuid = Str::uuid()->toString();
+            $keterangan = $request['keterangan'];
+            foreach ($request as $row) {
+                $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
+                $stock = barang::where('name', $row['Name'])->value('stok');
+                $kode = barang::where('name', $row['Name'])->first();
+                $stock = $stock + $row['jumlah'];
+                DB::table('barangs')->updateOrInsert(
+                    ['name' => $row['Name']],
+                    [
+                        'stok' => $stock,
+                        'Harga_pokok' => $row['Harga_pokok'],
+                        'harga_jual' => $row['harga_jual'],
+                        'id_supplier' => $supplier,
+                    ]
+                );
+                $uuid= hash('sha256', uniqid(mt_rand(), true));
+                $data_history = [
+                'uuid' => $uuid,
+                'name' => $row['Name'],
+                'jumlah' => $row['jumlah'],
+                'kode_barang' => $kode->kode_barang,
+                'uuid_barang' => $kode->uuid,
+                'harga_pokok' => $kode->harga_pokok,
+                'harga_jual' => $kode->harga_jual,
+                'id_supllayer' => $supplier,
+                'kode_transaction'=>$kode_tranasction,
+                'status' => 'masuk',
+                'keterangan'=> $keterangan
+            ];
+            $push = history_transaction::create($data_history);
+            }
+    }
+        catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error','data'=>$request
+                        , 'message' => $e->getMessage()], 500);
+        }
         return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Tambahkan');
     }
     private function distribusi()

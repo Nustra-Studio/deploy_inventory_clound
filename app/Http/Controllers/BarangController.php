@@ -60,37 +60,52 @@ class BarangController extends Controller
         $singkatan = "PM";
         $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
         $uuid = Str::uuid()->toString();
-        foreach ($data as $row) {
-            $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
-            $stock = barang::where('name', $row['Name'])->value('stok');
-            $kode = barang::where('name', $row['Name'])->first();
-            $stock = $stock + $row['jumlah'];
-            DB::table('barangs')->updateOrInsert(
-                ['name' => $row['Name']],
-                [
-                    'stok' => $stock,
-                    'Harga_pokok' => $row['Harga_pokok'],
-                    'harga_jual' => $row['harga_jual'],
-                    'id_supplier' => $supplier,
-                ]
-            );
-            $uuid= hash('sha256', uniqid(mt_rand(), true));
-            $data_history = [
-            'uuid' => $uuid,
-            'name' => $row['Name'],
-            'jumlah' => $row['jumlah'],
-            'kode_barang' => $kode->kode_barang,
-            'uuid_barang' => $kode->uuid,
-            'harga_pokok' => $kode->harga_pokok,
-            'harga_jual' => $kode->harga_jual,
-            'id_supllayer' => $supplier,
-            'kode_transaction'=>$kode_tranasction,
-            'status' => 'masuk',
-        ];
-        $push = history_transaction::create($data_history);
-        }
+        try{
+            $url = env('APP_API');
+            $response = Http::timeout(1)->get($url);
+            if ($response->successful()) {
+                // Prepare data for API request
+                $data['key'] = 'input_barang';
+                $data['keterangan'] = "singkron";
         
-        return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Tambahkan');
+                // Send data to the server API
+                $apiResponse = $this->sendToApi($url, $data);
+        
+                // Check the status of the API response
+                if ($apiResponse && $apiResponse['status'] === 'success') {
+                    // Save data locally to the database
+                    $data = $request->input('data_table_values');
+                    $data = json_decode($data, true);
+                    $data['keterangan'] = "singkron";
+                    $this->storeinput($data,$request);
+        
+                    return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+                } else {
+                    // Handle API response errors
+                    return redirect()->route('barang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
+                }
+            } 
+            else {
+                // Save data locally without synchronizing to the server
+                $data = $request->input('data_table_values');
+                $data = json_decode($data, true);
+                $data['keterangan'] = "not_singkron";
+
+                $this->storeinput($data,$request);
+        
+                return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tidak tersingkron ke server');
+            }
+        }
+            catch (\Exception $e) 
+            {
+                $data = $request->input('data_table_values');
+                $data = json_decode($data, true);
+                $data['keterangan'] = "not_singkron";
+
+                $this->storeLocally($data,$request);
+        
+                return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tidak tersingkron ke server');
+            }
     }
 
 
@@ -145,7 +160,7 @@ class BarangController extends Controller
             'uuid_barang' => $request->uuid,
             'harga_pokok' => $request->harga_pokok,
             'harga_jual' => $request->harga_jual,
-            'id_supllayer' => $request->id_supplier,
+            'id_supllayer' => $request->supplier,
             'status' => 'masuk',
         ];
         $data_hargas = [];
@@ -278,6 +293,49 @@ class BarangController extends Controller
                 \Log::error('Error storing data locally: ' . $e->getMessage());
             }
         }
+    private function storeinput($data , $request){
+        try {
+                $bulan = date('m');
+                $tahun = date('y');
+                $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
+                $singkatan = "PM";
+                $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
+                $uuid = Str::uuid()->toString();
+                $keterangan = $data['keterangan'];
+                foreach ($data as $row) {
+                    $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
+                    $stock = barang::where('name', $row['Name'])->value('stok');
+                    $kode = barang::where('name', $row['Name'])->first();
+                    $stock = $stock + $row['jumlah'];
+                    DB::table('barangs')->updateOrInsert(
+                        ['name' => $row['Name']],
+                        [
+                            'stok' => $stock,
+                            'Harga_pokok' => $row['Harga_pokok'],
+                            'harga_jual' => $row['harga_jual'],
+                            'id_supplier' => $supplier,
+                        ]
+                    );
+                    $uuid= hash('sha256', uniqid(mt_rand(), true));
+                    $data_history = [
+                    'uuid' => $uuid,
+                    'name' => $row['Name'],
+                    'jumlah' => $row['jumlah'],
+                    'kode_barang' => $kode->kode_barang,
+                    'uuid_barang' => $kode->uuid,
+                    'harga_pokok' => $kode->harga_pokok,
+                    'harga_jual' => $kode->harga_jual,
+                    'id_supllayer' => $supplier,
+                    'kode_transaction'=>$kode_tranasction,
+                    'status' => 'masuk',
+                    'keterangan'=> $keterangan
+                ];
+                $push = history_transaction::create($data_history);
+                }
+        } catch (\Exception $e) {
+            \Log::error('Error storing data locally: ' . $e->getMessage());
+        }
+    }
     /**
      * Display the specified resource.
      *
