@@ -229,7 +229,8 @@ class ApiSingkron extends Controller
 
         try {
             $data = $request->only(['request']);
-            $data = json_encode($data->data_table_values);
+            $data = $request->input('data_table_values');
+            $data = json_decode($data, true);
             $bulan = date('m');
             $tahun = date('y');
             $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
@@ -264,7 +265,6 @@ class ApiSingkron extends Controller
                 'id_supllayer' => $supplier,
                 'kode_transaction'=>$kode_tranasction,
                 'status' => 'masuk',
-                'keterangan'=> $keterangan
             ];
             $push = history_transaction::create($data_history);
             }

@@ -295,7 +295,8 @@ class BarangController extends Controller
         }
     private function storeinput($data , $request ,$keterangan){
         try {
-                $data = json_encode($request->data_table_values);
+                $data = $request->input('data_table_values');
+                $data = json_decode($data, true);
                 $bulan = date('m');
                 $tahun = date('y');
                 $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
