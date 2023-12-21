@@ -44,6 +44,56 @@ class DistribusiController extends Controller
     }
     public function barangstore(Request $request)
     {
+        $data = $request->all();
+        $url = env('APP_API');
+        $response = Http::timeout(1)->get($url);
+
+        try {
+            $data['keterangan'] = 'singkron';
+            $data['key'] = 'distribusi';
+
+            // Kirim data ke server API
+            $apiResponse = $this->sendToApi($url, $data);
+
+            // Cek status dari respons API
+            if ($apiResponse && $apiResponse['status'] === 'success') {
+                // Simpan data ke database lokal
+                $this->storeLocally($data ,$request);
+                return redirect()->route('distribusi.index')->with('success', 'Data Distribusi  berhasil disimpan dan disinkronkan ke server');
+            } else {
+                // Tangani kesalahan respons API
+                throw new \Exception('Terjadi kesalahan saat menyinkronkan data ke server');
+            }
+        } catch (\Exception $e) {
+            // Tangani kesalahan apapun yang terjadi
+            // Simpan data ke database lokal tanpa menyinkronkan ke server
+            $data['keterangan'] = 'not_singkron';
+            $this->storeLocally($data , $request);
+            return redirect()->route('distribusi.index')->with('error', $e->getMessage());
+        }
+    }
+    private function sendToApi($url, $data)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("$url/api/singkron", $data);
+
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
+                return null;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error sending data to API: ' . $e->getMessage());
+            return null;
+        }
+    }
+    private function storeLocally($data , $request)
+    {
+        try {
+        $keterangan = $data['keterangan'];
         $bulan = date('m');
         $tahun = date('y');
         $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
@@ -121,9 +171,12 @@ class DistribusiController extends Controller
             }
 
         }
-        return redirect()->route('distribusi.index')->with('success', "Barang Berhasil Di Distribusikan ke $nama  ");
+            
+        } catch (\Exception $e) {
+            \Log::error('Error storing data locally: ' . $e->getMessage());
+        }
     }
-
+    
     public function barang($uuid){
         $barang = barang::all();
         $uuid_cabang = $uuid;

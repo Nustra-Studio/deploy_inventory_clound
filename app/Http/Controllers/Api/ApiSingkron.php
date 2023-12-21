@@ -279,86 +279,91 @@ class ApiSingkron extends Controller
                         , 'message' => $e->getMessage()], 500);
         }
     }
-    private function distribusi()
+    private function distribusi($request)
     {
-        $bulan = date('m');
-        $tahun = date('y');
-        $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
-        $singkatan = "PD";
-        $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
-        $total = count($request->input('jumlah'));
-        $database = cabang::where('uuid', '=' ,"$request->id_cabang")->value('database');
-        $nama = cabang::where('uuid', '=' ,"$request->id_cabang")->value('nama');
-        for ($i=0; $i < $total; $i++) { 
-            $kode = $request->input('kode')[$i];
-            $stocks = $request->input('jumlah')[$i];
-            $data = barang::where('kode_barang', '=' ,"$kode")->first();
-            $check = DB::table("$database")->where('kode_barang', '=' ,"$kode")->first();
-            if ($check) {
-                $stock = $check->stok + $stocks;
-                DB::table("$database")->where('kode_barang', '=' ,"$kode")->update([
-                    'stok' => $stock,
-                    'Harga_pokok' => $data->Harga_pokok,
-                    'harga_jual' => $data->harga_jual,
-                ]);
-                $uuid= hash('sha256', uniqid(mt_rand(), true));
-                $data_history = [
-                    'uuid' => $uuid,
-                    'name' => $data->name,
-                    'jumlah' => $stocks,
-                    'kode_barang' => $data->kode_barang,
-                    'uuid_barang' => $data->uuid,
-                    'harga_pokok' => $data->harga_pokok,
-                    'harga_jual' => $data->harga_jual,
-                    'id_supllayer' => $data->id_supplier,
-                    'status' => 'keluar',
-                    'keterangan' => 'distribusi',
-                    'kode_transaction'=>$kode_tranasction,
-                    'id_cabang' => $request->id_cabang,
-                ];
-                history_transaction::create($data_history);
-                $data_stock = $data->stok - $stocks;
-                $data->update([
-                    'stok' => $data_stock,
-                ]);
-            }else{
-                DB::table("$database")->insert([
-                    'id' => $data->id,
-                    'name' => $data->name,
-                    'merek_barang' => $data->merek_barang,
-                    'uuid' => $data->uuid,
-                    'id_supplier' => $data->id_supplier,
-                    'category_id' => $data->category_id,
-                    'harga_pokok' => $data->harga_pokok,
-                    'harga_jual' => $data->harga_jual,
-                    'stok' => $stocks,
-                    'kode_barang' => $data->kode_barang,
-                    'keterangan' => $kode_tranasction,
-                ]);
-                $uuid= hash('sha256', uniqid(mt_rand(), true));
-                $data_history = [
-                    'uuid' => $uuid,
-                    'name' => $data->name,
-                    'jumlah' => $stocks,
-                    'kode_barang' => $data->kode_barang,
-                    'uuid_barang' => $data->uuid,
-                    'harga_pokok' => $data->harga_pokok,
-                    'harga_jual' => $data->harga_jual,
-                    'id_supllayer' => $data->id_supplier,
-                    'status' => 'keluar',
-                    'keterangan' => 'distribusi',
-                    'kode_transaction'=>$kode_tranasction,
-                    'id_cabang' => $request->id_cabang,
-                ];
-                history_transaction::create($data_history);
-                $data_stock = $data->stok - $stocks;
-                $data->update([
-                    'stok' => $data_stock,
-                ]);
+        try {
+            $bulan = date('m');
+            $tahun = date('y');
+            $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
+            $singkatan = "PD";
+            $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
+            $total = count($request->input('jumlah'));
+            $database = cabang::where('uuid', '=' ,"$request->id_cabang")->value('database');
+            $nama = cabang::where('uuid', '=' ,"$request->id_cabang")->value('nama');
+            for ($i=0; $i < $total; $i++) { 
+                $kode = $request->input('kode')[$i];
+                $stocks = $request->input('jumlah')[$i];
+                $data = barang::where('kode_barang', '=' ,"$kode")->first();
+                $check = DB::table("$database")->where('kode_barang', '=' ,"$kode")->first();
+                if ($check) {
+                    $stock = $check->stok + $stocks;
+                    DB::table("$database")->where('kode_barang', '=' ,"$kode")->update([
+                        'stok' => $stock,
+                        'Harga_pokok' => $data->Harga_pokok,
+                        'harga_jual' => $data->harga_jual,
+                    ]);
+                    $uuid= hash('sha256', uniqid(mt_rand(), true));
+                    $data_history = [
+                        'uuid' => $uuid,
+                        'name' => $data->name,
+                        'jumlah' => $stocks,
+                        'kode_barang' => $data->kode_barang,
+                        'uuid_barang' => $data->uuid,
+                        'harga_pokok' => $data->harga_pokok,
+                        'harga_jual' => $data->harga_jual,
+                        'id_supllayer' => $data->id_supplier,
+                        'status' => 'keluar',
+                        'keterangan' => 'distribusi',
+                        'kode_transaction'=>$kode_tranasction,
+                        'id_cabang' => $request->id_cabang,
+                    ];
+                    history_transaction::create($data_history);
+                    $data_stock = $data->stok - $stocks;
+                    $data->update([
+                        'stok' => $data_stock,
+                    ]);
+                }else{
+                    DB::table("$database")->insert([
+                        'id' => $data->id,
+                        'name' => $data->name,
+                        'merek_barang' => $data->merek_barang,
+                        'uuid' => $data->uuid,
+                        'id_supplier' => $data->id_supplier,
+                        'category_id' => $data->category_id,
+                        'harga_pokok' => $data->harga_pokok,
+                        'harga_jual' => $data->harga_jual,
+                        'stok' => $stocks,
+                        'kode_barang' => $data->kode_barang,
+                        'keterangan' => $kode_tranasction,
+                    ]);
+                    $uuid= hash('sha256', uniqid(mt_rand(), true));
+                    $data_history = [
+                        'uuid' => $uuid,
+                        'name' => $data->name,
+                        'jumlah' => $stocks,
+                        'kode_barang' => $data->kode_barang,
+                        'uuid_barang' => $data->uuid,
+                        'harga_pokok' => $data->harga_pokok,
+                        'harga_jual' => $data->harga_jual,
+                        'id_supllayer' => $data->id_supplier,
+                        'status' => 'keluar',
+                        'keterangan' => 'distribusi',
+                        'kode_transaction'=>$kode_tranasction,
+                        'id_cabang' => $request->id_cabang,
+                    ];
+                    history_transaction::create($data_history);
+                    $data_stock = $data->stok - $stocks;
+                    $data->update([
+                        'stok' => $data_stock,
+                    ]);
+                }
+    
             }
-
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
+        } catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
-        return redirect()->route('distribusi.index')->with('success', "Barang Berhasil Di Distribusikan ke $nama  ");
     }
     private function history()
     {

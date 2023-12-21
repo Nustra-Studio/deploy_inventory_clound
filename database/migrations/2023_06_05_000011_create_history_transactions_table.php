@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('keterangan')->nullable();
             $table->string('status')->nullable();
             $table->string('kode_transaction')->nullable();
+            $table->string('singkron')->nullable();
             // time date masuk barang
             $table->timestamps();
         });

@@ -21,6 +21,7 @@ class history_transaction extends Model
         'id_cabang',
         'keterangan',
         'status',
+        'singkron',
         'kode_transaction'
     ];
 }
