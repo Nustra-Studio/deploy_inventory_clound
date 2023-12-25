@@ -49,7 +49,7 @@ class DistribusiController extends Controller
         $response = Http::timeout(1)->get($url);
 
         try {
-            $data['keterangan'] = 'singkron';
+            $data['singkron'] = 'singkron';
             $data['key'] = 'distribusi';
 
             // Kirim data ke server API
@@ -67,7 +67,7 @@ class DistribusiController extends Controller
         } catch (\Exception $e) {
             // Tangani kesalahan apapun yang terjadi
             // Simpan data ke database lokal tanpa menyinkronkan ke server
-            $data['keterangan'] = 'not_singkron';
+            $data['singkron'] = 'not_singkron';
             $this->storeLocally($data , $request);
             return redirect()->route('distribusi.index')->with('error', $e->getMessage());
         }
@@ -93,7 +93,7 @@ class DistribusiController extends Controller
     private function storeLocally($data , $request)
     {
         try {
-        $keterangan = $data['keterangan'];
+        $singkron = $data['singkron'];
         $bulan = date('m');
         $tahun = date('y');
         $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
@@ -128,11 +128,13 @@ class DistribusiController extends Controller
                     'keterangan' => 'distribusi',
                     'kode_transaction'=>$kode_tranasction,
                     'id_cabang' => $request->id_cabang,
+                    'singkron'=>$singkron,
                 ];
                 history_transaction::create($data_history);
                 $data_stock = $data->stok - $stocks;
                 $data->update([
                     'stok' => $data_stock,
+
                 ]);
             }else{
                 DB::table("$database")->insert([
@@ -162,6 +164,7 @@ class DistribusiController extends Controller
                     'keterangan' => 'distribusi',
                     'kode_transaction'=>$kode_tranasction,
                     'id_cabang' => $request->id_cabang,
+                    'singkron'=>$singkron
                 ];
                 history_transaction::create($data_history);
                 $data_stock = $data->stok - $stocks;
