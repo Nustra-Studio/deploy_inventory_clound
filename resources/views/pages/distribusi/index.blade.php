@@ -27,8 +27,6 @@
                 <th>No</th>
                 <th>Nama Toko</th>
                 <th>Pimpinan Toko</th>
-                <th>Alamat</th>
-                <th>Telepon</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -39,8 +37,6 @@
                     <td>{{$loop->index+1}}</td>
                     <td>{{$item->nama}}</td>
                     <td>{{$item->kepala_cabang}}</td>
-                    <td>{{$item->alamat}}</td>
-                    <td>{{$item->telepon}}</td>
                     <td>
                       <div class="text-center">
                         <a href="{{url("/distribusi/$item->uuid/barang")}}" class="btn btn-primary btn-icon">

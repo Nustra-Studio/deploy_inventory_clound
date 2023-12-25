@@ -182,7 +182,7 @@ class ApiSingkron extends Controller
     {   
         try{
             $requests = $request;
-            $data_harga= $request->data_harga;
+            $data_harga= $request['data_harga'];
             $request = $request->data_master;
             $request = json_encode($request);
             $request = json_decode($request, true);
