@@ -9,6 +9,7 @@ use App\Models\supplier;
 use App\Models\category;
 use App\Models\history_transaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class DistribusiController extends Controller
 {
