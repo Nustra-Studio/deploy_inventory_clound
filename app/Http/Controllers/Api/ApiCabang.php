@@ -173,7 +173,10 @@ class ApiCabang extends Controller
         $uuid = $data['uuid'];
         $barcode = $data['barcode'];
         $stock = $data['stock'];
-        opname::create([
+        // update data for name
+        $check = opname::where('barcode',$barcode)->where('id_toko',$id_toko)->first();
+        if(empty($check)){
+            opname::create([
                 'id_toko'=>$id_toko,
                 'uuid'=>$uuid,
                 'barcode'=>$barcode,
@@ -181,6 +184,19 @@ class ApiCabang extends Controller
                 'stock'=>$stock,
                 'status'=>'old',
             ]);
+        }
+        else{
+            $id = $check->id;
+            $stocks = $check->stock;
+            $stock = $stock + $stocks;
+            opname::where('id',$id)
+                        ->where('id_toko',$id_toko)
+                        ->update([
+                            'perubahan'=>'',
+                            'stock'=>$stock,
+                            'status'=>'old',
+                        ]);
+        }
         return response()->json("Semua data telah buat.", 200);
     }
     public function opnamelist(Request $request){
