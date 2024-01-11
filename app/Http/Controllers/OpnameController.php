@@ -84,7 +84,7 @@ class OpnameController extends Controller
             $data = opname::where('id_toko', $id)->where('barcode', 'LIKE', '%'. $request->get('namaproduct'). '%')->get();
         }
         else{
-            $data = opname::where('id_toko', $id)->get();
+            $data = opname::where('id_toko', $id)->limit(20)->get();
         }
         return response()->json($data);
     }
