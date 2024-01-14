@@ -218,14 +218,14 @@ class ApiCabang extends Controller
         );
     }
     public function returnopname (Request $request){
-        $uuid = $request->input('id_barang');
+        $uuid = $request->input('barcode');
         $id_toko = $request->input('uuid');
-        $data = opname::where('uuid',$uuid)->where('id_toko',$id_toko)->frist();
+        $data = opname::where('uuid',$uuid)->where('barcode',$id_toko)->frist();
         $data->delete();
         return response()->json(
             [
                 'message'=>'success update data',
-                'uuid'=>$uuid
+                'barcode'=>$uuid
             ],200);
     }
     /**
