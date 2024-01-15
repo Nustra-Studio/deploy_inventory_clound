@@ -82,6 +82,13 @@ class ApiOwner extends Controller
     {
         //
     }
+    public function top(){
+
+    }
+
+    public function hariancabang(){
+        
+    }
 
     /**
      * Store a newly created resource in storage.
