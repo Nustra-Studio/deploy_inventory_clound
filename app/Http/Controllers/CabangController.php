@@ -177,7 +177,7 @@ class CabangController extends Controller
     public function edit($id)
     {
                 // create database for request data
-                $data = cabang::where('id', $id)->first();
+                $data = cabang::where('uuid', $id)->first();
                 return view('pages.cabang.update', compact('data'));
             
     }

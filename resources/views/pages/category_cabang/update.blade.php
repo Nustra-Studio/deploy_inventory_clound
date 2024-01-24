@@ -26,10 +26,6 @@
                 <label for="exampleInputUsername1" class="form-label">Nama</label>
                 <input type="text" value="{{$data->name}}" name="name" class="form-control" id="exampleInputUsername1" autocomplete="off" placeholder="Nama Catgory Barang">
             </div>
-            <div class="mb-3">
-                <label for="exampleInputUsername2" class="form-label">Keterangan</label>
-                <input type="text" name="keterangan" value="{{$data->keterangan}}" class="form-control" id="exampleInputUsername2" autocomplete="off" placeholder="Keterangan Cabang">
-            </div>
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button  
             onclick="window.history.go(-1); return false;"
