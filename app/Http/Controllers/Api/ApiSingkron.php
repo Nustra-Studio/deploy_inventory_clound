@@ -182,49 +182,49 @@ class ApiSingkron extends Controller
     {   
         try{
             $requests = $request;
-            $data_harga= $request['data_harga'];
-            $request = $request->data_master;
-            $request = json_encode($request);
-            $request = json_decode($request, true);
-            $data_master =[
-                'name' => $request['name'],
-                'merek_barang' => $request['merek_barang'],
-                'uuid' => $request['uuid'],
-                'id_supplier' => $request['id_supplier'],
-                'category_id' => $request['category_id'],
-                'harga_pokok' => $request['harga_pokok'],
-                'harga_jual' => $request['harga_jual'],
-                'stok' => $request['stok'],
-                'kode_barang' => $request['kode_barang'],
-                'keterangan' => $request['keterangan'],
+            $data_harga = $request->input('data_harga');
+            $requestDataMaster = json_decode(json_encode($request->data_master), true);
+            $data_master = [
+                'name' => $requestDataMaster['name'],
+                'merek_barang' => $requestDataMaster['merek_barang'],
+                'uuid' => $requestDataMaster['uuid'],
+                'id_supplier' => $requestDataMaster['id_supplier'],
+                'category_id' => $requestDataMaster['category_id'],
+                'harga_pokok' => $requestDataMaster['harga_pokok'],
+                'harga_jual' => $requestDataMaster['harga_jual'],
+                'stok' => $requestDataMaster['stok'],
+                'kode_barang' => $requestDataMaster['kode_barang'],
+                'keterangan' => $requestDataMaster['keterangan'],
             ];
+            
             $push = barang::create($data_master);
-            $request = $requests->data_history;
-            $request = json_encode($request);
-            $request = json_decode($request, true);
-            $uuid= hash('sha256', uniqid(mt_rand(), true));
+            
+            $requestDataHistory = json_decode(json_encode($requests->data_history), true);
+            $uuid = hash('sha256', uniqid(mt_rand(), true));
             $data_history = [
                 'uuid' => $uuid,
-                'name' => $request['name'],
-                'jumlah' => $request['jumlah'],
-                'kode_barang' => $request['kode_barang'],
-                'uuid_barang' => $request['uuid_barang'],
-                'harga_pokok' => $request['harga_pokok'],
-                'harga_jual' => $request['harga_jual'],
-                'id_supllayer' => $request['id_supllayer'],
+                'name' => $requestDataHistory['name'],
+                'jumlah' => $requestDataHistory['jumlah'],
+                'kode_barang' => $requestDataHistory['kode_barang'],
+                'uuid_barang' => $requestDataHistory['uuid_barang'],
+                'harga_pokok' => $requestDataHistory['harga_pokok'],
+                'harga_jual' => $requestDataHistory['harga_jual'],
+                'id_supllayer' => $requestDataHistory['id_supllayer'],
                 'status' => 'masuk',
             ];
+            
             $up = history_transaction::create($data_history);
-            if(is_array($data_harga) && !empty($data_harga)){
+            
+            if (is_array($data_harga) && !empty($data_harga)) {
                 $push = harga_khusus::insert($data_harga);
             }
             
-        return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         }
         catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
             return response()->json(['status' => 'error','data'=>$request->data_harga
-                        , 'message' => $e->getMessage()], 500);
+            , 'message' => $e->getMessage()], 500);
         }
 }
     private function input_barang($request)

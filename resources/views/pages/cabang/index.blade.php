@@ -46,7 +46,7 @@
                 <td> {{$item->telepon}}</td>
                 <td> {{$item->alamat}}</td>
                 @php
-                    $categorys = App\Models\category_cabangs::find($item->category_id);
+                    $categorys = App\Models\category_cabangs::where('uuid',$item->category_id)->first();
                     $category = $categorys->name;
                 @endphp
                 <td> {{$category}}</td>
