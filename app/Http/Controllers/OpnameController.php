@@ -111,13 +111,13 @@ class OpnameController extends Controller
         $file = $request->file('file');
 
         // Debugging: Print file information
-        dd([
-            'File Path' => $file->path(),
-            'File Size' => $file->getSize(),
-        ]);
+        // dd([
+        //     'File Path' => $file->path(),
+        //     'File Size' => $file->getSize(),
+        // ]);
 
         // Continue with Excel import
-        // Excel::import(new OpnameImport, $file);
+        Excel::import(new OpnameImport, $file);
 
         return redirect()->back()->with('success', 'Data Imported');
     } catch (\Exception $e) {
