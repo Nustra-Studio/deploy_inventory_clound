@@ -22,6 +22,8 @@
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14.1",
+        "laravel/tinker": "^2.7",
+        "maatwebsite/excel": "^1.1",
         "mike42/escpos-php": "^2.2",
         "realrashid/sweet-alert": "^7.0",
         "simplesoftwareio/simple-qrcode": "^0.0.4@beta"
