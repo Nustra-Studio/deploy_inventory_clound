@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\user_cabang;
 use App\Models\UserCabang;
 use App\Models\opname;
+use App\Imports\OpnameImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 
 class OpnameController extends Controller
@@ -99,6 +101,29 @@ class OpnameController extends Controller
     {
         //
     }
+    public function excel(Request $request)
+{
+    try {
+        $request->validate([
+            'file' => 'required', // Adjust max file size as needed
+        ]);
+
+        $file = $request->file('file');
+
+        // Debugging: Print file information
+        dd([
+            'File Path' => $file->path(),
+            'File Size' => $file->getSize(),
+        ]);
+
+        // Continue with Excel import
+        // Excel::import(new OpnameImport, $file);
+
+        return redirect()->back()->with('success', 'Data Imported');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Error importing data: ' . $e->getMessage());
+    }
+}
 
     /**
      * Remove the specified resource from storage.

@@ -12,18 +12,19 @@ class OpnameImport implements ToCollection
     */
     public function collection(Collection $collection)
     {
-        $id_toko = $request->input('id_toko');
-        $data = $request->data;
-        $uuid = $data['uuid'];
-        $barcode = $data['barcode'];
-        $stock = $data['stock'];
-        opname::create([
-            'id_toko'=>$id_toko,
-            'uuid'=>$uuid,
-            'barcode'=>$barcode,
-            'perubahan'=>'',
-            'stock'=>$stock,
-            'status'=>'old',
-        ]);
+        foreach($collection as $item){
+            $id_toko = $item[4];
+            $uuid = $item[1];
+            $barcode = $item[2];
+            $stock = $item[3];
+            opname::create([
+                'id_toko'=>$id_toko,
+                'uuid'=>$uuid,
+                'barcode'=>$barcode,
+                'perubahan'=>'',
+                'stock'=>$stock,
+                'status'=>'old',
+            ]);
+        }
     }
 }

@@ -35,6 +35,7 @@ Route::group(['prefix' => 'error'], function(){
         Route::middleware(['opname'])->group(function () {
             Route::resource('opname', OpnameController::class);
             Route::get('opname/{id}/show', 'OpnameController@product')->name('opname.product');
+            Route::post('opname/excel','OpnameController@excel')->name('opname.excel');
         });
         Route::get('/login-opname', 'OpnameAuthController@index')->name('opname.login');
         Route::prefix('opname')->group(function () {
