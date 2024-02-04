@@ -194,7 +194,7 @@ class BarangController extends Controller
         
                 // Send data to the server API
                 $apiResponse = $this->sendToApi($url, $data);
-        
+                Log::error('test api' . $data);
                 // Check the status of the API response
                 if ($apiResponse && $apiResponse['status'] === 'success') {
                     // Save data locally to the database
