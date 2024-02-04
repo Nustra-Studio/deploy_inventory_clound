@@ -239,7 +239,7 @@ class ApiSingkron extends Controller
             $singkatan = "PM";
             $kode_tranasction = $singkatan.$bulan.$tahun.$nomorUrut;
             $uuid = Str::uuid()->toString();
-            $keterangan = isset($data['keterangan']) ? $data['keterangan'] : null;
+            // $keterangan = isset($data['keterangan']) ? $data['keterangan'] : null;
             foreach ($data as $row) {
                 // $supplier = suplier::where('nama', $row['supplier'])->value('uuid');
                 $stock = barang::where('name', $row['Name'])->value('stok');
