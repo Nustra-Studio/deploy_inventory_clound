@@ -16,6 +16,7 @@ use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\Printer;
 use Illuminate\Support\Facades\Http;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Log;
 
 class BarangController extends Controller
 {
@@ -72,6 +73,7 @@ class BarangController extends Controller
         
                 // Send data to the server API
                 $apiResponse = $this->sendToApi($url, $data);
+                Log::debug($data);
         
                 // Check the status of the API response
                 if ($apiResponse && $apiResponse['status'] === 'success') {
