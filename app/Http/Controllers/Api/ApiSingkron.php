@@ -231,8 +231,8 @@ class ApiSingkron extends Controller
     {
 
         try {
-            $requestData = $request->input('data_table_values');
-            $data = json_decode($requestData, true);            
+            $requestData = $request['request'];
+            $data = json_decode($requestData['data_table_values'], true);
             $bulan = date('m');
             $tahun = date('y');
             $nomorUrut = str_pad(mt_rand(1, 99), 2, '0', STR_PAD_LEFT);
