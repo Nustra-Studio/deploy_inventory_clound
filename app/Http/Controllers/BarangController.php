@@ -66,12 +66,10 @@ class BarangController extends Controller
             $response = Http::timeout(1)->get($url);
             if ($response->successful()) {
                 // Prepare data for API request
-               // Jika metode sendToApi menggunakan metode POST
-            $apiResponse = $this->sendToApi($url, [
-                'data' => $request->all(),
-                'key' => 'input_barang', // Sesuaikan dengan format yang diharapkan oleh API
-            ]);
-
+                $data = [
+                    'request'=>$request->all(),
+                    'key'=>'input_barang'
+                ];
         
                 // Send data to the server API
                 $apiResponse = $this->sendToApi($url, $data);
