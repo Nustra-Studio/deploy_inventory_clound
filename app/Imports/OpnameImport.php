@@ -13,10 +13,10 @@ class OpnameImport implements ToCollection
     public function collection(Collection $collection)
     {
         foreach($collection as $item){
-            $id_toko = $item[4];
-            $uuid = $item[1];
-            $barcode = $item[2];
-            $stock = $item[3];
+            $id_toko = $item[3];
+            $uuid = $item[0];
+            $barcode = $item[1];
+            $stock = $item[2];
             opname::create([
                 'id_toko'=>$id_toko,
                 'uuid'=>$uuid,
