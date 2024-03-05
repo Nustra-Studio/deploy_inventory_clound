@@ -218,6 +218,44 @@ class ApiMember extends Controller
             }
     
     }
+    public function reset(Request $request){
+        $phone = $request->phone;
+        $nik = $request->nik;
+        $passowrd = $request->password;
+        $characters = '0123456789';
+        $randomNumber = '';
+        $length = 16;
+        $uuid =Str::uuid(60);
+        for ($i = 0; $i < $length; $i++) {
+            $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        $data = member::where('phone', $phone)->where('email',$nik)->first();
+        if(empty($data)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Reset Password  Gagal Data Tidak Di Temukan',
+            ], 404);
+        }
+        else{
+          $update = $data->update([
+                'password' => Hash::make($passowrd),
+                'random_kode'=>$randomNumber
+            ]);
+            if($update){
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Reset Password Berhasil',
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'success' =>false,
+                    'message' => 'Server error',
+                ], 500);
+            }
+        }
+
+    }
     public function register(Request $request){
         $characters = '0123456789';
         $randomNumber = '';
