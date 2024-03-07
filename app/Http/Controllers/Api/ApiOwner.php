@@ -35,42 +35,11 @@ class ApiOwner extends Controller
             $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
         }
         if ($member && Hash::check($input['password'], $member->password)) {
-                $time = time();
-                $expainds = $member->expait_kode;
-                if ($expainds < $time) {
-                    $member->kode_akses = Str::random(60);
-                    $member->expait_kode = time() + 600;
-                    $member->random_kode = $randomNumber;
-                    $member->save();
-                    $member = member::where('name', $input['name'])->first();
-                    // data member hanya nama uuid phone dan kode akses
-                    $members = [
-                        'nama' => $member->name,
-                        'uuid' => $member->uuid,
-                        'phone' => $member->phone,
-                        'email' => $member->email,
-                    ];
-                    return response()->json([
-                        'access_token' => $member->kode_akses,
-                        'expaid_token' => $member->expait_kode,
-                        'success' => true,
-                        'message' => 'Login Berhasil',
-                        'data' => $members,
-                    ], 200);
-                } else {
-                    $members = [
-                        'nama' => $member->name,
-                        'uuid' => $member->uuid,
-                        'phone' => $member->phone,
-                    ];
-                    return response()->json([
-                        'access_token' => $member->kode_akses,
-                        'success' => true,
-                        'expaid_token' => $member->expait_kode,
-                        'message' => 'Login Berhasil',
-                        'data' => $members
-                    ], 200);
-                }
+            return response()->json([
+                'access_token' => $member->kode_akses,
+                'success' => true,
+                'message' => 'Login Berhasil',
+            ], 200);
             } else {
                 return response()->json([
                     'success' => false,
