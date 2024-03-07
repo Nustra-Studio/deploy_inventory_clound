@@ -70,7 +70,7 @@ class ApiOwner extends Controller
 
     }
     public function gudangout(){
-
+        
     }
 
     /**

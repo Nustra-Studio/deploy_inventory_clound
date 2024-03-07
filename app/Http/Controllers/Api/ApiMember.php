@@ -109,7 +109,7 @@ class ApiMember extends Controller
             $dates = date('Y-m-d H:i:s');
                 if($input['id_member']!== null ){
                     $uang = $input['quantity'] * $input['harga_jual'];
-                    $transaction_member += $uang;
+                    $transaction_member += $uang;   
                     $id_member[] = $input['id_member'];
                     $add =transaction_member::create( [
                         'uuid' => Str::uuid(60),
@@ -134,6 +134,7 @@ class ApiMember extends Controller
                 ]
             );
             }
+           if(!empty($id_member)){
             $uuid_member = member::where('phone',$id_member[0])->first();
             $poin = poin_member::where('id_member', $uuid_member->uuid)->first();
             // $created_at = $poin->created_at;
@@ -150,6 +151,7 @@ class ApiMember extends Controller
                 'expaid'=> "",
             ];
         poin_member::where('id_member',$uuid_member->uuid)->update($data);
+           }
 
     return response()->json([
         'success' => true,
