@@ -33,10 +33,13 @@ class ApiOwner extends Controller
         $characters = '0123456789';
         $randomNumber = '';
         $length = 16;
+        $member->kode_akses = Str::random(60);
+        $member->save();
         for ($i = 0; $i < $length; $i++) {
             $randomNumber .= $characters[rand(0, strlen($characters) - 1)];
         }
         if ($member && Hash::check($input['password'], $member->password)) {
+            $member = member::where('name', $input['name'])->where('status','owner')->first();
             return response()->json([
                 'access_token' => $member->kode_akses,
                 'success' => true,
