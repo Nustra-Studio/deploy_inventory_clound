@@ -42,7 +42,7 @@ class ApiOwner extends Controller
                     $member->expait_kode = time() + 600;
                     $member->random_kode = $randomNumber;
                     $member->save();
-                    $member = member::where('phone', $input['nomor_hp'])->first();
+                    $member = member::where('name', $input['name'])->first();
                     // data member hanya nama uuid phone dan kode akses
                     $members = [
                         'nama' => $member->name,
