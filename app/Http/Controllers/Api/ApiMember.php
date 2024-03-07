@@ -107,7 +107,7 @@ class ApiMember extends Controller
             $db_cabang = cabang::where('uuid', $uuid)->value('database');
             $db_cabang = "transaction_$db_cabang";
             $dates = date('Y-m-d H:i:s');
-                if($input['id_member']!== null ){
+                if(!empty($input['id_member'])){
                     $uang = $input['quantity'] * $input['harga_jual'];
                     $transaction_member += $uang;   
                     $id_member[] = $input['id_member'];
