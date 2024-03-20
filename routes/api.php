@@ -45,8 +45,8 @@ Route::group(['middleware' => 'ApiCabang'], function () {
 });
 Route::prefix('member')->group( function () {
     Route::group(['middleware' => 'Cors'], function() {
-        // Route::post('/loginowner', 'Api\ApiMember@login')->name('api.member.login');
-        Route::match(['post', 'options'], "/loginowner", "Api\ApiMember@login")->middleware("cors");
+        Route::post('/loginowner', 'Api\ApiMember@login')->name('api.member.login');
+        // Route::match(['post', 'options'], "/loginowner", "Api\ApiMember@login")->middleware("cors");
     });
     Route::post('/login', 'Api\ApiMember@login')->name('api.member.login');
     Route::post('/register', 'Api\ApiMember@register')->name('api.member.register');
