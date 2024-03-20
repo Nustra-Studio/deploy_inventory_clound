@@ -43,7 +43,7 @@ Route::group(['middleware' => 'ApiCabang'], function () {
     });
     
 });
-Route::prefix('member')->group(['middleware' => 'cors'], function () {
+Route::prefix('member')->group(['middleware' => 'Cors'], function () {
     Route::post('/login', 'Api\ApiMember@login')->name('api.member.login');
     Route::post('/register', 'Api\ApiMember@register')->name('api.member.register');
     Route::group(['middleware' => 'ApiMember'], function () {
