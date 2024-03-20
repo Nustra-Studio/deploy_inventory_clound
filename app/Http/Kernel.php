@@ -66,7 +66,7 @@ class Kernel extends HttpKernel
         'ApiOwner'=> \App\Http\Middleware\ApiOwner::class,
         'CheckRole'=> \App\Http\Middleware\CheckRole::class,
         'opname'=>\App\Http\Middleware\Opname::class,
-        'cors' => \App\Http\Middleware\Cors::class,
+        'Cors' => \App\Http\Middleware\Cors::class,
     ];
 
     /**
