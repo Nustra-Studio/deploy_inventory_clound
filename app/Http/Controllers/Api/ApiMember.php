@@ -196,7 +196,7 @@ class ApiMember extends Controller
                         'success' => true,
                         'message' => 'Login Berhasil',
                         'data' => $members,
-                    ], 200)->header('Access-Control-Allow-Origin', '*');
+                    ], 200);
                 } else {
                     $members = [
                         'nama' => $member->name,
@@ -209,14 +209,14 @@ class ApiMember extends Controller
                         'expaid_token' => $member->expait_kode,
                         'message' => 'Login Berhasil',
                         'data' => $members
-                    ], 200)->header('Access-Control-Allow-Origin', '*');
+                    ], 200);
                 }
             } else {
                 return response()->json([
                     'success' => false,
                     'message' => 'Login Gagal',
                     'data' => ''
-                ], 401)->header('Access-Control-Allow-Origin', '*');
+                ], 401);
             }
     
     }
