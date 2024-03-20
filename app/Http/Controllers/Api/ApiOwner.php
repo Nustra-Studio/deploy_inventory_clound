@@ -29,7 +29,7 @@ class ApiOwner extends Controller
         
         $input = $request->all();
         $password = Hash::make($input['password']);
-        $member = member::where('name', $input['name'])->where('status','owner')->first();
+        $member = member::where('phone', $input['nomor_hp'])->where('status','owner')->first();
         $characters = '0123456789';
         $randomNumber = '';
         $length = 16;
