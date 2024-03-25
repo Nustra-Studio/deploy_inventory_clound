@@ -151,7 +151,7 @@ class ApiOwner extends Controller
                 }
             }
 
-            return response()->json($id_counts_per_day);
+            return response()->json($results);
     }
 
     public function hariancabang(){
