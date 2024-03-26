@@ -89,7 +89,8 @@ class ApiOwner extends Controller
                 $id_value = $entry['id'];
 
                 if (array_key_exists($date, $id_counts_per_day)) {
-                    $id_counts_per_day[$date][$id_value] = isset($id_counts_per_day[$date][$id_value]) ? $id_counts_per_day[$date][$id_value] + 1 : 1;
+                    // $id_counts_per_day[$date][$id_value] = isset($id_counts_per_day[$date][$id_value]) ? $id_counts_per_day[$date][$id_value] + 1 : 1;
+                    $id_counts_per_day[$date][$id_value] = "test";
                 } else {
                     $id_counts_per_day[$date][$id_value] = 1;
                 }
