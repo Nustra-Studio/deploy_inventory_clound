@@ -150,8 +150,9 @@ class CabangController extends Controller
                 'category_id' => $data['category_id'],
                 'uuid'=> $data['uuid'],
                 'database' => "cabang_$nama",
+                'keterangan'=>$data['keterangan']
             ];
-            DB::table('cabangs')->insert($newdata);
+            cabang::create($newdata);
         } catch (\Exception $e) {
             \Log::error('Error storing data locally: ' . $e->getMessage());
         }
