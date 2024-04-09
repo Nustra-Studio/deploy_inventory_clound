@@ -79,6 +79,7 @@ class ApiOwner extends Controller
                 $results = $results->concat($result);
             }
         }
+            //a
             $data = json_decode($results, true);
 
             $id_counts_per_day = [];
