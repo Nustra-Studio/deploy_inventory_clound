@@ -66,7 +66,7 @@ class ApiOwner extends Controller
         $startDate = now()->subWeek();
         $endDate = now();
 
-        $dataCabangs = DB::table($tableDB)->whereBetween('created_at', [$startDate, $endDate])->get();
+        $dataCabangs = DB::table($tableCB)->whereBetween('created_at', [$startDate, $endDate])->get();
 
         return response()->json($dataCabangs);
     }
