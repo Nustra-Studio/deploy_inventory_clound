@@ -58,9 +58,19 @@ class ApiOwner extends Controller
         $cabang = cabang::all();
         return response()->json($cabang);
     }
-    public function cabanglaporan(){
 
+    public function cabanglaporan(Request $request){
+        $input = $request->all();
+        $cabangDB = $input['database'];
+        $tableCB = "transaction_$cabangDB";
+        $startDate = now()->subWeek();
+        $endDate = now();
+
+        $dataCabangs = DB::table($tableDB)->whereBetween('created_at', [$startDate, $endDate])->get();
+
+        return response()->json($dataCabangs);
     }
+
     public function cabangbarang(){
         $cabang = cabang::all();
         $results = collect();
