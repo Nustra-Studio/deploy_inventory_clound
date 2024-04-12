@@ -67,13 +67,13 @@ class ApiOwner extends Controller
         $endDate = now();
         $results = collect();
 
-        $dataCabangs = DB::table($tableCB)->whereBetween('created_at', [$startDate, $endDate])->first();
+        $dataCabangs = DB::table($tableCB)->whereBetween('created_at', [$startDate, $endDate])->get();
 
-        $data = json_decode($results, true);
+        // $data = json_decode($results, true);
 
         $id_counts_per_day = [];
         
-        $created_at = new DateTime($data['created_at']);
+        $created_at = new DateTime($dataCabangs['created_at']);
         $date = $created_at->format('Y-m-d');
         $id_value = $data['jumlah'];
         // $id_value = $entry['id'];
