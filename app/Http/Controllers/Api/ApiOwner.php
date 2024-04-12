@@ -65,6 +65,7 @@ class ApiOwner extends Controller
         $tableCB = "transaction_$cabangDB";
         $startDate = now()->subWeek();
         $endDate = now();
+        $results = collect();
 
         $dataCabangs = DB::table($tableCB)->whereBetween('created_at', [$startDate, $endDate])->first();
 
