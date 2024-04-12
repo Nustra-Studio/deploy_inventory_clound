@@ -66,9 +66,28 @@ class ApiOwner extends Controller
         $startDate = now()->subWeek();
         $endDate = now();
 
-        $dataCabangs = DB::table($tableCB)->whereBetween('created_at', [$startDate, $endDate])->get();
+        $dataCabangs = DB::table($tableCB)->whereBetween('created_at', [$startDate, $endDate])->first();
 
-        return response()->json($dataCabangs);
+        $results = $results->concat($dataCabangs);
+
+        $data = json_decode($results, true);
+
+        $id_counts_per_day = [];
+        
+        $created_at = new DateTime($data['created_at']);
+        $date = $created_at->format('Y-m-d');
+        $id_value = $data['jumlah'];
+        // $id_value = $entry['id'];
+
+        $id_counts_per_day[$date][$id_value] = $data["harga_jual"];
+        
+        // if (array_key_exists($date, $id_counts_per_day)) {
+        //     $id_counts_per_day[$date][$id_value] = isset($id_counts_per_day[$date][$id_value]) ? $id_counts_per_day[$date][$id_value] + 1 : 1;
+        // } else {
+        //     $id_counts_per_day[$date][$id_value] = 1;
+        // }
+        
+        return response()->json($id_counts_per_day);
     }
 
     public function cabangbarang(){
