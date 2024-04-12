@@ -69,8 +69,6 @@ class ApiOwner extends Controller
 
         $dataCabangs = DB::table($tableCB)->whereBetween('created_at', [$startDate, $endDate])->first();
 
-        $results = $results->concat($dataCabangs);
-
         $data = json_decode($results, true);
 
         $id_counts_per_day = [];
