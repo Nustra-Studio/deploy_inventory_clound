@@ -73,12 +73,14 @@ class ApiOwner extends Controller
 
         $id_counts_per_day = [];
         
-        $created_at = new DateTime($dataCabangs['created_at']);
-        $date = $created_at->format('Y-m-d');
-        $id_value = $data['jumlah'];
-        // $id_value = $entry['id'];
-
-        $id_counts_per_day[$date][$id_value] = $data["harga_jual"];
+        foreach($dataCabangs as $item) {
+            $created_at = new DateTime($item['created_at']);
+            $date = $created_at->format('Y-m-d');
+            $id_value = $item['jumlah'];
+            // $id_value = $entry['id'];
+    
+            $id_counts_per_day[$date][$id_value] = $item["harga_jual"];
+        }
         
         // if (array_key_exists($date, $id_counts_per_day)) {
         //     $id_counts_per_day[$date][$id_value] = isset($id_counts_per_day[$date][$id_value]) ? $id_counts_per_day[$date][$id_value] + 1 : 1;
