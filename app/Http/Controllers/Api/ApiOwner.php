@@ -69,11 +69,11 @@ class ApiOwner extends Controller
 
         $dataCabangs = DB::table($tableCB)->whereBetween('created_at', [$startDate, $endDate])->get();
 
-        // $data = json_decode($results, true);
+        $data = json_decode($dataCabangs, true);
 
         $id_counts_per_day = [];
         
-        foreach($dataCabangs as $item) {
+        foreach($data as $item) {
             $created_at = new DateTime($item['created_at']);
             $date = $created_at->format('Y-m-d');
             $id_value = $item['jumlah'];
