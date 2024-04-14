@@ -116,11 +116,17 @@ class ApiOwner extends Controller
 
             foreach ($data as $entry) {
                 $created_at = new DateTime($entry['created_at']);
-                $date = $created_at->format('Y-m-d');
-                $id_value = $entry['jumlah'];
+                $date = $created_at->format('Y-m-d'); 
+                $id_value = $entry['id'];
+
+                $resultData = [
+                    'stok' => $entry['jumlah'],
+                    'total' => $entry['harga_jual']
+                ];
+
                 // $id_value = $entry['id'];
 
-                $id_counts_per_day[$date][$id_value] = $entry["harga_jual"];
+                $id_counts_per_day[$date][$id_value] = $resultData;
                 
                 // if (array_key_exists($date, $id_counts_per_day)) {
                 //     $id_counts_per_day[$date][$id_value] = isset($id_counts_per_day[$date][$id_value]) ? $id_counts_per_day[$date][$id_value] + 1 : 1;
