@@ -11,6 +11,7 @@ use App\Models\barang;
 use App\Models\cabang;
 use App\Models\suplier;
 use App\Models\member;
+use App\Models\history_transaction;
 use DateTime;
 use DB;
 
@@ -52,7 +53,7 @@ class ApiOwner extends Controller
                     'data' => ''
                 ], 401);
             }
-    
+            
     }
     public function cabang(){
         $cabang = cabang::all();
@@ -141,6 +142,17 @@ class ApiOwner extends Controller
             }
 
             return response()->json($id_counts_per_day);
+    }
+
+    public function listGudang(Request $request) {
+        $cabang = cabang::where('nama', $request->table)->first();
+        $uuid = $cabang->uuid;
+        $startDate = now()->subWeek();
+        $endDate = now();
+
+        $dataGudang = history_transaction::where('id_cabang', $uuid)->whereBetween('created_at', [$startDate, $endDate])->get();
+
+        return response()->json($dataGudang);
     }
         
     public function gudangadd(){
