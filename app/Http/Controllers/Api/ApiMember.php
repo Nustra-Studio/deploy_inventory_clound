@@ -115,7 +115,7 @@ class ApiMember extends Controller
                         'uuid' => Str::uuid(60),
                         'nama_barang' =>$input['nama'],
                         'jumlah_barang'=>$input['quantity'],
-                        'harga'=> $input['harga_jual'],
+                        'harga'=> $input['harga_pokok'],
                         'id_member'=>$input['id_member']
                     ]);
                 }
@@ -129,7 +129,7 @@ class ApiMember extends Controller
                     'id_member' => $input['id_member'],
                     'keterangan' => 'penjualan',
                     'harga_pokok' => $input['harga_pokok'],
-                    'harga_jual' => $input['total'],
+                    'harga_jual' => $input['harga_jual'],
                     'created_at' => $dates
                 ]
             );
