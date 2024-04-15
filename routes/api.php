@@ -65,7 +65,7 @@ Route::prefix('owner')->group(function (){
         Route::get('/listcabang', 'Api\ApiOwner@cabang')->name('api.owner.cabang');
         Route::get('/laporan','Api\ApiOwner@cabanglaporan')->name('api.owner.laporan');
         Route::get('/home', 'Api\ApiOwner@cabangbarang')->name('api.owner.cabangbarang');
-        Route::get('/listgudang', 'ApiOwner@listGudang')->name('api.owner.listgudang');
+        Route::get('/listgudang', 'Api\ApiOwner@listGudang')->name('api.owner.listgudang');
         Route::get('/gudang/add', 'Api\ApiOwner@gudangadd')->name('api.owner.gudangadd');
         Route::get('/gudang/out', 'Api\ApiOwner@gudangout')->name('api.owner.gudangout');
         Route::get('/top-10', 'Api\ApiOwner@top')->name('api.owner.top');
