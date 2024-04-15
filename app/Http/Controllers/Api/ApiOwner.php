@@ -145,7 +145,7 @@ class ApiOwner extends Controller
     }
 
     public function listGudang(Request $request) {
-        $cabang = cabang::where('nama', $request->table)->first();
+        $cabang = cabang::where('database', $request->table)->first();
         $uuid = $cabang->uuid;
         $startDate = now()->subWeek();
         $endDate = now();
