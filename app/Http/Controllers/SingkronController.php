@@ -37,7 +37,7 @@ class SingkronController extends Controller
                                 ];
                                 $apiResponse = $this->sendToApi($url, $data);
                                 if ($apiResponse && $apiResponse['status'] === 'success') {
-                                    
+                                    dd('success');
                                 }
                                 else{
                                     dd('error');
@@ -47,8 +47,8 @@ class SingkronController extends Controller
                 }
             }
         } catch (\Exception $e) {
-    
-            return redirect()->route('supllier.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
+            dd($e);
+            // return redirect()->route('supllier.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
         
         }
     }
@@ -63,13 +63,13 @@ class SingkronController extends Controller
                 'name'=>$message['message'],
                 'status'=>$message['status'],
             ];
+            singkronlog::insert($send);
             if ($response->successful()) {
                 return $response->json();
             } else {
                 \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
                 return null;
             }
-            singkronlog::insert($send);
         } catch (\Exception $e) {
             \Log::error('Error sending data to API: ' . $e->getMessage());
             return null;
