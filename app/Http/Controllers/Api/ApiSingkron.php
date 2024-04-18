@@ -57,8 +57,8 @@ class ApiSingkron extends Controller
                 return $response;
             } catch (\Exception $e) {
 
-                // return response()->json(['status' => 'error','data'=>$request
-                //     , 'message' => $response], 500);
+                return response()->json(['status' => 'error','data'=>$request
+                    , 'message' => $e->getMessage()], 500);
             }
         } else {
             return response()->json(['status' => 'error', 'message' => 'Invalid key'], 400);
@@ -161,7 +161,7 @@ class ApiSingkron extends Controller
 
     }
     private function supplier($request){
-        $request = $request->data;
+        $data = $request->only(['data']);
         // $data =[
         //     'nama' => $request->nama,
         //     'product' => $request->product,
@@ -172,11 +172,11 @@ class ApiSingkron extends Controller
         //     'uuid' => $request->uuid,
         // ];
         try {
-            // DB::table('supliers')->insert($request->data);
+            DB::table('supliers')->insert($data);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
-        } catch (\Exception ) {
+        } catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
-            return response()->json($request, 500);
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
     private function barang($request)

@@ -63,13 +63,13 @@ class SingkronController extends Controller
                 'name'=>$message['message'],
                 'status'=>$message['status'],
             ];
-            singkronlog::insert($send);
             if ($response->successful()) {
                 return $response->json();
             } else {
                 \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
                 return null;
             }
+            singkronlog::insert($send);
         } catch (\Exception $e) {
             \Log::error('Error sending data to API: ' . $e->getMessage());
             return null;
