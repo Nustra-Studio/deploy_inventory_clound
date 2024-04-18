@@ -172,7 +172,7 @@ class ApiSingkron extends Controller
         //     'uuid' => $request->uuid,
         // ];
         try {
-            DB::table('supliers')->insert($request->data);
+            // DB::table('supliers')->insert($request->data);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         } catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
