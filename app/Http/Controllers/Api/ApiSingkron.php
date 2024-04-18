@@ -174,9 +174,9 @@ class ApiSingkron extends Controller
         try {
             // DB::table('supliers')->insert($request->data);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
-        } catch (\Exception $e) {
+        } catch (\Exception ) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
-            return response()->json($request->data, 500);
+            return response()->json($request, 500);
         }
     }
     private function barang($request)
