@@ -55,7 +55,6 @@ class ApiSingkron extends Controller
             try {
                 $response = $this->{$key}($request);
                 return $response;
-                Log::error('Server: ' . $key . $request);
             } catch (\Exception $e) {
 
                 return response()->json(['status' => 'error','data'=>$request
@@ -162,16 +161,16 @@ class ApiSingkron extends Controller
 
     }
     private function supplier($request){
-        $request = $request->input('data');
-        $data =[
-            'nama' => "yudha",
-            'product' => $request->product,
-            'keterangan' => $request->keterangan,
-            'alamat' => $request->alamat,
-            'telepon' => $request->telepon,
-            'category_barang_id'=> $request->category_barang_id,
-            'uuid' => $request->uuid,
-        ];
+        $data = $request->input('data');
+        // $data =[
+        //     'nama' => $request->nama,
+        //     'product' => $request->supplier,
+        //     'keterangan' => $request->keterangan,
+        //     'alamat' => $request->alamat,
+        //     'telepon' => $request->telepon,
+        //     'category_barang_id'=> $request->category,
+        //     'uuid' => $request->uuid,
+        // ];
         try {
             DB::table('supliers')->insert($data);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);

@@ -33,7 +33,7 @@ class SingkronController extends Controller
                                 $data = [
                                     'key'=>$item->name,
                                     'status'=>$item->status,
-                                    'data'=>$datas
+                                    'data'=>$datas->toArray(),
                                 ];
                                 $apiResponse = $this->sendToApi($url, $data);
                                 if ($apiResponse && $apiResponse['status'] === 'success') {
