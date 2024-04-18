@@ -161,6 +161,7 @@ class ApiSingkron extends Controller
 
     }
     private function supplier($request){
+        $request = $request->data;
         $data =[
             'nama' => $request->nama,
             'product' => $request->supplier,

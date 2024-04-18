@@ -17,6 +17,7 @@ use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\CategoryCabangController;
+use App\Http\Controllers\SingkronController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
@@ -50,6 +51,7 @@ Route::group(['prefix' => 'error'], function(){
             // buat kan route barang resource metode get 
             Route::get('/barang', 'BarangController@resource')->name('barang.resource');
         });
+        Route::resource('/singkron', SingkronController::class);
         Route::prefix('pdf')->group(function () {
             // Route::get('/pembelian', 'TransactionController@pembelian_pdf')->name('transaction.pembelian.pdf');
             // Route::get('/pengeluaran', 'TransactionController@pengeluaran_pdf')->name('transaction.pengeluaran.pdf');

@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('singkrons', function (Blueprint $table) {
+        Schema::create('singkronlogs', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('uuid')->nullable();
             $table->string('status')->nullable();
             $table->string('keterangan')->nullable();
             $table->string('option')->nullable();
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('singkrons');
+        Schema::dropIfExists('singkronlogs');
     }
 };

@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class singkron extends Model
+class singkronlog extends Model
 {
     use HasFactory;
-    protected $table = 'singkrons';
+    protected $table = 'singkronlogs';
     protected $fillable = [
-        'uuid',
         'name',
         'keterangan',
         'status',
