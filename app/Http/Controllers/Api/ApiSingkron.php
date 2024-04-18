@@ -160,7 +160,25 @@ class ApiSingkron extends Controller
         }
 
     }
-
+    private function supplier($request){
+        $data = $request->input('data');
+        // $data =[
+        //     'nama' => $request->nama,
+        //     'product' => $request->supplier,
+        //     'keterangan' => $request->keterangan,
+        //     'alamat' => $request->alamat,
+        //     'telepon' => $request->telepon,
+        //     'category_barang_id'=> $request->category,
+        //     'uuid' => $request->uuid,
+        // ];
+        try {
+            DB::table('supliers')->create($data);
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
+        } catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
     private function barang($request)
     {   
         try{
