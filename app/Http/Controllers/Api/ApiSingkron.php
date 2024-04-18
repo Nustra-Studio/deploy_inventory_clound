@@ -163,13 +163,17 @@ class ApiSingkron extends Controller
     private function supplier($request){
         $data = $request->input('data');
         $status = $request->input('status');
-        switch($status){
-            case create :
-                DB::table('supliers')->insert($data);
-            break;
-        }
+        try {
+                switch($status){
+                    case "create" :
+                        DB::table('supliers')->insert($data);
+                    break;
+                }
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
-        
+        } catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
     private function barang($request)
     {   
