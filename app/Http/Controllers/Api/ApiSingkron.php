@@ -162,16 +162,16 @@ class ApiSingkron extends Controller
 
     }
     private function supplier($request){
-        $data = $request->input('data');
-        // $data =[
-        //     'nama' => $request->nama,
-        //     'product' => $request->product,
-        //     'keterangan' => $request->keterangan,
-        //     'alamat' => $request->alamat,
-        //     'telepon' => $request->telepon,
-        //     'category_barang_id'=> $request->category,
-        //     'uuid' => $request->uuid,
-        // ];
+        $request = $request->input('data');
+        $data =[
+            'nama' => $request->nama,
+            'product' => $request->product,
+            'keterangan' => $request->keterangan,
+            'alamat' => $request->alamat,
+            'telepon' => $request->telepon,
+            'category_barang_id'=> $request->category_barang_id,
+            'uuid' => $request->uuid,
+        ];
         try {
             Log::error('Server: ' . $data);
             // DB::table('supliers')->insert($data);
