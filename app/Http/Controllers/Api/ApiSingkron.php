@@ -55,6 +55,7 @@ class ApiSingkron extends Controller
             try {
                 $response = $this->{$key}($request);
                 return $response;
+                Log::error('Server: ' . $key . $request);
             } catch (\Exception $e) {
 
                 return response()->json(['status' => 'error','data'=>$request
@@ -172,7 +173,7 @@ class ApiSingkron extends Controller
         //     'uuid' => $request->uuid,
         // ];
         try {
-            \Log::error('Server: ' . $data);
+            Log::error('Server: ' . $data);
             // DB::table('supliers')->insert($data);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         } catch (\Exception $e) {
