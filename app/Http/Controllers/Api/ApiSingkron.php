@@ -58,7 +58,7 @@ class ApiSingkron extends Controller
             } catch (\Exception $e) {
 
                 return response()->json(['status' => 'error','data'=>$request
-                    , 'message' => $e->getMessage()], 500);
+                    , 'message' => $response], 500);
             }
         } else {
             return response()->json(['status' => 'error', 'message' => 'Invalid key'], 400);
