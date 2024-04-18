@@ -63,7 +63,7 @@ class SupplierController extends Controller
             'status'=>'create',
             'uuid'=>$request->uuid,
         ];
-        $this->storeLocally($localData);
+        DB::table('supliers')->insert($localData);
         singkron::insert($singkron);
 
         return redirect()->route('supllier.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
