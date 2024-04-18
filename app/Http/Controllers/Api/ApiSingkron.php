@@ -171,8 +171,11 @@ class ApiSingkron extends Controller
                     case "update" :
                         DB::table('supliers')->where('uuid',$data['uuid'])->update($data);
                     break;
+                    case "delete" :
+                        DB::table('supliers')->where('uuid',$data['uuid'])->delete();
+                    break;
                 }
-            return response()->json(['status' => 'success', 'message' => $data['uuid']], 200);
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         } catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
