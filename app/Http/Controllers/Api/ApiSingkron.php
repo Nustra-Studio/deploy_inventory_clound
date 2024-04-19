@@ -67,10 +67,20 @@ class ApiSingkron extends Controller
     
     private function categorycabang($request)
     {
-        $data = $request->only(['name', 'keterangan', 'uuid']);
-    
+        $data = $request->input('data');
+        $status = $request->input('status');
         try {
-            DB::table('category_cabangs')->insert($data);
+                switch($status){
+                    case "create" :
+                            DB::table('category_cabangs')->insert($data);
+                    break;
+                    case "update" :
+                            DB::table('category_cabangs')->where('uuid',$data['uuid'])->update($data);
+                    break;
+                    case "delete" :
+                            DB::table('category_cabangs')->where('uuid',$data['uuid'])->delete();
+                    break;
+                }
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         } catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal

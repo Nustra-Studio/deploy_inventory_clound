@@ -42,7 +42,7 @@ class CategoryCabangController extends Controller
     {
                     $data = $request->only(['name', 'keterangan', 'uuid']);
                     $singkron =  [
-                        'name'=>'category_cabang',
+                        'name'=>'categorycabang',
                         'status'=>'create',
                         'uuid'=>$request->uuid,
                     ];
@@ -104,7 +104,7 @@ class CategoryCabangController extends Controller
             'name' => $data['name'],
         ];
         $singkron =  [
-            'name'=>'category_cabang',
+            'name'=>'categorycabang',
             'status'=>'update',
             'uuid'=>$id,
         ];
@@ -122,7 +122,7 @@ class CategoryCabangController extends Controller
     public function destroy($id)
     {
         $singkron =  [
-            'name'=>'category_cabang',
+            'name'=>'categorycabang',
             'status'=>'delete',
             'uuid'=>$id,
         ];

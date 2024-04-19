@@ -49,7 +49,7 @@ class SingkronController extends Controller
                                     singkron::where('id',$item->id)->delete();
                                 }
                             break;
-                            case'category_cabang':
+                            case'categorycabang':
                                 $datas = category_cabangs::where('uuid',$item->uuid)->first();
                                 if(!empty($datas) || $item->status == 'delete'){
                                     if($item->status === 'delete'){
