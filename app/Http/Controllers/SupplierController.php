@@ -108,7 +108,7 @@ class SupplierController extends Controller
      */
     public function edit($id)
     {
-       $data = DB::table('supliers')->where('uuid', $id)->first();
+        $data = DB::table('supliers')->where('uuid', $id)->first();
         return view('pages.supplier.update', compact('data'));
     }
 
@@ -140,6 +140,12 @@ class SupplierController extends Controller
             'category_barang_id'=> $request->category,
         ];
         DB::table('supliers')->where('uuid', $id)->update($data);
+        $singkron =  [
+            'name'=>'supplier',
+            'status'=>'update',
+            'uuid'=> $id,
+        ];
+        singkron::insert($singkron);
         return redirect()->route('supllier.index')->with('success', 'Data supplier berhasil diupdate');
     }
 
@@ -152,6 +158,12 @@ class SupplierController extends Controller
     public function destroy($id)
     {
         DB::table('supliers')->where('uuid', $id)->delete();
+        $singkron =  [
+            'name'=>'supplier',
+            'status'=>'delete',
+            'uuid'=> $id,
+        ];
+        singkron::insert($singkron);
         return redirect()->route('supllier.index')->with('success', 'Data supplier berhasil dihapus');
     }
 }
