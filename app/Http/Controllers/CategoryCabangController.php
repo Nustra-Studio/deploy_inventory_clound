@@ -98,12 +98,10 @@ class CategoryCabangController extends Controller
     {
         $this -> validate(request(),[
             'name' => 'required',
-            'keterangan' => 'required',
         ]);
         $data = $request->all();
         $datanew = [
             'name' => $data['name'],
-            'keterangan' => $data['keterangan'],
         ];
         $singkron =  [
             'name'=>'category_cabang',
