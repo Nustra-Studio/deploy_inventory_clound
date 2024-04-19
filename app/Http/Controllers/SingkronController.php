@@ -82,7 +82,7 @@ class SingkronController extends Controller
                                         'data'=>$datas->toArray(),
                                     ];
                                     $apiResponse = $this->sendToApi($url, $data);
-                                    dd($data);
+                                    dd($apiResponse);
                                     if ($apiResponse && $apiResponse['status'] === 'success') {
                                         singkron::where('id',$item->id)->delete();
                                     }
@@ -111,7 +111,7 @@ class SingkronController extends Controller
                 'name'=>$message['message'],
                 'status'=>$message['status'],
             ];
-            singkronlog::insert($send);
+            // singkronlog::insert($send);
             if ($response->successful()) {
                 return $response->json();
             } else {
