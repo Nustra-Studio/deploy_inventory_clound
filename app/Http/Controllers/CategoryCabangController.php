@@ -40,13 +40,14 @@ class CategoryCabangController extends Controller
      */
     public function store(Request $request)
     {
-                    $data = $request->only(['name', 'keterangan', 'uuid']);
+                    $data = $request->only(['name','uuid']);
+                    $data['keterangan']='singkron';
+                    DB::table('category_cabangs')->insert($data);
                     $singkron =  [
                         'name'=>'categorycabang',
                         'status'=>'create',
                         'uuid'=>$request->uuid,
                     ];
-                    $this->storeLocally($data);
                     singkron::insert($singkron);
                     return redirect()->route('categorycabang.index')->with('success', 'Data berhasil disimpan');
 
@@ -102,6 +103,7 @@ class CategoryCabangController extends Controller
         $data = $request->all();
         $datanew = [
             'name' => $data['name'],
+            'keterangan'=>'singkron'
         ];
         $singkron =  [
             'name'=>'categorycabang',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\category_barang;
+use App\Models\singkron;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -38,72 +39,18 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     { 
-        try {
-            $url = env('APP_API');
-            
-            // Make API request
-            $response = Http::timeout(1)->get($url);
-        
-            // Check if the API request was successful
-            if ($response->successful()) {
-                // Prepare data for API request
                 $data = $request->only(['name', 'uuid']);
                 $data['keterangan'] = 'singkron';
-                $data['key'] = 'categorybarang';
-        
-                // Send data to the server API
-                $apiResponse = $this->sendToApi($url, $data);
-        
-                // Check the status of the API response
-                if ($apiResponse && $apiResponse['status'] === 'success') {
-                    // Save data locally to the database
-                    $datas = $request->only(['name', 'uuid']);
-                    $datas['keterangan'] = 'singkron';
-                    $this->storeLocally($datas);
-        
-                    return redirect()->route('category.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
-                } else {
-                    // Handle API response errors
-                    return redirect()->route('category.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
-                }
-            } else {
-                // Save data locally without synchronizing to the server
-                $data = $request->only(['name', 'uuid']);
-                $data['keterangan'] = 'not_singkron';
+                $singkron =  [
+                    'name'=>'categorybarang',
+                    'status'=>'create',
+                    'uuid'=>$request->uuid,
+                ];
                 $this->storeLocally($data);
-        
-                return redirect()->route('category.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
-            }
-        } catch (\Exception $e) {
-            // Save data locally without synchronizing to the server
-            $data = $request->only(['name', 'uuid']);
-            $data['keterangan'] = 'not_singkron';
-            $this->storeLocally($data);
-    
-            return redirect()->route('category.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
-        }
+                singkron::insert($singkron);
+                return redirect()->route('category.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
 
-    }
-    private function sendToApi($url, $data)
-    {
-        try {
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post("$url/api/singkron", $data);
-    
-            if ($response->successful()) {
-                return $response->json();
-            } else {
-                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
-                return null;
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error sending data to API: ' . $e->getMessage());
-            return null;
-        }
-    }
-    
-        
+    }        
     private function storeLocally($datas)
         {
             try {
@@ -145,9 +92,18 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this ->validate($request,['nama'=>'required']);
-        $data = $request ->all();
-        category_barang::where('uuid',$id)->first()->update($data);
+        $this->validate($request,['name'=>'required']);
+        $data = $request->all();
+        $update =category_barang::where('uuid',$id)->first();
+        $singkron =  [
+            'name'=>'categorybarang',
+            'status'=>'update',
+            'uuid'=>$update->uuid,
+        ];
+        $update->update($data);
+        singkron::insert($singkron);
+        
+        
         return view('pages.category.index')->with('success','Data Berhasil Diupdate');
     }
 
@@ -160,6 +116,12 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = category_barang::find($id);
+        $singkron =  [
+            'name'=>'categorybarang',
+            'status'=>'delete',
+            'uuid'=>$category->uuid,
+        ];
+        singkron::insert($singkron);
         $category->delete();
         return redirect()->route('category.index')->with('success','Data Berhasil Dihapus');
     }
