@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\singkron;
 use App\Models\singkronlog;
 use App\Models\category_cabangs;
+use App\Models\category_barang;
 
 class SingkronController extends Controller
 {
@@ -61,6 +62,27 @@ class SingkronController extends Controller
                                         'data'=>$datas->toArray(),
                                     ];
                                     $apiResponse = $this->sendToApi($url, $data);
+                                    if ($apiResponse && $apiResponse['status'] === 'success') {
+                                        singkron::where('id',$item->id)->delete();
+                                    }
+                                }
+                                else{
+                                    singkron::where('id',$item->id)->delete();
+                                }
+                            break;
+                            case'categorybarang':
+                                $datas = category_barang::where('uuid',$item->uuid)->first();
+                                if(!empty($datas) || $item->status == 'delete'){
+                                    if($item->status === 'delete'){
+                                        $datas = $item;
+                                    }
+                                    $data = [
+                                        'key'=>$item->name,
+                                        'status'=>$item->status,
+                                        'data'=>$datas->toArray(),
+                                    ];
+                                    $apiResponse = $this->sendToApi($url, $data);
+                                    dd($data);
                                     if ($apiResponse && $apiResponse['status'] === 'success') {
                                         singkron::where('id',$item->id)->delete();
                                     }

@@ -97,7 +97,8 @@ class ApiSingkron extends Controller
                         category_barang::insert($data);
                     break;
                     case "update" :
-                        category_barang::where('uuid',$data['uuid'])->update($data);
+                        $data = category_barang::where('uuid',$data['uuid'])->first();
+                        return response()->json(['status' => 'success', 'message' => $data], 200);
                     break;
                     case "delete" :
                         category_barang::where('uuid',$data['uuid'])->delete();

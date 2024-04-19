@@ -94,17 +94,17 @@ class CategoryController extends Controller
     {
         $this->validate($request,['name'=>'required']);
         $data = $request->all();
-        $update =category_barang::where('uuid',$id)->first();
+        $update = category_barang::where('uuid',$id)->first();
         $singkron =  [
             'name'=>'categorybarang',
             'status'=>'update',
             'uuid'=>$update->uuid,
         ];
-        $update->update($data);
+        category_barang::where('uuid',$id)->first()->update($data);
         singkron::insert($singkron);
         
         
-        return view('pages.category.index')->with('success','Data Berhasil Diupdate');
+        return redirect()->route('category.index')->with('success','Data Berhasil Diupdate');
     }
 
     /**
