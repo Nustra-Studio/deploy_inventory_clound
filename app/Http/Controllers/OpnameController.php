@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\user_cabang;
 use App\Models\UserCabang;
 use App\Models\opname;
-use App\Imports\OpnameImport;
+use App\Imports\OpnameImports;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 
@@ -103,7 +103,7 @@ class OpnameController extends Controller
     }
     public function excel(Request $request){
         try {
-            Excel::import(new OpnameImport, request()->file('file'));
+            Excel::import(new OpnameImports, request()->file('file'));
             return redirect()->back()->with('success', 'Data Imported');
         } catch (\Exception $e) {
             // Handle the exception
