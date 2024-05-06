@@ -12,7 +12,8 @@ class OpnameImport implements ToCollection
     */
     public function collection(Collection $collection)
     {
-        foreach($collection as $item){
+        $data = $collection->first();
+        foreach($data as $item){
             $id_toko = $item[3];
             $uuid = $item[0];
             $barcode = $item[1];
