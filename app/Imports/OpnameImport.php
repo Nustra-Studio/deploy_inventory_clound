@@ -12,7 +12,7 @@ class OpnameImport implements ToCollection
     */
     public function collection(Collection $collection)
     {
-        $data = $collection->first();
+        $data = $collection->get('Sheet1');
         foreach($data as $item){
             $id_toko = $item[3];
             $uuid = $item[0];
