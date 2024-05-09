@@ -48,11 +48,11 @@
                 <label for="exampleFormControlSelect1" class="form-label">Category Cabang</label>
                 <select class="form-select" name="category_id" id="exampleFormControlSelect1">
                     @foreach ($cabang as $item)
-                    <option value="{{$item->id}}
-                        @if ($item->id == $data->category_id)
+                    <option value="{{$item->uuid}}"
+                        @if ($item->uuid == $data->category_id)
                             selected
                         @endif
-                        ">{{$item->name}}</option>
+                        >{{$item->name}}</option>
                     @endforeach
                 </select>
             </div>

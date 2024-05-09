@@ -219,7 +219,13 @@ class CabangController extends Controller
             'telepon' => $data['telepon'],
             'category_id' => $data['category_id'],
         ];
+        $singkron =  [
+            'name'=>'cabang',
+            'status'=>"update",
+            'uuid'=>$request->uuid,
+        ];
         DB::table('cabangs')->where('uuid', $id)->update($newdata);
+        singkron::insert($singkron);
         return redirect()->route('cabang.index')->with('success', 'Data cabang berhasil diupdate');
     }
 
@@ -238,6 +244,12 @@ class CabangController extends Controller
                 DB::statement("DROP TABLE cabang_$nama");
                 DB::statement("DROP TABLE transaction_$database");
                 cabang::where('id', $id)->delete();
+                $singkron =  [
+                    'name'=>'cabang',
+                    'status'=>"delete",
+                    'uuid'=>$request->uuid,
+                ];
+                singkron::insert($singkron);
                 return redirect()->route('cabang.index')->with('success', 'Data cabang berhasil dihapus');
     }
 }

@@ -11,6 +11,8 @@ use App\Models\singkron;
 use App\Models\singkronlog;
 use App\Models\category_cabangs;
 use App\Models\category_barang;
+use App\Models\cabang;
+use App\Models\user_cabang;
 
 class SingkronController extends Controller
 {
@@ -91,7 +93,14 @@ class SingkronController extends Controller
                                 }
                             break;
                             case'cabang':
-
+                                $cabang = cabang::where('uuid',$item->uuid)->first();
+                                $user = user_cabang::where('cabang_id',$item->uuid)->first();
+                                $data = [
+                                    'key'=>$item->name,
+                                    'status'=>$item->status,
+                                    'cabang'=>$cabang,
+                                    'user'=>$user
+                                ];
                             break;
                         }
                 }
@@ -113,7 +122,7 @@ class SingkronController extends Controller
                 'name'=>$message['message'],
                 'status'=>$message['status'],
             ];
-            // singkronlog::insert($send);
+            singkronlog::insert($send);
             if ($response->successful()) {
                 return $response->json();
             } else {

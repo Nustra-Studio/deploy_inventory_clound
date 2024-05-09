@@ -114,9 +114,23 @@ class ApiSingkron extends Controller
     private function cabang($request)
     {
         // create database for request data
-        $data = $request->all();
+        $data = $request->input('data');
+        $status = $request->input('status');
         // create new data
         try {
+                switch($status){
+                    case"create":
+                        $this->cabangcreate($data);
+                    break;
+                }
+        } catch (\Exception $e) {
+            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+    private function cabangcreate($request){
+            $data = $request->input('cabang');
+            $user = $request->input('user');
             $namas = $data['nama'];
             $nama = str_replace(' ', '_', $namas);
             $database = "cabang_$nama";
@@ -156,31 +170,9 @@ class ApiSingkron extends Controller
                 `updated_at` timestamp NULL DEFAULT NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
             DB::statement($query2);
-            user_cabang::create([
-                'cabang_id' => $data['uuid'],
-                'uuid' => Str::random(40),
-                'username' => "supervisor_$nama",
-                'password' => Hash::make('cintabunda123'),
-                'role' => "supervisor",
-                'api_key' => Str::random(40),
-            ]);
-            $newdata = [
-                'nama' => $data['nama'],
-                'alamat' => $data['alamat'],
-                'kepala_cabang' => $data['kepala_cabang'],
-                'telepon' => $data['telepon'],
-                'category_id' => $data['category_id'],
-                'uuid'=> $data['uuid'],
-                'database' => "cabang_$nama",
-                'keterangan'=>$data['keterangan']
-            ];
-            DB::table('cabangs')->insert($newdata);
+            user_cabang::create($user);
+            DB::table('cabangs')->insert($data);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
-        } catch (\Exception $e) {
-            // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-        }
-
     }
     private function supplier($request){
         $data = $request->input('data');
