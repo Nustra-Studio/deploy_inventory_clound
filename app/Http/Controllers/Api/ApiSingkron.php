@@ -113,14 +113,13 @@ class ApiSingkron extends Controller
     }
     private function cabang($request)
     {
-        // create database for request data
-        $data = $request->input('data');
+        
         $status = $request->input('status');
         // create new data
         try {
                 switch($status){
-                    case"create":
-                        $this->cabangcreate($data);
+                    case "create" :
+                        $this->cabangcreate($request);
                     break;
                 }
         } catch (\Exception $e) {

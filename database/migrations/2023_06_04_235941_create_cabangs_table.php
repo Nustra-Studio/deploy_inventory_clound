@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('uuid')->unique();
             // string nama kepala_cabang telepon alamat category_id keterangan
             $table->string('nama');
-            $table->string('kepala_cabang');
-            $table->string('telepon');
-            $table->string('alamat');
-            $table->string('category_id');
-            $table->string('keterangan');
-            $table->string('database');
+            $table->string('kepala_cabang')->nullable();
+            $table->string('telepon')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('category_id')->nullable();
+            $table->string('keterangan')->nullable();
+            $table->string('database')->nullable();
             $table->timestamps();
         });
     }

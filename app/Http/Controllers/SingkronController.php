@@ -26,7 +26,7 @@ class SingkronController extends Controller
         $url = env('APP_API');
         try {
             // Make an HTTP request to the API
-            $response = Http::timeout(1)->get($url);
+            $response = Http::timeout(2)->get($url);
             // Check if the API request was successful
             if ($response->successful()) {
                 $singkron = singkron::all();
@@ -101,6 +101,14 @@ class SingkronController extends Controller
                                     'cabang'=>$cabang,
                                     'user'=>$user
                                 ];
+                                $apiResponse = $this->sendToApi($url, $data);
+                                    if ($apiResponse && $apiResponse['status'] === 'success') {
+                                        // singkron::where('id',$item->id)->delete();
+                                        dd('success');
+                                    }
+                                    else{
+                                        dd('error');
+                                    }
                             break;
                         }
                 }

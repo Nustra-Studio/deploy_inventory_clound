@@ -50,7 +50,7 @@ class CabangController extends Controller
             'status'=>"create",
             'uuid'=>$request->uuid,
         ];
-            $this->storeLocally($data);
+            $this->storeLocally($request);
             singkron::insert($singkron);
             return redirect()->route('cabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
 
@@ -82,28 +82,11 @@ class CabangController extends Controller
         // }
 
     }
-    private function sendToApi($url, $data)
-    {
-        try {
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post("$url/api/singkron", $data);
-
-            if ($response->successful()) {
-                return $response->json();
-            } else {
-                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
-                return null;
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error sending data to API: ' . $e->getMessage());
-            return null;
-        }
-    }
 
         
-    private function storeLocally($data)
+    private function storeLocally($request)
     {
+        $data = $request->all();
         try {
             $namas = $data['nama'];
             $nama = str_replace(' ', '_', $namas);
@@ -144,7 +127,16 @@ class CabangController extends Controller
                 `updated_at` timestamp NULL DEFAULT NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
             DB::statement($query2);
-            user_cabang::create([
+            cabang::insert([
+                'nama' => $data['nama'],
+                'alamat' => $data['alamat'],
+                'kepala_cabang' => $data['kepala_cabang'],
+                'telepon' => $data['telepon'],
+                'category_id' => $data['category_id'],
+                'uuid'=> $data['uuid'],
+                'database' => $database
+            ]);
+            user_cabang::insert([
                 'cabang_id' => $data['uuid'],
                 'uuid' => Str::random(40),
                 'username' => "supervisor_$nama",
@@ -152,17 +144,6 @@ class CabangController extends Controller
                 'role' => "supervisor",
                 'api_key' => Str::random(40),
             ]);
-            $newdata = [
-                'nama' => $data['nama'],
-                'alamat' => $data['alamat'],
-                'kepala_cabang' => $data['kepala_cabang'],
-                'telepon' => $data['telepon'],
-                'category_id' => $data['category_id'],
-                'uuid'=> $data['uuid'],
-                'database' => "cabang_$nama",
-                'keterangan'=>$data['keterangan']
-            ];
-            cabang::create($newdata);
         } catch (\Exception $e) {
             \Log::error('Error storing data locally: ' . $e->getMessage());
         }

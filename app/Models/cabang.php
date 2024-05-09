@@ -18,5 +18,6 @@ class cabang extends Model
         'keterangan',
         'database',
         'uuid',
+        'keterangan'
     ];
 }

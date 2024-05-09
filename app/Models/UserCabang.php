@@ -17,6 +17,10 @@ class UserCabang extends Authenticatable
 
     protected $fillable = [
         'username',
+        'cabang_id',
+        'uuid',
+        'role',
+        'api_key'
     ];
     protected $hidden = [
         'password',
