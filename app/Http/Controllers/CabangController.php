@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\cabang;
 use App\Models\user_cabang;
+use App\Models\singkron;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -44,32 +45,41 @@ class CabangController extends Controller
     {
                 // create database for request data
         $data = $request->all();
-        $url = env('APP_API');
-        $response = Http::timeout(1)->get($url);
-
-        try {
-            $data['keterangan'] = 'singkron';
-            $data['key'] = 'cabang';
-
-            // Kirim data ke server API
-            $apiResponse = $this->sendToApi($url, $data);
-
-            // Cek status dari respons API
-            if ($apiResponse && $apiResponse['status'] === 'success') {
-                // Simpan data ke database lokal
-                $this->storeLocally($data);
-                return redirect()->route('cabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
-            } else {
-                // Tangani kesalahan respons API
-                throw new \Exception('Terjadi kesalahan saat menyinkronkan data ke server');
-            }
-        } catch (\Exception $e) {
-            // Tangani kesalahan apapun yang terjadi
-            // Simpan data ke database lokal tanpa menyinkronkan ke server
-            $data['keterangan'] = 'not_singkron';
+        $singkron =  [
+            'name'=>'cabang',
+            'status'=>"create",
+            'uuid'=>$request->uuid,
+        ];
             $this->storeLocally($data);
-            return redirect()->route('cabang.index')->with('error', $e->getMessage());
-        }
+            singkron::insert($singkron);
+            return redirect()->route('cabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+
+        // $url = env('APP_API');
+        // $response = Http::timeout(1)->get($url);
+
+        // try {
+        //     $data['keterangan'] = 'singkron';
+        //     $data['key'] = 'cabang';
+
+        //     // Kirim data ke server API
+        //     $apiResponse = $this->sendToApi($url, $data);
+
+        //     // Cek status dari respons API
+        //     if ($apiResponse && $apiResponse['status'] === 'success') {
+        //         // Simpan data ke database lokal
+        //         $this->storeLocally($data);
+        //         return redirect()->route('cabang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+        //     } else {
+        //         // Tangani kesalahan respons API
+        //         throw new \Exception('Terjadi kesalahan saat menyinkronkan data ke server');
+        //     }
+        // } catch (\Exception $e) {
+        //     // Tangani kesalahan apapun yang terjadi
+        //     // Simpan data ke database lokal tanpa menyinkronkan ke server
+        //     $data['keterangan'] = 'not_singkron';
+        //     $this->storeLocally($data);
+        //     return redirect()->route('cabang.index')->with('error', $e->getMessage());
+        // }
 
     }
     private function sendToApi($url, $data)

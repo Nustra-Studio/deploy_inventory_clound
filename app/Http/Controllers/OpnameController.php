@@ -47,12 +47,14 @@ class OpnameController extends Controller
         $data = $request->input('data_table_values');
         $data = json_decode($data, true);
         foreach($data as $item){
-            opname::where('barcode',$item['barcode'])
+            if(!empty($item['jumlah'])){
+                opname::where('barcode',$item['barcode'])
             ->where('id_toko',$item['id_toko'])
             ->update([
                 'perubahan'=>$item['jumlah'],
                 'status'=>'new',
             ]);
+            }
         }
         return redirect()->route('opname.index')->with('success', 'Data Berhasil Di Tambahkan');
     }

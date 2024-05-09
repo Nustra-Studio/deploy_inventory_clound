@@ -82,7 +82,6 @@ class SingkronController extends Controller
                                         'data'=>$datas->toArray(),
                                     ];
                                     $apiResponse = $this->sendToApi($url, $data);
-                                    dd($apiResponse);
                                     if ($apiResponse && $apiResponse['status'] === 'success') {
                                         singkron::where('id',$item->id)->delete();
                                     }
@@ -90,6 +89,9 @@ class SingkronController extends Controller
                                 else{
                                     singkron::where('id',$item->id)->delete();
                                 }
+                            break;
+                            case'cabang':
+
                             break;
                         }
                 }

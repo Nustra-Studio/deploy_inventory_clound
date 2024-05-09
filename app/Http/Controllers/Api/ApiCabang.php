@@ -220,7 +220,7 @@ class ApiCabang extends Controller
     public function returnopname (Request $request){
         $uuid = $request->input('barcode');
         $id_toko = $request->input('uuid');
-        $data = opname::where('uuid',$uuid)->where('barcode',$id_toko)->frist();
+        $data = opname::where('uuid',$uuid)->where('barcode',$id_toko)->first();
         $data->delete();
         return response()->json(
             [
