@@ -201,22 +201,21 @@ class ApiCabang extends Controller
     }
     public function opnamelist(Request $request){
         $id_toko = $request->input('uuid');
-        $data = opname::where('id_toko',$id_toko)->where('status','new')->get();
-        $datas = opname::where('id_toko',$id_toko)->where('status','new')->first();
-        if(empty($datas)){
-            return response()->json(
-                [
-                    'status'=>'tidak ada data opname terbaru',
-                ],200
-            );
+        $data = opname::where('id_toko', $id_toko)->where('status', 'new')->get();
+        $datas = opname::where('id_toko', $id_toko)->where('status', 'new')->first();
+        
+        if(!$datas){
+            return response()->json([
+                'status' => 'tidak ada data opname terbaru',
+            ], 200);
         }
-        return response()->json(
-            [
-                'status'=>'succes read data',
-                'data'=>$data
-            ],200
-        );
+        
+        return response()->json([
+            'status' => 'success read data',
+            'data' => $data
+        ], 200);
     }
+    
     public function returnopname (Request $request){
         $uuid = $request->input('barcode');
         $id_toko = $request->input('uuid');
