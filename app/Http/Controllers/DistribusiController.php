@@ -47,7 +47,7 @@ class DistribusiController extends Controller
     {
         $data = $request->all();
         $url = env('APP_API');
-        $response = Http::timeout(1)->get($url);
+        $response = Http::timeout(3)->get($url);
 
         try {
             $data['singkron'] = 'singkron';
