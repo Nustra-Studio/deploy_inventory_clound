@@ -30,7 +30,7 @@ class BarangController extends Controller
      */
     public function index()
     {
-        $data = barang::where('uuid', '!=', 'hidden')->get();
+        $data = barang::where('uuid', '!=', 'hidden')->limit(1500)->get();
         return view ('pages.barang.index',compact('data'));
     }
     public function datatables(){

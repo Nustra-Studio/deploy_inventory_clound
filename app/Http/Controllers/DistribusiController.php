@@ -182,7 +182,7 @@ class DistribusiController extends Controller
     }
     
     public function barang($uuid){
-        $barang = barang::all();
+        $barang =  barang::where('uuid', '!=', 'hidden')->limit(1500)->get();
         $uuid_cabang = $uuid;
         return view('pages.distribusi.barang', compact('barang','uuid_cabang'));
     }
