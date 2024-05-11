@@ -204,7 +204,7 @@ class CabangController extends Controller
         $singkron =  [
             'name'=>'cabang',
             'status'=>"update",
-            'uuid'=>$request->uuid,
+            'uuid'=>$id,
         ];
         DB::table('cabangs')->where('uuid', $id)->update($newdata);
         singkron::insert($singkron);
