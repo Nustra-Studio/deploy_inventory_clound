@@ -229,7 +229,7 @@ class CabangController extends Controller
                 $singkron =  [
                     'name'=>'cabang',
                     'status'=>"delete",
-                    'uuid'=>$request->uuid,
+                    'uuid'=>$id,
                 ];
                 singkron::insert($singkron);
                 return redirect()->route('cabang.index')->with('success', 'Data cabang berhasil dihapus');
