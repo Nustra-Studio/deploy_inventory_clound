@@ -14,6 +14,9 @@ use Mike42\Escpos\CapabilityProfile;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\Printer;
+use App\Imports\BarangImport;
+use Yajra\DataTables\Facades\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Http;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Log;
@@ -29,6 +32,19 @@ class BarangController extends Controller
     {
         $data = barang::where('uuid', '!=', 'hidden')->get();
         return view ('pages.barang.index',compact('data'));
+    }
+    public function datatables(){
+        // $data = barang::all();
+        return DataTables::of(barang::query())->toJson();
+    }
+    public function excel(Request $request){
+        try {
+            Excel::import(new BarangImport, request()->file('file'));
+            return redirect()->back()->with('success', 'Data Imported');
+        } catch (\Exception $e) {
+            // Handle the exception
+            return redirect()->back()->with('error', 'Error importing data: ' . $e->getMessage());
+        }
     }
     public function getProductsBySupplier(Request $request)
     {
@@ -412,7 +428,6 @@ class BarangController extends Controller
         $this->validate(request(),
         [
             'name' => 'required',
-            'merek_barang' => 'required',
             'supplier' => 'required',
             'category_barang' => 'required',
             'harga_pokok' => 'required',
@@ -430,36 +445,41 @@ class BarangController extends Controller
             'keterangan' => $request->keterangan,
         ];
         for ($j = 0; $j < count($request->input('nama')); $j++) {
-            $this->validate(request(),
-            [
-                'nama.' . $j => 'required',
-                'harga.' . $j => 'required',
-                'jumlah_minimal.' . $j => 'required',
-                'diskon.' . $j => 'required',
-            ]);
-
-            if ($request->input('status')[$j] == 'update') {
-                $uuid_barang = $request->input('uuid_barang')[$j];
-                $data_harga = [
-                    'harga' => $request->harga[$j],
-                    'jumlah_minimal' => $request->jumlah_minimal[$j],
-                    'diskon' => $request->diskon[$j],
-                    'keterangan' => $request->nama[$j],
-                ];
-                $push = harga_khusus::where('id', $uuid_barang)->update($data_harga);
-            } elseif ($request->input('status')[$j] == 'tambah') {
-                $uuid = hash('sha256', uniqid(mt_rand(), true));
-                $data_harga = [
-                    'id_barang'=> $id,
-                    'harga' => $request->harga[$j],
-                    'jumlah_minimal' => $request->jumlah_minimal[$j],
-                    'diskon' => $request->diskon[$j],
-                    'keterangan' => $request->nama[$j],
-                    'uuid' => $uuid,
-                ];
-                $push = harga_khusus::create($data_harga);
-            }
+                if(!empty($request->harga[$j])){
+                    {
+                        $this->validate(request(),
+                        [
+                            'nama.' . $j => 'required',
+                            'harga.' . $j => 'required',
+                            'jumlah_minimal.' . $j => 'required',
+                            'diskon.' . $j => 'required',
+                        ]);
+            
+                        if ($request->input('status')[$j] == 'update') {
+                            $uuid_barang = $request->input('uuid_barang')[$j];
+                            $data_harga = [
+                                'harga' => $request->harga[$j],
+                                'jumlah_minimal' => $request->jumlah_minimal[$j],
+                                'diskon' => $request->diskon[$j],
+                                'keterangan' => $request->nama[$j],
+                            ];
+                            $push = harga_khusus::where('id', $uuid_barang)->update($data_harga);
+                        } elseif ($request->input('status')[$j] == 'tambah') {
+                            $uuid = hash('sha256', uniqid(mt_rand(), true));
+                            $data_harga = [
+                                'id_barang'=> $id,
+                                'harga' => $request->harga[$j],
+                                'jumlah_minimal' => $request->jumlah_minimal[$j],
+                                'diskon' => $request->diskon[$j],
+                                'keterangan' => $request->nama[$j],
+                                'uuid' => $uuid,
+                            ];
+                            $push = harga_khusus::create($data_harga);
+                        }
+                    }
+                }
         }
+            
         $push = barang::where('uuid', $id)->update($data_master);
         return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Update');
     }

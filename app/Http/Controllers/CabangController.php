@@ -134,7 +134,8 @@ class CabangController extends Controller
                 'telepon' => $data['telepon'],
                 'category_id' => $data['category_id'],
                 'uuid'=> $data['uuid'],
-                'database' => $database
+                'database' => $database,
+                'keterangan'=> 'not_singkron'
             ]);
             user_cabang::insert([
                 'cabang_id' => $data['uuid'],

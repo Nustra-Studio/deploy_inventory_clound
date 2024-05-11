@@ -102,13 +102,7 @@ class SingkronController extends Controller
                                     'user'=>$user
                                 ];
                                 $apiResponse = $this->sendToApi($url, $data);
-                                    if ($apiResponse && $apiResponse['status'] === 'success') {
-                                        // singkron::where('id',$item->id)->delete();
-                                        dd('success');
-                                    }
-                                    else{
-                                        dd('error');
-                                    }
+                                    singkron::where('id',$item->id)->delete();
                             break;
                         }
                 }

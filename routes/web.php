@@ -50,6 +50,7 @@ Route::group(['prefix' => 'error'], function(){
         Route::prefix('resource')->group(function () {
             // buat kan route barang resource metode get 
             Route::get('/barang', 'BarangController@resource')->name('barang.resource');
+            Route::get('/barang/datatables ', 'BarangController@datatables')->name('barang.datatables');
         });
         Route::resource('/singkron', SingkronController::class);
         Route::prefix('pdf')->group(function () {
@@ -62,6 +63,8 @@ Route::group(['prefix' => 'error'], function(){
         Route::post('/pembelian', 'TransactionController@pembelian_cari')->name('transaction.pembelian.cari');
         Route::post('/pengeluaran', 'TransactionController@pengeluaran_cari')->name('transaction.pengeluaran.cari');
         Route::resource('/barang', BarangController::class);
+        Route::post('/barang/excel','BarangController@excel')->name('barang.excel');
+
         Route::post('/barang/hapus', 'BarangController@hapus')->name('barang.hapus');
         Route::get('/barang/{uuid}/list', 'BarangController@list')->name('barang.list');
         Route::get('/supllier/barang/{uuid}', 'SupplierController@barang')->name('supplier.barang');

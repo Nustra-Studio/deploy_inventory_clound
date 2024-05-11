@@ -122,6 +122,7 @@ class ApiSingkron extends Controller
                         $this->cabangcreate($request);
                     break;
                 }
+                return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
         } catch (\Exception $e) {
             // Tangani pengecualian jika terjadi kesalahan saat menyimpan ke database lokal
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);

@@ -19,6 +19,10 @@
         <div class="card-header">
             <h4 class="card-title">Data Barang</h4>
             <a href="{{ url('/barang/create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
+            <button type="button" class=" mx-2 btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Excel
+          </button>
+
       <div class="card-body">
         {{-- <p class="text-muted mb-3">Read the <a href="https://datatables.net/" target="_blank"> Official DataTables Documentation </a>for a full list of instructions and other options.</p> --}}
         
@@ -47,7 +51,9 @@
                 <td>{{$item->name}}</td>
                 <td>{{$item->kode_barang}}</td>
                 <td>{{$item->kode_barang}}</td>
-                <td>{{$category->name}}</td>
+                <td>@if(!empty($category))
+                  {{$category->name}}
+                @endif</td>
                 <td>{{$item->harga_pokok}}</td>
                 <td>{{$item->harga_jual}}</td>
                 <td>{{$item->stok}}</td>
@@ -116,7 +122,32 @@
       </div>
     </div>
     @endforeach
-
+    {{-- model --}}
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <form action="{{ route('barang.excel') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="excelFile" class="form-label">Choose Excel File</label>
+                            <input type="file" class="form-control" id="excelFile" name="file">
+                        </div>
+                        <!-- Add other necessary form fields for file import if needed -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </form>
+                </div>
+                
+                </div>
+            </div>
+            </div>
+        </div>
 @endsection
 
 @push('plugin-scripts')
