@@ -93,7 +93,11 @@
                 <td>{{ $item->jumlah }}</td>
                 <td>{{ $item->harga_pokok }}</td>
                 <td>{{ $item->harga_jual }}</td>
-                <td>{{$cabang->nama }}</td>
+                <td>@if (!empty($cabang->nama))
+                  {{$cabang->nama }}
+                @else
+                    Non
+                @endif</td>
                 <td>{{$item->keterangan}}</td>
                 <td>{{ $item->created_at }}</td>
               </tr>
