@@ -183,7 +183,7 @@ class ApiOwner extends Controller
                 $database = "transaction_$namas";
                 $startDate = now()->subWeek();
                 $endDate = now();
-
+                
                 $result = DB::table($database)->whereBetween('created_at', [$startDate, $endDate])
                 ->orderBy('jumlah','desc')
                 ->limit(10)
