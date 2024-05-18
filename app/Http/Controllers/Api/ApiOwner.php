@@ -176,11 +176,11 @@ class ApiOwner extends Controller
         $results = collect();
 
         foreach($cabang as $datas){
-            $namas = $datas->nama;
+            $namas = $datas->database;
 
             if($namas !== "Toko Bandung"){ // Jika bukan "Toko Bandung"
                 $nama = str_replace(' ', '_', $namas);
-                $database = "transaction_cabang_$nama";
+                $database = "transaction_$nama";
                 $startDate = now()->subWeek();
                 $endDate = now();
 
