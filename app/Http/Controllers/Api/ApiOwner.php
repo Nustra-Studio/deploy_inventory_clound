@@ -180,7 +180,7 @@ class ApiOwner extends Controller
 
             if($namas !== "Toko Bandung"){ // Jika bukan "Toko Bandung"
                 $nama = str_replace(' ', '_', $namas);
-                $database = "transaction_$nama";
+                $database = "transaction_$namas";
                 $startDate = now()->subWeek();
                 $endDate = now();
 
