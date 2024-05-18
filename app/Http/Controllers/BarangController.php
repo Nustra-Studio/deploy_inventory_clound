@@ -15,6 +15,7 @@ use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\Printer;
 use App\Imports\BarangImport;
+use App\Imports\BarangUpdates;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Http;
@@ -30,7 +31,7 @@ class BarangController extends Controller
      */
     public function index()
     {
-        $data = barang::where('uuid', '!=', 'hidden')->limit(1500)->get();
+        $data = barang::where('uuid', '!=', 'hidden')->whereDate('created_at', now()->today())->limit(1500)->get();
         return view ('pages.barang.index',compact('data'));
     }
     public function datatables(){
@@ -40,6 +41,15 @@ class BarangController extends Controller
     public function excel(Request $request){
         try {
             Excel::import(new BarangImport, request()->file('file'));
+            return redirect()->back()->with('success', 'Data Imported');
+        } catch (\Exception $e) {
+            // Handle the exception
+            return redirect()->back()->with('error', 'Error importing data: ' . $e->getMessage());
+        }
+    }
+    public function updateexcel(Request $request){
+        try {
+            Excel::import(new BarangUpdates, request()->file('file'));
             return redirect()->back()->with('success', 'Data Imported');
         } catch (\Exception $e) {
             // Handle the exception

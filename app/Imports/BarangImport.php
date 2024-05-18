@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use App\Models\barang;
 use App\Models\category_barang;
 use App\Models\suplier;
+use App\Models\singkron;
 class BarangImport implements ToCollection
 {
     /**
@@ -27,6 +28,12 @@ class BarangImport implements ToCollection
                     'name'=>$item[7],
                     'uuid'=>$uuid_category
                 ]);
+                $singkron =  [
+                    'name'=>'categorybarang',
+                    'status'=>'create',
+                    'uuid'=>$uuid_category,
+                ];
+                singkron::insert($singkron);
                 $id_category = $uuid_category;
             }
             else{
@@ -49,7 +56,7 @@ class BarangImport implements ToCollection
                 'stok'=>$stock
             ];
             if(empty($barang)){
-                barang::insert($data);
+                barang::create($data);
             }
             else{
                 $barang->update($data);

@@ -72,6 +72,7 @@ Route::group(['prefix' => 'error'], function(){
         Route::get('/input-barang', 'BarangController@input')->name('barang.input');
         Route::post('/input-barang', 'BarangController@inputcreate')->name('barang.input.create');
         Route::get('/product/{id}/show', 'SupplierController@caribarang')->name('supplier.getProductsBySupplier');
+        Route::post('/barang/update/excel','BarangController@updateexcel')->name('barang.update.excel');
         // route resource category,cabang,supplier,distribusi,transaction
         Route::get('/harga/{id}/{harga}/barang', 'BarangController@harga')->name('barang.harga');
     

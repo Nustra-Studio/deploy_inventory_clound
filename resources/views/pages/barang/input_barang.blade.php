@@ -54,6 +54,9 @@
                 <!-- Rest of the form content -->
                 <input type="button" class="btn btn-warning me-2" value="Tambah Barang"data-bs-toggle="modal" data-bs-target="#exampleModalLongScollable" />
                 <input type="button" class="btn btn-success me-2" value="Tambah" onclick="addRow()" />
+                <button type="button" class=" mx-2 btn btn-success" data-bs-toggle="modal" data-bs-target="#excelmodal">
+                    Excel
+                </button>
                 <button onclick="window.history.go(-1); return false;" type="submit" value="Cancel" class="btn btn-secondary">Cancel</button>
             </form>
 
@@ -374,7 +377,31 @@
         </div>
         </div>
     </div>
-    
+    <div class="modal fade" id="excelmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+                <form action="{{ route('barang.update.excel') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="excelFile" class="form-label">Choose Excel File</label>
+                        <input type="file" class="form-control" id="excelFile" name="file">
+                    </div>
+                    <!-- Add other necessary form fields for file import if needed -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </form>
+            </div>
+            
+            </div>
+        </div>
+        </div>
+    </div>
 @endsection
 {{-- @push('plugin-scripts')
     <script src="{{ asset('assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
