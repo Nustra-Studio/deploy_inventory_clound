@@ -50,7 +50,9 @@ Route::group(['prefix' => 'error'], function(){
         Route::prefix('resource')->group(function () {
             // buat kan route barang resource metode get 
             Route::get('/barang', 'BarangController@resource')->name('barang.resource');
-            Route::get('/barang/datatables ', 'BarangController@datatables')->name('barang.datatables');
+            Route::get('/barang/datatables ', 'BarangController@datatables')->name('barang.data');
+            Route::get('/barang/distribusi ', 'BarangController@datadistribusi')->name('barang.distribusi');
+
         });
         Route::resource('/singkron', SingkronController::class);
         Route::prefix('pdf')->group(function () {

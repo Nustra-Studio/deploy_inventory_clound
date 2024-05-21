@@ -56,7 +56,6 @@
                   $suplier = suplier::where('uuid', $item->id_supplier)->value('nama');
               @endphp
               <tr>
-                <form action="">
                   <td>{{$loop->index+1}}</td>
                   <td>{{$item->kode_barang}}</td>
                   <td>{{$item->name}}</td>
@@ -69,11 +68,10 @@
                         <i data-feather="repeat"></i>
                       </button>
                     </div>
+                    <input type="hidden" name="kode" value="{{ $item->kode_barang}}">
+                    <input type="hidden" name="nama" value="{{ $item->name }}">
+                    <input type="hidden" name="stock" value="{{ $item->stock }}">
                   </td>
-                  <input type="hidden" name="kode" value="{{ $item->kode_barang}}">
-                  <input type="hidden" name="nama" value="{{ $item->name }}">
-                  <input type="hidden" name="stock" value="{{ $item->stock }}">
-                </form>
               </tr>
               @endforeach
             </tbody>
@@ -176,7 +174,7 @@
       } else {
         // Jika item belum ada, tambahkan baris baru
         var newRow = '<tr>';
-          newRow += '<input type="hidden" name="kode[]" value="' + kode + '">';
+        newRow += '<input type="hidden" name="kode[]" value="' + kode + '">';
         newRow += '<input type="hidden" name="nama[]" value="' + nama + '">';
         newRow += '<input type="hidden" name="jumlah[]" value="' + jumlah + '">';
         newRow += '<td>' + (tableExample2.rows().count() + 1) + '</td>';

@@ -45,7 +45,12 @@
                 <td> {{$item->product}}</td>
                 @php
                     $categorys = App\Models\category_barang::find($item->category_barang_id);
-                    $category = $categorys->name;
+                    if (!empty($categorys)) {
+                      $category = $categorys->name;
+                    }
+                    else{
+                      $category = " ";
+                    }
                 @endphp
                 <td> {{$category}}</td>
                 <td>

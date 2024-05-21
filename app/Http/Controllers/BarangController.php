@@ -16,7 +16,7 @@ use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\Printer;
 use App\Imports\BarangImport;
 use App\Imports\BarangUpdates;
-use Yajra\DataTables\Facades\DataTables;
+use DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Http;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -34,9 +34,67 @@ class BarangController extends Controller
         $data = barang::where('uuid', '!=', 'hidden')->whereDate('created_at', now()->today())->limit(1500)->get();
         return view ('pages.barang.index',compact('data'));
     }
-    public function datatables(){
+    public function datatables(Request $request)
+    {
         // $data = barang::all();
-        return DataTables::of(barang::query())->toJson();
+        $barang = barang::select(['id', 'name', 'kode_barang', 'category_id', 'harga_pokok', 'harga_jual', 'stok'])
+                     ->orderBy('created_at', 'desc'); // Order by latest created
+        if ($request->input('search.value')) {
+            $search = $request->input('search.value');
+            $barang->where(function($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('kode_barang', 'like', "%{$search}%");
+            })->limit(3000); // Limit search results to 3000 records
+        }
+        else{
+            $barang->limit(1000);
+        }
+                
+        return DataTables::of($barang)
+            ->addIndexColumn() 
+            ->addColumn('category', function ($row) {
+                $category = category_barang::where('uuid', $row->category_id)->first();
+                return $category ? $category->name : '';
+            })
+            ->addColumn('action', function ($row) {
+                $btn = '<button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal_'.$row->uuid.'">Show</button>';
+                $btn .= ' <a href="'.url("/barang/$row->uuid/edit").'" class="btn btn-primary btn-sm">Edit</a>';
+                $btn .= ' <button class="btn btn-danger btn-sm delete-button" data-id="'.$row->uuid.'">Delete</button>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+    public function datadistribusi(Request $request)
+    {
+        // $data = barang::all();
+        $barang = barang::select(['id', 'name', 'kode_barang', 'category_id', 'harga_pokok', 'harga_jual', 'stok','id_supplier'])
+                     ->orderBy('created_at', 'desc'); // Order by latest created
+        if ($request->input('search.value')) {
+            $search = $request->input('search.value');
+            $barang->where(function($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('kode_barang', 'like', "%{$search}%");
+            })->limit(3000); // Limit search results to 3000 records
+        }
+        else{
+            $barang->limit(1000);
+        }
+                
+        return DataTables::of($barang)
+            ->addIndexColumn() 
+            ->addColumn('category', function ($row) {
+                $category = category_barang::where('uuid', $row->category_id)->first();
+                return $category ? $category->name : '';
+            })
+            ->addColumn('action', function ($row) {
+                $btn = '<button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal_'.$row->uuid.'">Show</button>';
+                $btn .= ' <a href="'.url("/barang/$row->uuid/edit").'" class="btn btn-primary btn-sm">Edit</a>';
+                $btn .= ' <button class="btn btn-danger btn-sm delete-button" data-id="'.$row->uuid.'">Delete</button>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
     public function excel(Request $request){
         try {
