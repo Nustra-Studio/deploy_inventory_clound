@@ -310,7 +310,7 @@ class ApiSingkron extends Controller
                 $stocks = $request->input('jumlah')[$i];
                 $data = barang::where('kode_barang', '=' ,"$kode")->first();
                 $check = DB::table("$database")->where('kode_barang', '=' ,"$kode")->first();
-                if ($check) {
+                if (!empty($check)) {
                     $stock = $check->stok + $stocks;
                     DB::table("$database")->where('kode_barang', '=' ,"$kode")->update([
                         'stok' => $stock,

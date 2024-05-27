@@ -38,7 +38,7 @@
     <div class="card">
       <div class="card-body">
         <div class="table-responsive">
-          <table id="dataTableExample1" class="table">
+          <table id="masterdata" class="table">
             <thead>
               <tr>
                 <th>No</th>
@@ -50,7 +50,7 @@
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody id="tb-local">
+            {{-- <tbody id="tb-local">
               @foreach ($barang as $item)
               @php
                   $suplier = suplier::where('uuid', $item->id_supplier)->value('nama');
@@ -74,7 +74,7 @@
                   </td>
               </tr>
               @endforeach
-            </tbody>
+            </tbody> --}}
           </table>
         </div>
       </div>
@@ -125,6 +125,32 @@
 @endpush
 
 @push('custom-scripts')
+<script>
+  $(document).ready(function() {
+    $('#masterdata').DataTable({
+          processing: true,
+          serverSide: true,
+          ajax: {
+              url: '/resource/barang/distribusi',
+              data: function (d) {
+                  // Add custom parameters for server-side processing here if needed
+              }
+          },
+          searchDelay: 500, 
+          pageLength: 25, 
+          columns: [
+              { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+              { data: 'kode_barang', name: 'kode_barang' },
+              { data: 'name', name: 'name' },
+              { data: 'suplier', name: 'suplier' },
+              { data: 'stok', name: 'stok' },
+              { data: 'jumlah', name: 'jumlah' , orderable: false, searchable: false },
+              { data: 'action', name: 'action', orderable: false, searchable: false },
+          ]
+      });
+  
+  });
+  </script>
   <script src="{{ asset('assets/js/data-table.js') }}"></script>
   <script>
     $(document).ready(function() {

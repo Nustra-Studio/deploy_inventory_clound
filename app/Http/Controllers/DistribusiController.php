@@ -47,7 +47,7 @@ class DistribusiController extends Controller
     {
         $data = $request->all();
         $url = env('APP_API');
-        $response = Http::timeout(3)->get($url);
+        $response = Http::timeout(10)->get($url);
 
         try {
             $data['singkron'] = 'singkron';
@@ -108,7 +108,7 @@ class DistribusiController extends Controller
             $stocks = $request->input('jumlah')[$i];
             $data = barang::where('kode_barang', '=' ,"$kode")->first();
             $check = DB::table("$database")->where('kode_barang', '=' ,"$kode")->first();
-            if ($check) {
+            if (!empty($check)) {
                 $stock = $check->stok + $stocks;
                 DB::table("$database")->where('kode_barang', '=' ,"$kode")->update([
                     'stok' => $stock,

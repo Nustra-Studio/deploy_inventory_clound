@@ -57,7 +57,7 @@ $(document).ready(function() {
                 // Add custom parameters for server-side processing here if needed
             }
         },
-        searchDelay: 500, /
+        searchDelay: 500, 
         pageLength: 25, 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },

@@ -69,7 +69,9 @@ class BarangController extends Controller
     {
         // $data = barang::all();
         $barang = barang::select(['id', 'name', 'kode_barang', 'category_id', 'harga_pokok', 'harga_jual', 'stok','id_supplier'])
-                     ->orderBy('created_at', 'desc'); // Order by latest created
+                    ->where('stok', '>', 0)
+                    ->orderBy('created_at', 'desc');
+
         if ($request->input('search.value')) {
             $search = $request->input('search.value');
             $barang->where(function($query) use ($search) {
@@ -83,17 +85,26 @@ class BarangController extends Controller
                 
         return DataTables::of($barang)
             ->addIndexColumn() 
-            ->addColumn('category', function ($row) {
-                $category = category_barang::where('uuid', $row->category_id)->first();
-                return $category ? $category->name : '';
+            ->addColumn('suplier', function ($row) {
+                $suplier = suplier::where('uuid', $row->id_supplier)->first();
+                return $suplier ? $suplier->nama : 'non';
+            })
+            ->addColumn('jumlah',function($row){
+                $jumlah = '<input type="number" name="jumlah" value="0" class="form-control form-control-sm">';
+                return $jumlah;
             })
             ->addColumn('action', function ($row) {
-                $btn = '<button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal_'.$row->uuid.'">Show</button>';
-                $btn .= ' <a href="'.url("/barang/$row->uuid/edit").'" class="btn btn-primary btn-sm">Edit</a>';
-                $btn .= ' <button class="btn btn-danger btn-sm delete-button" data-id="'.$row->uuid.'">Delete</button>';
+                $btn = '<div class="text-center">
+                    <button type="button" class="btn btn-primary btn-icon add-to-tb-barang">
+                        ->
+                    </button>
+                </div>';
+                $btn .= " <input type='hidden' name='kode' value='$row->kode_barang'>";
+                $btn .= " <input type='hidden' name='nama' value='$row->name'>";
+                $btn .= " <input type='hidden' name='stock' value='$row->stock'>";
                 return $btn;
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action','jumlah'])
             ->make(true);
     }
     public function excel(Request $request){
