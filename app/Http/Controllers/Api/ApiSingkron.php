@@ -175,7 +175,7 @@ class ApiSingkron extends Controller
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
     }
     private function supplier($request){
-        $data = $request->input('data');
+        $data = $request['data'];
         $status = $request->input('status');
         try {
                 switch($status){

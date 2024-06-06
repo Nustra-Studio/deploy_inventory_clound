@@ -45,6 +45,7 @@ class SingkronController extends Controller
                                         'status'=>$item->status,
                                         'data'=>$upload,
                                     ];
+                                    // $data = $data['data'];
                                     // dd($data);
                                     $apiResponse = $this->sendToApi($url, $data);
                                     if ($apiResponse && $apiResponse['status'] === 'success') {
