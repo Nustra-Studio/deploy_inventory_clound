@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use App\Models\suplier;
 use App\Models\barang;
@@ -38,11 +39,13 @@ class SingkronController extends Controller
                                     if($item->status === 'delete'){
                                         $datas = $item;
                                     }
+                                    $upload = Arr::except($datas->toArray(), ['id']);
                                     $data = [
                                         'key'=>$item->name,
                                         'status'=>$item->status,
-                                        'data'=>$datas->toArray(),
+                                        'data'=>$upload,
                                     ];
+                                    // dd($data);
                                     $apiResponse = $this->sendToApi($url, $data);
                                     if ($apiResponse && $apiResponse['status'] === 'success') {
                                         singkron::where('id',$item->id)->delete();
