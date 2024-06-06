@@ -10,6 +10,7 @@ class suplier extends Model
     use HasFactory;
     protected $table = 'supliers';
     protected $fillabel = [
+        'id',
         'nama',
         'product',
         'keterangan',
