@@ -47,9 +47,11 @@
                 @endphp
                 @foreach ($categorys as $item)
                 <option value="{{$item->id}}"
-                    @if ($item->id == $data->category_barang_id)
-                    selected
-                    
+                    @if (!empty($item))
+                        @if ($item->id == $data->category_barang_id)
+                        selected
+                        
+                        @endif
                     @endif
                     >{{$item->name}}
                 </option>

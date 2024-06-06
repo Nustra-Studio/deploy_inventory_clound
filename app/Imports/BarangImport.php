@@ -57,9 +57,21 @@ class BarangImport implements ToCollection
             ];
             if(empty($barang)){
                 barang::create($data);
+                $singkron = [
+                    'name' => 'barang',
+                    'status' => 'create',
+                    'uuid' => $uuid,
+                ];
+                singkron::create($singkron);
             }
             else{
                 $barang->update($data);
+                $singkron = [
+                    'name' => 'barang',
+                    'status' => 'update',
+                    'uuid' => $uuid,
+                ];
+                singkron::create($singkron);
             }
         }
 

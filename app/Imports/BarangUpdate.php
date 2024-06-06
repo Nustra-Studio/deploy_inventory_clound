@@ -45,7 +45,7 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                         $uuid_supplier = hash('sha256', uniqid(mt_rand(), true));
                         $data = [
                             'nama' => $item[11],
-                            'product' => 'default',
+                            'product' => 'non',
                             'keterangan' => 'singkron',
                             'alamat' => 'empty',
                             'telepon' => "0",
@@ -57,8 +57,8 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                             'status' => 'create',
                             'uuid' => $uuid_supplier,
                         ];
-                        suplier::insert($data);
-                        singkron::insert($singkron);
+                        suplier::create($data);
+                        singkron::create($singkron);
                         $supplier = $uuid_supplier;
                     }
                 } else {
@@ -83,6 +83,12 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                             'stok'=>$stock_update
                         ]
                     );
+                    $singkron = [
+                        'name' => 'barang',
+                        'status' => 'update',
+                        'uuid' => $uuid,
+                    ];
+                    singkron::create($singkron);
                 }
                 // action create
                 else{
@@ -98,6 +104,12 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                             'stok'=>$item[3] 
                         ]
                     );
+                    $singkron = [
+                        'name' => 'barang',
+                        'status' => 'create',
+                        'uuid' => $uuid,
+                    ];
+                    singkron::create($singkron);
                 }
             }
         }

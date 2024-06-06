@@ -180,7 +180,7 @@ class ApiSingkron extends Controller
         try {
                 switch($status){
                     case "create" :
-                        DB::table('supliers')->insert($data);
+                        DB::table('supliers')->create($data);
                     break;
                     case "update" :
                         DB::table('supliers')->where('uuid',$data['uuid'])->update($data);

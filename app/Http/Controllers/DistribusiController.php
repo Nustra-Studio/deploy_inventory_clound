@@ -7,6 +7,7 @@ use App\Models\barang;
 use App\Models\cabang;
 use App\Models\supplier;
 use App\Models\category;
+use App\Models\singkron;
 use App\Models\history_transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -132,6 +133,11 @@ class DistribusiController extends Controller
                     'singkron'=>$singkron,
                 ];
                 history_transaction::create($data_history);
+                $singkron =  [
+                    'name'=>'barang',
+                    'status'=>'distribusi',
+                    'uuid'=>$uuid,
+                ];
                 $data_stock = $data->stok - $stocks;
                 $data->update([
                     'stok' => $data_stock,
@@ -168,12 +174,18 @@ class DistribusiController extends Controller
                     'singkron'=>$singkron
                 ];
                 history_transaction::create($data_history);
+
                 $data_stock = $data->stok - $stocks;
                 $data->update([
                     'stok' => $data_stock,
                 ]);
+                $singkron =  [
+                    'name'=>'barang',
+                    'status'=>'distribusi',
+                    'uuid'=>$uuid,
+                ];
             }
-
+            singkron::create($singkron);
         }
             
         } catch (\Exception $e) {

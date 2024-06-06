@@ -52,6 +52,7 @@ Route::group(['prefix' => 'error'], function(){
             Route::get('/barang', 'BarangController@resource')->name('barang.resource');
             Route::get('/barang/datatables ', 'BarangController@datatables')->name('barang.data');
             Route::get('/barang/distribusi ', 'BarangController@datadistribusi')->name('barang.distribusi');
+            Route::get('/barang/data','BarangController@datarespone');
 
         });
         Route::resource('/singkron', SingkronController::class);

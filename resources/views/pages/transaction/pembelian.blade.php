@@ -83,7 +83,7 @@
             <tbody>
               @foreach ($data as $item)
               @php
-                   $supplier = suplier::where('uuid', $item->id_supllayer)->first();
+                  $supplier = suplier::where('uuid', $item->id_supllayer)->first();
               @endphp
               <tr>
                 <td>{{ $loop->iteration }}</td>
@@ -93,7 +93,11 @@
                 <td>{{ $item->jumlah }}</td>
                 <td>{{ $item->harga_pokok }}</td>
                 <td>{{ $item->harga_jual }}</td>
-                <td>{{$supplier->nama }}</td>
+                <td>
+                  @if (!empty($supplier))
+                  {{$supplier->nama }}
+                  @endif
+                </td>  
                 <td>{{ $item->created_at }}</td>
               </tr>
               @endforeach

@@ -73,7 +73,7 @@
           </ul>
         </div>
       </li>
-      <li class="nav-item {{ active_class(['supplier/*']) }}">
+      {{-- <li class="nav-item {{ active_class(['supplier/*']) }}">
         <a class="nav-link" data-bs-toggle="collapse" href="#data-supplier" role="button" aria-expanded="{{ is_active_route(['email/*']) }}" aria-controls="email">
           <i class="link-icon" data-feather="package"></i>
           <span class="link-title">Supplier</span>
@@ -96,7 +96,7 @@
             @endforeach
           </ul>
         </div>
-      </li>
+      </li> --}}
       <li class="nav-item nav-category">Distribusi</li>
       <li class="nav-item {{ active_class(['/distribusi']) }}">
         <a href="{{ url('/distribusi') }}" class="nav-link">

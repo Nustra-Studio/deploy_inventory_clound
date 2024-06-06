@@ -16,6 +16,7 @@ use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\Printer;
 use App\Imports\BarangImport;
 use App\Imports\BarangUpdates;
+use App\Models\singkron;
 use DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Http;
@@ -31,33 +32,61 @@ class BarangController extends Controller
      */
     public function index()
     {
-        $data = barang::where('uuid', '!=', 'hidden')->whereDate('created_at', now()->today())->limit(1500)->get();
-        return view ('pages.barang.index',compact('data'));
+        return view ('pages.barang.index');
+    }
+    public function datarespone (Request $request){
+        $name = $request->name;
+        // uuid item
+            if($name === "barang"){
+                $data = barang::where('uuid',$request->uuid)->select(['uuid','name'])->get();
+                return response()->json($data, 200);
+            }
+        // harga khusus
+            elseif($name === "harga"){
+                $data = harga_khusus::where('id_barang', $request->uuid)->get();
+                return response()->json($data, 200);
+            }
+        // null
+        else{
+            return response()->json("Data Not Found", 404);
+        }
     }
     public function datatables(Request $request)
     {
-        // $data = barang::all();
-        $barang = barang::select(['id', 'name', 'kode_barang', 'category_id', 'harga_pokok', 'harga_jual', 'stok'])
+        $barang = barang::select(['id', 'uuid','name','id_supplier', 'kode_barang', 'category_id', 'harga_pokok', 'harga_jual', 'stok'])
                      ->orderBy('created_at', 'desc'); // Order by latest created
+    
         if ($request->input('search.value')) {
             $search = $request->input('search.value');
-            $barang->where(function($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('kode_barang', 'like', "%{$search}%");
-            })->limit(3000); // Limit search results to 3000 records
+            $suplier = suplier::where('nama', $search)->value('uuid');
+            $barang->where(function($query) use ($search, $suplier) {
+                $query->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('kode_barang', 'like', "%{$search}%");
+
+            }); // Limit search results to 3000 records
         }
         else{
             $barang->limit(1000);
         }
-                
+    
         return DataTables::of($barang)
             ->addIndexColumn() 
             ->addColumn('category', function ($row) {
                 $category = category_barang::where('uuid', $row->category_id)->first();
                 return $category ? $category->name : '';
             })
+            ->editColumn('harga_pokok', function ($row) {
+                return 'Rp '.number_format($row->harga_pokok, 0, ',', '.');
+            })
+            ->editColumn('harga_jual', function ($row) {
+                return 'Rp '.number_format($row->harga_jual, 0, ',', '.');
+            })
+            ->addColumn('suplier', function ($row) {
+                $suplier = suplier::where('uuid', $row->id_supplier)->first();
+                return $suplier ? $suplier->nama : 'non';
+            })
             ->addColumn('action', function ($row) {
-                $btn = '<button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal_'.$row->uuid.'">Show</button>';
+                $btn = '<button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#dynamicModal"data-item-id="'.$row->uuid.'">Show</button>';
                 $btn .= ' <a href="'.url("/barang/$row->uuid/edit").'" class="btn btn-primary btn-sm">Edit</a>';
                 $btn .= ' <button class="btn btn-danger btn-sm delete-button" data-id="'.$row->uuid.'">Delete</button>';
                 return $btn;
@@ -65,6 +94,7 @@ class BarangController extends Controller
             ->rawColumns(['action'])
             ->make(true);
     }
+    
     public function datadistribusi(Request $request)
     {
         // $data = barang::all();
@@ -277,96 +307,12 @@ class BarangController extends Controller
             $data_hargas[] = $data_harga;
         }
     }
-        try{
-            $url = env('APP_API');
-            $response = Http::timeout(1)->get($url);
-            if ($response->successful()) {
-                // Prepare data for API request
-                $data = [
-                    'data_history'=>$data_history,
-                    'data_master'=>$data_master,
-                    'data_harga'=>$data_hargas
-                ];
-                $data['key'] = 'barang';
-        
-                // Send data to the server API
-                $apiResponse = $this->sendToApi($url, $data);
-                Log::error('test api' . $data);
-                // Check the status of the API response
-                if ($apiResponse && $apiResponse['status'] === 'success') {
-                    // Save data locally to the database
-                    $data_master =[
-                        'name' => $request->name,
-                        'merek_barang' => $request->merek_barang,
-                        'uuid' => $request->uuid,
-                        'id_supplier' => $request->supplier,
-                        'category_id' => $request->category_barang,
-                        'harga_pokok' => $request->harga_pokok,
-                        'harga_jual' => $request->harga_jual,
-                        'stok' => $request->jumlah,
-                        'kode_barang' => $kode,
-                        'keterangan' => 'singkron',
-                    ];
-                    $this->storeLocally($data_master , $data_history , $request);
-        
-                    return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
-                } else {
-                    // Handle API response errors
-                    return redirect()->route('barang.index')->with('error', 'Terjadi kesalahan saat menyinkronkan data ke server');
-                }
-            } else {
-                // Save data locally without synchronizing to the server
-                $data_master =[
-                    'name' => $request->name,
-                    'merek_barang' => $request->merek_barang,
-                    'uuid' => $request->uuid,
-                    'id_supplier' => $request->supplier,
-                    'category_id' => $request->category_barang,
-                    'harga_pokok' => $request->harga_pokok,
-                    'harga_jual' => $request->harga_jual,
-                    'stok' => $request->jumlah,
-                    'kode_barang' => $kode,
-                    'keterangan' => 'not_singkron',
-                ];
-                $this->storeLocally($data_master , $data_history , $request);
-        
-                return redirect()->route('barang.index')->with('success', "$response");
-            }
-        }
-        catch (\Exception $e) {
-            $data_master =[
-                'name' => $request->name,
-                'merek_barang' => $request->merek_barang,
-                'uuid' => $request->uuid,
-                'id_supplier' => $request->supplier,
-                'category_id' => $request->category_barang,
-                'harga_pokok' => $request->harga_pokok,
-                'harga_jual' => $request->harga_jual,
-                'stok' => $request->jumlah,
-                'kode_barang' => $kode,
-                'keterangan' => 'not_singkron',
-            ];
-            $this->storeLocally($data_master , $data_history , $request);
-    
-            return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan tetapi tidak disinkronkan ke server');
-        }
-    }
-    private function sendToApi($url, $data)
-    {
         try {
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post("$url/api/singkron", $data);
-    
-            if ($response->successful()) {
-                return $response->json();
-            } else {
-                \Log::error('API Error: ' . $response->status() . ' - ' . $response->body());
-                return null;
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error sending data to API: ' . $e->getMessage());
-            return null;
+            $this->storeLocally($data_master , $data_history , $request);
+        
+            return redirect()->route('barang.index')->with('success', 'Data berhasil disimpan dan disinkronkan ke server');
+        } catch (\Throwable $th) {
+            return redirect()->route('barang.index')->with('error', 'Sistem Error');
         }
     }
     private function storeLocally($data_master, $data_history , $request)
@@ -389,6 +335,12 @@ class BarangController extends Controller
                         $push = harga_khusus::create($data_harga);
                     }
                 }
+                $singkron =  [
+                    'name'=>'barang',
+                    'status'=>'create',
+                    'uuid'=>$data_master['uuid'],
+                ];
+                singkron::create($singkron);
             } catch (\Exception $e) {
                 \Log::error('Error storing data locally: ' . $e->getMessage());
             }
@@ -434,6 +386,12 @@ class BarangController extends Controller
                     'status' => 'masuk',
                     'keterangan'=> $keterangan
                 ];
+                $singkron =  [
+                    'name'=>'barang',
+                    'status'=>'input',
+                    'uuid'=>$data_master['uuid'],
+                ];
+                singkron::create($data_history['uuid']);
                 $push = history_transaction::create($data_history);
                 }
         } catch (\Exception $e) {
@@ -448,37 +406,6 @@ class BarangController extends Controller
      */
     public function show($id)
     {
-
-        // $kategori = 'supplier';
-        // $bulan = date('m');
-        // $tahun = date('y');
-
-        // // Dapatkan nomor urut terakhir yang digunakan
-        // $nomorUrutTerakhir = DB::table('tabel_nomor_urut')->where('kategori', $kategori)->value('nomor_urut');
-        // if ($nomorUrutTerakhir === null) {
-        //     $nomorUrutTerakhir = 0;
-        // }
-
-        // // Generate nomor urut baru yang belum digunakan
-        // $nomorUrutTerakhir++; // Increment nomor urut terakhir
-
-        // // Cek apakah nomor urut terakhir mencapai batas 999
-        // if ($nomorUrutTerakhir > 999) {
-        //     $kategori .= '4'; // Ubah kategori menjadi 'supplier4'
-        //     $nomorUrutTerakhir = 1; // Reset nomor urut terakhir menjadi 1
-        //     $nomorUrut = str_pad($nomorUrutTerakhir, 4, '0', STR_PAD_LEFT);
-        //     $tahun = date('Y'); // Ubah format tahun menjadi empat digit
-        // } else {
-        //     $nomorUrut = str_pad($nomorUrutTerakhir, 3, '0', STR_PAD_LEFT);
-        // }
-
-        // $kode = $kategori . $bulan . $tahun . $nomorUrut;
-
-        // // Simpan nomor urut terakhir yang digunakan ke database
-        // DB::table('tabel_nomor_urut')->updateOrInsert(['kategori' => $kategori], ['nomor_urut' => $nomorUrutTerakhir]);
-
-        // // Contoh penggunaan
-        // echo $kode;
 
     }
 
@@ -558,8 +485,12 @@ class BarangController extends Controller
                     }
                 }
         }
-            
         $push = barang::where('uuid', $id)->update($data_master);
+        $singkron =  [
+            'name'=>'barang',
+            'status'=>'update',
+            'uuid'=>$id,
+        ];
         return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Update');
     }
 
@@ -573,11 +504,21 @@ class BarangController extends Controller
     {
         $data = barang::where('uuid', $id)->first();
         $data->delete();
+        $singkron =  [
+            'name'=>'barang',
+            'status'=>'delete',
+            'uuid'=>$id,
+        ];
         return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Hapus');
     }
     public function hapus(Request $request){
         $data = harga_khusus::where('id', $request->id)->first();
         $data->delete();
+        $singkron =  [
+            'name'=>'barang',
+            'status'=>'hapus_harga',
+            'uuid'=>$request->id,
+        ];
         return redirect()->route('barang.index')->with('success', 'Data Berhasil Di Hapus');
     }
 }
