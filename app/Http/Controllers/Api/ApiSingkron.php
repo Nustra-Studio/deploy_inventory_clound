@@ -180,13 +180,13 @@ class ApiSingkron extends Controller
         try {
                 switch($status){
                     case "create" :
-                        suplier::create($data);
+                        DB::table('supliers')->create($data);
                     break;
                     case "update" :
-                        suplier::where('uuid',$data['uuid'])->update($data);
+                        DB::table('supliers')->where('uuid',$data['uuid'])->update($data);
                     break;
                     case "delete" :
-                        suplier::where('uuid',$data['uuid'])->delete();
+                        DB::table('supliers')->where('uuid',$data['uuid'])->delete();
                     break;
                 }
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan secara lokal'], 200);
