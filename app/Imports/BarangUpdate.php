@@ -9,6 +9,7 @@ use App\Models\barang;
 use App\Models\category_barang;
 use App\Models\suplier;
 use App\Models\singkron;
+use Illuminate\Support\Facades\DB;
 class BarangUpdate implements ToCollection , WithCalculatedFormulas
 {
     /**
