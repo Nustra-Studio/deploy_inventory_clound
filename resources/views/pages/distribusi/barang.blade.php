@@ -42,12 +42,12 @@
             <thead>
               <tr>
                 <th>No</th>
-                <th>Kode</th>
                 <th>Nama</th>
-                <th>Supplier</th>
+                <th>Kode</th>
                 <th>Stock</th>
                 <th>Jumlah</th>
                 <th>Action</th>
+                <th>Supplier</th>
               </tr>
             </thead>
             {{-- <tbody id="tb-local">
@@ -140,12 +140,12 @@
           pageLength: 25, 
           columns: [
               { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-              { data: 'kode_barang', name: 'kode_barang' },
               { data: 'name', name: 'name' },
-              { data: 'suplier', name: 'suplier' },
+              { data: 'kode_barang', name: 'kode_barang' },
               { data: 'stok', name: 'stok' },
               { data: 'jumlah', name: 'jumlah' , orderable: false, searchable: false },
               { data: 'action', name: 'action', orderable: false, searchable: false },
+              { data: 'suplier', name: 'suplier' },
           ]
       });
   

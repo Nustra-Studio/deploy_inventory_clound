@@ -61,7 +61,7 @@ class DistribusiController extends Controller
             if ($apiResponse && $apiResponse['status'] === 'success') {
                 // Simpan data ke database lokal
                 $this->storeLocally($data ,$request);
-                return redirect()->route('distribusi.index')->with('success', 'Data Distribusi  berhasil disimpan dan disinkronkan ke server');
+                return redirect()->back()->with('success', 'Data Distribusi  berhasil disimpan dan disinkronkan ke server');
             } else {
                 // Tangani kesalahan respons API
                 throw new \Exception('Terjadi kesalahan saat menyinkronkan data ke server');
@@ -71,7 +71,7 @@ class DistribusiController extends Controller
             // Simpan data ke database lokal tanpa menyinkronkan ke server
             $data['singkron'] = 'not_singkron';
             $this->storeLocally($data , $request);
-            return redirect()->route('distribusi.index')->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
     private function sendToApi($url, $data)
