@@ -58,7 +58,8 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                             'status' => 'create',
                             'uuid' => $uuid_supplier,
                         ];
-                        suplier::create($data);
+                        
+                        DB::table('supliers')->create($data);
                         singkron::create($singkron);
                         $supplier = $uuid_supplier;
                     }
