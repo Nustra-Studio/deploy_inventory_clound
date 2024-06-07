@@ -57,6 +57,7 @@ class SupplierController extends Controller
             'telepon' => $request->telepon,
             'category_barang_id' => $request->category,
             'uuid' => $request->uuid,
+            'status'=>'not'
         ];
         $singkron =  [
             'name'=>'supplier',

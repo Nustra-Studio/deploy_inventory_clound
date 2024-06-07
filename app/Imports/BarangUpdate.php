@@ -51,6 +51,7 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                             'telepon' => "0",
                             'category_barang_id' => $category,
                             'uuid' => $uuid_supplier,
+                            'status'=>'non'
                         ];
                         $singkron = [
                             'name' => 'supplier',
