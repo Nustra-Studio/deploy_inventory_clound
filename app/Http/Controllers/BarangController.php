@@ -120,7 +120,7 @@ class BarangController extends Controller
                 return $suplier ? $suplier->nama : 'non';
             })
             ->addColumn('jumlah',function($row){
-                $jumlah = '<input type="number" name="jumlah" value="0" class="form-control form-control-sm">';
+                $jumlah = '<input type="number" name="jumlah" value="0" class="form-control">';
                 return $jumlah;
             })
             ->addColumn('action', function ($row) {

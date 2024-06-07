@@ -41,7 +41,6 @@
           <table id="masterdata" class="table">
             <thead>
               <tr>
-                <th>No</th>
                 <th>Nama</th>
                 <th>Kode</th>
                 <th>Stock</th>
@@ -139,7 +138,6 @@
           searchDelay: 500, 
           pageLength: 25, 
           columns: [
-              { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
               { data: 'name', name: 'name' },
               { data: 'kode_barang', name: 'kode_barang' },
               { data: 'stok', name: 'stok' },
