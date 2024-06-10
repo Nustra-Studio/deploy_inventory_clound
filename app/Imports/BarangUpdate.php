@@ -15,10 +15,28 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
     /**
     * @param Collection $collection
     */
+    private $startColumn;
+    private $endColumn;
+
+    public function __construct($startColumn, $endColumn)
+    {
+        $this->startColumn = $startColumn;
+        $this->endColumn = $endColumn;
+    }
     public function collection(Collection $collection)
     {
-        $data = $collection->slice(3);
+        
+        if($this->startColumn <= 0 || empty($this->startColumn)){
+            $data = $collection->slice(3);
+        }
+        else{
+            $startColumnn =(int)$this->startColumn - 1;
+            $endColumn = (int) $this->endColumn -1 ;
+            $data = $collection->slice($startColumnn,$endColumn);
+        }
+        // dd($this->endColumn);
         foreach($data as $item){
+            
             if(!empty($item[0])||!empty($item[2])){
                 $uuid = hash('sha256', uniqid(mt_rand(), true));
                 // check huruf
@@ -72,7 +90,7 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                     $unit = barang::where('kode_barang',$item[0])->first();
                 // end check
                 if(!empty($unit)){
-                    $stock_update = intval($unit->stok) + intval($item[3]);
+                    $stock_update = intval($item[3]);
                 // action update
                     $unit->update(
                         [

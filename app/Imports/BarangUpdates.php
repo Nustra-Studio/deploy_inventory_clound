@@ -14,10 +14,18 @@ class BarangUpdates implements WithMultipleSheets
     /**
     * @param Collection $collection
     */
+    private $start;
+    private $end;
+    public function __construct($start, $end)
+    {
+        $this->startColumn = $start;
+        $this->endColumn = $end;
+    }
+
     public function sheets(): array
     {
         return [
-            "Sheet3"=> new BarangUpdate()
+            "Sheet3"=> new BarangUpdate($this->startColumn, $this->endColumn)
         ];
     }
 }

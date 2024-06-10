@@ -148,7 +148,9 @@ class BarangController extends Controller
     }
     public function updateexcel(Request $request){
         try {
-            Excel::import(new BarangUpdates, request()->file('file'));
+            $start = request()->input('start');
+            $end = request()->input('end');
+            Excel::import(new BarangUpdates($start,$end), request()->file('file'));
             return redirect()->back()->with('success', 'Data Imported');
         } catch (\Exception $e) {
             // Handle the exception

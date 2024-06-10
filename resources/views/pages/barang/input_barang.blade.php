@@ -378,17 +378,26 @@
         </div>
     </div>
     <div class="modal fade" id="excelmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog  modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
             <div class="modal-body">
                 <form action="{{ route('barang.update.excel') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label for="excelFile" class="form-label">Choose Excel File</label>
                         <input type="file" class="form-control" id="excelFile" name="file">
+                    </div>
+                    <div class="mb-3">
+                        <label for="excelFile" class="form-label">Start Column:</label>
+                        <input type="number" class="form-control" id="excelFile" name="start">
+                    </div>
+                    <div class="mb-3">
+                        <label for="excelFile" class="form-label">End Column:</label>
+                        <input type="number" class="form-control" id="excelFile" name="end">
                     </div>
                     <!-- Add other necessary form fields for file import if needed -->
                 </div>
