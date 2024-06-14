@@ -150,9 +150,16 @@ class ApiCabang extends Controller
         $db_cabang = cabang::where('uuid', $id)->first();
         $db_cabang = $db_cabang->database;
         $barang = DB::table("$db_cabang")->get();
-        foreach ($barang as $item){
-            DB::table("$db_cabang")->where('uuid', $item->uuid)->delete();
+        
+        $dataList = $request->data;
+
+        foreach($dataList as $item) {
+            DB::table("$db_cabang")->where('kode_barang', $item->kode_barang)->delete();
         }
+        
+        // foreach ($barang as $item){
+        //     DB::table("$db_cabang")->where('uuid', $item->uuid)->delete();
+        // }
         return response()->json("Semua data telah dihapus.", 200);
 
 
