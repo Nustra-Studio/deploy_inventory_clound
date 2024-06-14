@@ -83,7 +83,7 @@ class ApiCabang extends Controller
             $dataFinal = DB::table("$db_cabang as c")
                         ->join('supliers as s', 'c.id_supplier', '=', 's.uuid')
                         ->select(
-                            'c.*','s.nama as suplier_name'
+                            'c.*','s.nama as merek_barang'
                         )
                         ->get();
         
