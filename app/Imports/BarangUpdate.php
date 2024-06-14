@@ -30,11 +30,11 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
             $data = $collection->slice(3);
         }
         else{
-            $startColumnn =(int)$this->startColumn - 1;
-            $endColumn = (int) $this->endColumn -1 ;
-            $data = $collection->slice($startColumnn,$endColumn);
+            $startColumn = (int) $this->startColumn - 1;
+            $endColumn = (int) $this->endColumn - 1;
+            $length = $endColumn - $startColumn + 1;
+            $data = $collection->slice($startColumn, $length);
         }
-        // dd($this->endColumn);
         foreach($data as $item){
             
             if(!empty($item[0])||!empty($item[2])){
