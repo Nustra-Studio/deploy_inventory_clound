@@ -80,15 +80,14 @@ class ApiCabang extends Controller
             $db_cabang = $db_cabang->database;
             $barang = DB::table("$db_cabang")->get();
 
-            $dataFinal = DB::table("$db_cabang")->join('supliers', "$db_cabang.id_suplier", '=', 'supliers.uuid')
+            $dataFinal = DB::table("$db_cabang as c")
+                        ->join('supliers as s', 'c.id_supplier', '=', 's.uuid')
                         ->select(
-                            "$db_cabang.id", "$db_cabang.uuid", "$db_cabang.category_id", "$db_cabang.id_suplier", "$db_cabang.kode_barang", 'harga',
-                            'harga_pokok', 'harga_jual', 'harga_grosir', 'stok', "$db_cabang.keterangan",
-                            'name', 'supliers.nama AS merek_baranng', 'type_barang', "$db_cabang.created_at",
-                            "$db_cabang.updated_at")
+                            'c.*','s.nama as suplier_name'
+                        )
                         ->get();
-
-            return response()->json($items);
+        
+            return response()->json($dataFinal);
         }
     
     public function usercreate(Request $request){
