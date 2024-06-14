@@ -81,19 +81,13 @@ class ApiCabang extends Controller
             $db_cabang = $db_cabang->database;
             $barang = DB::table("$db_cabang")->get();
 
-
-            foreach($barang as $items) {
-                $join = $items
-                        ->join('supliers', $items->id_suplier, '=', 'supliers.id')
+            $items = DB::table("$db_cabang")->join('supliers', $items->id_suplier, '=', 'supliers.id')
                         ->select(
                             'id', 'uuid', 'category_id', 'id_suplier', 'kode_barang', 'harga',
                             'harga_pokok', 'harga_jual', 'harga_grosir', 'stok', 'keterangan',
                             'name', 'supliers.name AS merek_baranng', 'type_barang', 'created_at',
                             'updated_at')
-                        ->first();    
-
-                $arrData += $join;
-            }
+                        ->get();
 
             return response()->json($arrData);
         }
