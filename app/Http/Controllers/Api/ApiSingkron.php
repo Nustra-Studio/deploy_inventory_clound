@@ -331,6 +331,7 @@ class ApiSingkron extends Controller
                         'keterangan' => 'distribusi',
                         'kode_transaction'=>$kode_tranasction,
                         'id_cabang' => $request->id_cabang,
+                        'created_at' => date('Y-m-d H:i:s')
                     ];
                     history_transaction::create($data_history);
                     $data_stock = $data->stok - $stocks;
@@ -350,6 +351,7 @@ class ApiSingkron extends Controller
                         'stok' => $stocks,
                         'kode_barang' => $data->kode_barang,
                         'keterangan' => $kode_tranasction,
+                        'created_at' => date('Y-m-d H:i:s')
                     ]);
                     $uuid= hash('sha256', uniqid(mt_rand(), true));
                     $data_history = [
@@ -365,6 +367,7 @@ class ApiSingkron extends Controller
                         'keterangan' => 'distribusi',
                         'kode_transaction'=>$kode_tranasction,
                         'id_cabang' => $request->id_cabang,
+                        'created_at' => date('Y-m-d H:i:s')
                     ];
                     history_transaction::create($data_history);
                     $data_stock = $data->stok - $stocks;
