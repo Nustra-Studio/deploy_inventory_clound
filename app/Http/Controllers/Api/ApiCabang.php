@@ -85,14 +85,14 @@ class ApiCabang extends Controller
             if(!empty($date)){
                 $dataFinal = DB::table("$db_cabang as c")
                 ->whereDate('c.created_at','=',$date)
-                ->join('supliers as s', 'c.id_supplier', '=', 's.uuid')
+                ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
                 ->select(
                     'c.*','s.nama as merek_barang'
                 )->get();
             }
             else{
                 $dataFinal = DB::table("$db_cabang as c")
-                ->join('supliers as s', 'c.id_supplier', '=', 's.uuid')
+                ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
                 ->select(
                     'c.*','s.nama as merek_barang'
                 )->get();
