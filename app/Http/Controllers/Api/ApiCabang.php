@@ -95,7 +95,7 @@ class ApiCabang extends Controller
                 $dataFinal = DB::table("$db_cabang")->get();
             }
         
-            return response()->json($date);
+            return response()->json($db_cabang);
         }
 
     public function usercreate(Request $request){
