@@ -87,14 +87,16 @@ class ApiCabang extends Controller
                 ->whereDate('c.created_at','=',$date)
                 ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
                 ->select(
-                    'c.*','s.nama as merek_barang'
+                    'c.*',
+                    DB::raw("COALESCE(s.nama, '') as merek_barang")
                 )->get();
             }
             else{
                 $dataFinal = DB::table("$db_cabang as c")
                 ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
                 ->select(
-                    'c.*','s.nama as merek_barang'
+                    'c.*',
+                    DB::raw("COALESCE(s.nama, '') as merek_barang")
                 )->get();
             }
         
