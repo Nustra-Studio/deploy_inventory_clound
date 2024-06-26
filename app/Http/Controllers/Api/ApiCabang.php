@@ -72,6 +72,7 @@ class ApiCabang extends Controller
             $request->validate([
                 'token' => 'required',
             ]);
+
             $uuid = $request->input('uuid');
             $uuid = user_cabang::where('uuid', $uuid)->first();
             $id = $uuid->cabang_id;
@@ -79,8 +80,14 @@ class ApiCabang extends Controller
             $db_cabang = $db_cabang->database;
             $barang = DB::table("$db_cabang")->get();
 
-
-            return response()->json($barang);
+            $dataFinal = DB::table("$db_cabang as c")
+                        ->join('supliers as s', 'c.id_supplier', '=', 's.uuid')
+                        ->select(
+                            'c.*','s.nama as merek_barang'
+                        )
+                        ->get();
+        
+            return response()->json($dataFinal);
         }
     
     public function usercreate(Request $request){
