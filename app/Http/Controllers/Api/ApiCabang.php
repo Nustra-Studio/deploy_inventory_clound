@@ -89,7 +89,7 @@ class ApiCabang extends Controller
                         ->select(
                             'c.*','s.nama as merek_barang'
                         )
-                        ->whereBetween('created_at', [$finalDate, $finalDateMax])->get();
+                        ->whereBetween('c.created_at', [$finalDate, $finalDateMax])->get();
         
             return response()->json($dataFinal);
         }
