@@ -317,6 +317,7 @@ class BarangController extends Controller
             return redirect()->route('barang.index')->with('error', 'Sistem Error');
         }
     }
+
     private function storeLocally($data_master, $data_history , $request)
         {
             try {
