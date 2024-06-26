@@ -93,7 +93,7 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                 // action update
                     $unit->update(
                         [
-                            'uuid'=>$uuid,
+                            'uuid'=>$unit->uuid,
                             'name'=>$item[2],
                             'id_supplier'=>$supplier,
                             'category_id'=>$category,
@@ -106,7 +106,7 @@ class BarangUpdate implements ToCollection , WithCalculatedFormulas
                     $singkron = [
                         'name' => 'barang',
                         'status' => 'update',
-                        'uuid' => $uuid,
+                        'uuid' => $unit->uuid,
                     ];
                     singkron::create($singkron);
                 }

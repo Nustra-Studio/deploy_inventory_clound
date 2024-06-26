@@ -64,14 +64,19 @@ class DistribusiController extends Controller
                 return redirect()->back()->with('success', 'Data Distribusi  berhasil disimpan dan disinkronkan ke server');
             } else {
                 // Tangani kesalahan respons API
-                throw new \Exception('Terjadi kesalahan saat menyinkronkan data ke server');
+                $data['singkron'] = 'not_singkron';
+                $this->storeLocally($data ,$request);
+                return redirect()->back()->with('success', 'Data Distribusi  berhasil disimpan dan Tidak ke server Tunggu Beberapa saat');
             }
         } catch (\Exception $e) {
             // Tangani kesalahan apapun yang terjadi
             // Simpan data ke database lokal tanpa menyinkronkan ke server
             $data['singkron'] = 'not_singkron';
-            $this->storeLocally($data , $request);
-            return redirect()->back()->with('error', $e->getMessage());
+            // $this->storeLocally($data , $request);
+            // return redirect()->back()->with('error', $e->getMessage());
+            $this->storeLocally($data ,$request);
+                return redirect()->back()->with('success', 'Data Distribusi  berhasil disimpan dan Tidak ke server Tunggu Beberapa saat');
+
         }
     }
     private function sendToApi($url, $data)
@@ -133,11 +138,11 @@ class DistribusiController extends Controller
                     'singkron'=>$singkron,
                 ];
                 history_transaction::create($data_history);
-                $singkron =  [
-                    'name'=>'barang',
-                    'status'=>'distribusi',
-                    'uuid'=>$uuid,
-                ];
+                // $singkron =  [
+                //     'name'=>'barang',
+                //     'status'=>'distribusi',
+                //     'uuid'=>$uuid,
+                // ];
                 $data_stock = $data->stok - $stocks;
                 $data->update([
                     'stok' => $data_stock,
@@ -179,13 +184,15 @@ class DistribusiController extends Controller
                 $data->update([
                     'stok' => $data_stock,
                 ]);
-                $singkron =  [
+            }
+            if($singkron == "not_singkron"){
+                $singkrons =  [
                     'name'=>'barang',
                     'status'=>'distribusi',
                     'uuid'=>$uuid,
                 ];
+                singkron::create($singkrons);
             }
-            singkron::create($singkron);
         }
             
         } catch (\Exception $e) {
