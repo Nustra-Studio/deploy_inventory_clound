@@ -103,7 +103,7 @@ class ApiCabang extends Controller
             else{
                 $respone = $barangs;
             }
-            return response()->json($respone);
+            return response()->json($date);
         }
 
     public function usercreate(Request $request){
