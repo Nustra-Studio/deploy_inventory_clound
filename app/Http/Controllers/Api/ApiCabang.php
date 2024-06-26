@@ -89,7 +89,7 @@ class ApiCabang extends Controller
                 )
                 ->get();
             if(!empty($date)){
-                $barang = DB::table("$db_cabang as c")
+                $barangs = DB::table("$db_cabang as c")
                 ->whereDate('c.created_at','=',$date)
                 ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
                 ->select(
@@ -97,8 +97,13 @@ class ApiCabang extends Controller
                     DB::raw("COALESCE(s.nama, '') as merek_barang")
                 )->get();
             }
-        
-            return response()->json($barang);
+            if(empty($date)){
+                $respone = $barang;
+            }
+            else{
+                $respone = $barangs;
+            }
+            return response()->json($respone);
         }
 
     public function usercreate(Request $request){
