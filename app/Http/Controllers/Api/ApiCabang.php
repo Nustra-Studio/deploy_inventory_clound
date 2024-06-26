@@ -81,7 +81,13 @@ class ApiCabang extends Controller
             $id = $uuid->cabang_id;
             $db_cabang = cabang::where('uuid', $id)->first();
             $db_cabang = $db_cabang->database;
-            $barang = DB::table("$db_cabang")->get();
+            $barang = DB::table("$db_cabang")
+                ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
+                ->select(
+                    'c.*',
+                    DB::raw("COALESCE(s.nama, '') as merek_barang")
+                )
+                ->get();
             if(!empty($date)){
                 $dataFinal = DB::table("$db_cabang as c")
                 ->whereDate('c.created_at','=',$date)
