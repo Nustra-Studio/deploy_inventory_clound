@@ -81,7 +81,7 @@ class ApiCabang extends Controller
             $id = $uuid->cabang_id;
             $db_cabang = cabang::where('uuid', $id)->first();
             $db_cabang = $db_cabang->database;
-            $barang = DB::table("$db_cabang")
+            $barang = DB::table("$db_cabang as c")
                 ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
                 ->select(
                     'c.*',
