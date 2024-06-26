@@ -73,6 +73,10 @@ class ApiCabang extends Controller
                 'token' => 'required',
             ]);
 
+            $date = $request->input('tanggal');
+            $finalDate = $date ? "$date 00:00:00" : '';
+            $finalDateMax = $date ? "$date 23:00:00" : '';
+
             $uuid = $request->input('uuid');
             $uuid = user_cabang::where('uuid', $uuid)->first();
             $id = $uuid->cabang_id;
@@ -85,11 +89,11 @@ class ApiCabang extends Controller
                         ->select(
                             'c.*','s.nama as merek_barang'
                         )
-                        ->get();
+                        ->whereBetween('created_at', [$finalDate, $finalDateMax])->get();
         
             return response()->json($dataFinal);
         }
-    
+
     public function usercreate(Request $request){
         $data = $request->data;
         $username = $data['username'];
