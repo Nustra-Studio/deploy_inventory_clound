@@ -73,8 +73,8 @@ class ApiCabang extends Controller
                 'token' => 'required',
             ]);
 
-            $date = $request->input('tanggal');
-            $date = date('Y-m-d', strtotime($date));
+            $dates = $request->input('tanggal');
+            $date = date('Y-m-d', strtotime($dates));
 
             $uuid = $request->input('uuid');
             $uuid = user_cabang::where('uuid', $uuid)->first();
@@ -97,13 +97,13 @@ class ApiCabang extends Controller
                     DB::raw("COALESCE(s.nama, '') as merek_barang")
                 )->get();
             }
-            if(empty($date)){
+            if(empty($dates)){
                 $respone = $barang;
             }
             else{
                 $respone = $barangs;
             }
-            return response()->json($date);
+            return response()->json($respone);
         }
 
     public function usercreate(Request $request){
