@@ -89,16 +89,13 @@ class ApiCabang extends Controller
                 )
                 ->get();
             if(!empty($date)){
-                $dataFinal = DB::table("$db_cabang as c")
+                $barang = DB::table("$db_cabang as c")
                 ->whereDate('c.created_at','=',$date)
                 ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
                 ->select(
                     'c.*',
                     DB::raw("COALESCE(s.nama, '') as merek_barang")
                 )->get();
-            }
-            else{
-                $dataFinal = DB::table("$db_cabang")->get();
             }
         
             return response()->json($barang);
