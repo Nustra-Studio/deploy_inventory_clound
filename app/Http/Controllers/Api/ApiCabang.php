@@ -74,8 +74,7 @@ class ApiCabang extends Controller
             ]);
 
             $date = $request->input('tanggal');
-            $finalDate = $date ? "$date 00:00:00" : '';
-            $finalDateMax = $date ? "$date 23:00:00" : '';
+            $date = date('Y-m-d', strtotime($date));
 
             $uuid = $request->input('uuid');
             $uuid = user_cabang::where('uuid', $uuid)->first();
@@ -83,13 +82,21 @@ class ApiCabang extends Controller
             $db_cabang = cabang::where('uuid', $id)->first();
             $db_cabang = $db_cabang->database;
             $barang = DB::table("$db_cabang")->get();
-
-            $dataFinal = DB::table("$db_cabang as c")
-                        ->join('supliers as s', 'c.id_supplier', '=', 's.uuid')
-                        ->select(
-                            'c.*','s.nama as merek_barang'
-                        )
-                        ->whereBetween('c.created_at', [$finalDate, $finalDateMax])->get();
+            if(!empty($date)){
+                $dataFinal = DB::table("$db_cabang as c")
+                ->whereDate('c.created_at','=',$date)
+                ->join('supliers as s', 'c.id_supplier', '=', 's.uuid')
+                ->select(
+                    'c.*','s.nama as merek_barang'
+                )->get();
+            }
+            else{
+                $dataFinal = DB::table("$db_cabang as c")
+                ->join('supliers as s', 'c.id_supplier', '=', 's.uuid')
+                ->select(
+                    'c.*','s.nama as merek_barang'
+                )->get();
+            }
         
             return response()->json($dataFinal);
         }
