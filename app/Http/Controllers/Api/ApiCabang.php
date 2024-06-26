@@ -92,12 +92,7 @@ class ApiCabang extends Controller
                 )->get();
             }
             else{
-                $dataFinal = DB::table("$db_cabang as c")
-                ->leftJoin('supliers as s', 'c.id_supplier', '=', 's.uuid')
-                ->select(
-                    'c.*',
-                    DB::raw("COALESCE(s.nama, '') as merek_barang")
-                )->get();
+                $dataFinal = DB::table("$db_cabang")->get();
             }
         
             return response()->json($dataFinal);
