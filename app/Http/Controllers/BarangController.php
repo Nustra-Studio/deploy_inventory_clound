@@ -98,7 +98,7 @@ class BarangController extends Controller
     public function datadistribusi(Request $request)
     {
         // $data = barang::all();
-        $barang = barang::select(['id', 'name', 'kode_barang', 'category_id', 'harga_pokok', 'harga_jual', 'stok','id_supplier'])
+        $barang = barang::select(['id', 'name', 'kode_barang', 'category_id', 'harga_pokok', 'harga_jual', 'stok','id_supplier','uuid'])
                     ->where('stok', '>', 0)
                     ->orderBy('created_at', 'desc');
 
@@ -132,6 +132,7 @@ class BarangController extends Controller
                 $btn .= " <input type='hidden' name='kode' value='$row->kode_barang'>";
                 $btn .= " <input type='hidden' name='nama' value='$row->name'>";
                 $btn .= " <input type='hidden' name='stock' value='$row->stock'>";
+                $btn .= " <input type='hidden' name='product' value='$row'>";
                 return $btn;
             })
             ->rawColumns(['action','jumlah'])

@@ -339,6 +339,7 @@ class ApiSingkron extends Controller
                         'stok' => $data_stock,
                     ]);
                 }else{
+                    $data = $request->input('product')[$i];
                     DB::table("$database")->insert([
                         'id' => $data->id,
                         'name' => $data->name,

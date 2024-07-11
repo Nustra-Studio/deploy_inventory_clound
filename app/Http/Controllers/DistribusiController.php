@@ -55,12 +55,14 @@ class DistribusiController extends Controller
             $data['key'] = 'distribusi';
 
             // Kirim data ke server API
+            // dd($data);
             $apiResponse = $this->sendToApi($url, $data);
 
             // Cek status dari respons API
             if ($apiResponse && $apiResponse['status'] === 'success') {
                 // Simpan data ke database lokal
                 $this->storeLocally($data ,$request);
+                // dd($apiResponse);
                 return redirect()->back()->with('success', 'Data Distribusi  berhasil disimpan dan disinkronkan ke server');
             } else {
                 // Tangani kesalahan respons API

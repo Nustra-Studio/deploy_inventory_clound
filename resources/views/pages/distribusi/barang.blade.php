@@ -175,6 +175,7 @@
       var nama = row.find('input[name="nama"]').val();
       var stock = parseInt(row.find('input[name="stock"]').val());
       var jumlah = parseInt(row.find('input[name="jumlah"]').val());
+      var product = JSON.parse(row.find('input[name="product"]').val()); // Parse the product data
 
       // Validasi jumlah
       if (jumlah < 1) {
@@ -194,13 +195,14 @@
         $(existingRow).find('td:eq(3)').text(updatedJumlah);
 
         // Update value di input jumlah
-        $(existingRow).find('input[name="jumlah"]').val(updatedJumlah);
+        $(existingRow).find('input[name="jumlah[]"]').val(updatedJumlah);
       } else {
         // Jika item belum ada, tambahkan baris baru
         var newRow = '<tr>';
         newRow += '<input type="hidden" name="kode[]" value="' + kode + '">';
         newRow += '<input type="hidden" name="nama[]" value="' + nama + '">';
         newRow += '<input type="hidden" name="jumlah[]" value="' + jumlah + '">';
+        newRow += '<input type="hidden" name="product[]" value=\'' + JSON.stringify(product) + '\'>';
         newRow += '<td>' + (tableExample2.rows().count() + 1) + '</td>';
         newRow += '<td>' + kode + '</td>';
         newRow += '<td>' + nama + '</td>';
